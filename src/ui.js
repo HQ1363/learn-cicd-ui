@@ -43,6 +43,7 @@ const TestHubo=AsyncComponent(()=>import("./pipeline/test/testhubo/component/Tes
 const TestMaven=AsyncComponent(()=>import("./pipeline/test/maven/component/TestMaven"))
 const TestSpotbugs=AsyncComponent(()=>import("./pipeline/test/spotbugs/component/SpotbugsScan"))
 const TestSonarQube=AsyncComponent(()=>import("./pipeline/test/sonarQube/component/SonarQubeScan"))
+const TestSourceFare=AsyncComponent(()=>import("./pipeline/test/sourcefare/component/SourceFareScan"))
 const PipelineSetting=AsyncComponent(()=>import("./pipeline/setting/navigator/PipelineSetting"))
 const BasicInfo=AsyncComponent(()=>import("./pipeline/setting/basicInfo/BasicInfo"))
 
@@ -87,8 +88,8 @@ const Version=AsyncComponent(()=>import("./setting/licence/Version"))
 const ProductAuth=AsyncComponent(()=>import("./setting/licence/ProductAuth"))
 
 //系统集成
-const OpenApi=AsyncComponent(()=>import("./setting/integration/openApi/components/OpenApi"))
-const OpenApiDoc=AsyncComponent(()=>import("./setting/integration/openApi/components/OpenApiDoc"))
+const OpenApi=AsyncComponent(()=>import("./setting/integration/openApi/OpenApi"))
+const OpenApiDoc=AsyncComponent(()=>import("./setting/integration/openApi/OpenApiDoc"))
 
 // base
 const UserGroupTrue=AsyncComponent(()=>import("./setting/base/user/Groupture"))
@@ -153,6 +154,7 @@ export {
     Test,
     TestSpotbugs,
     TestSonarQube,
+    TestSourceFare,
     TestHubo,
     TestMaven,
 

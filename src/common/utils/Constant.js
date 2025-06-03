@@ -50,6 +50,7 @@ export const serverTesthubo = 'testhubo';
 export const serverSonar = 'sonar';
 export const serverNexus = 'nexus';
 export const serverHadess = 'hadess';
+export const serverSourceFare = 'sourcefare';
 
 /**
  * 工具常量
@@ -67,16 +68,16 @@ export const toolSourceFareScanner = 'sourcefare-scanner';
 /**
  * 权限
  */
-export const pipeline_task_update = 'pipeline_task_update'; //流水线运行
-
+export const pipeline_task_update = 'pipeline_task_update'; //流水线更新
+export const pipeline_task_run = 'pipeline_task_run'; //流水线运行
 
 /**
  * 运行状态
  */
-export const runError = "error";
-export const runSuccess = "success";
-export const runHalt = "halt";
-export const runRun = "run";
-export const runWait = "wait";
-export const runSuspend = "suspend";
-export const runTimeout = "timeout";
+export const runError = "error";  //失败
+export const runSuccess = "success"; //成功
+export const runHalt = "halt"; //终止
+export const runRun = "run"; //运行中
+export const runWait = "wait"; //等待
+export const runSuspend = "suspend"; //暂停
+export const runTimeout = "timeout"; //超时

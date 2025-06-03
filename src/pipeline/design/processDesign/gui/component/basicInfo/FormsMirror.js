@@ -37,7 +37,9 @@ const FormsMirror = props =>{
      * @param e
      */
     const onFocus = e => {
-        if(!taskUpdate){return;}
+        if(!taskUpdate){
+            return;
+        }
         setBordered(true)
         if(e.state.placeholder){
             e.state.placeholder.innerHTML=placeholder

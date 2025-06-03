@@ -28,7 +28,8 @@ import {
     serverTesthubo,
     serverSonar,
     serverNexus,
-    serverHadess
+    serverHadess,
+    serverSourceFare,
 } from "../../../../common/utils/Constant";
 
 const pageSize = 13;
@@ -140,26 +141,27 @@ const Server = props =>{
         </Space>
     )
 
+    const restrictedType = [
+        serverGitpuk,
+        serverHadess,
+        serverTesthubo,
+        serverSourceFare,
+    ]
     // 操作
-    const action = record =>{
-        const {type} = record
-        if(type===serverGitpuk || type===serverHadess || type===serverTesthubo){
-            if(version ==='cloud'){
-                return (
-                    <ListAction
-                        edit={()=>editServer(record)}
-                    />
-                )
-            }
-        }
-        return (
+    const action = record => {
+        const { type } = record;
+        const isRestricted = restrictedType.includes(type)&& version === 'cloud';
+
+        return isRestricted ? (
+            <ListAction edit={() => editServer(record)} />
+        ) : (
             <ListAction
-                edit={()=>editServer(record)}
-                del={()=>delServer(record)}
+                edit={() => editServer(record)}
+                del={() => delServer(record)}
                 isMore={true}
             />
-        )
-    }
+        );
+    };
 
     // 全部
     const allColumn = [
@@ -369,6 +371,7 @@ const Server = props =>{
             case serverSonar :
             case serverNexus :
             case serverHadess :
+            case serverSourceFare :
                 return authColumn
             default:
                 return allColumn
@@ -413,7 +416,7 @@ const Server = props =>{
                         >
                             {
                                 ['all',serverGitee,serverGithub,serverGitlab,serverPriGitlab,serverGitpuk,
-                                    serverTesthubo,serverSonar,serverNexus,serverHadess].map(id=>(
+                                    serverTesthubo,serverSonar,serverNexus,serverHadess,serverSourceFare].map(id=>(
                                     <Select.Option value={id} key={id}>{id==='all'? '全部' : serverTitle[id]}</Select.Option>
                                 ))
                             }

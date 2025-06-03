@@ -33,6 +33,7 @@ import {
     download_hadess,
     download_ssh,
     download_nexus,
+    sourcefare,
 } from "../../../../../../common/utils/Constant";
 import {taskTitle} from "../TaskCommon";
 
@@ -78,9 +79,10 @@ const FormsAuth = props =>{
             case github:
             case gitlab:
             case pri_gitlab:
-            case gitpuk:
             case testhubo:
+            case gitpuk:
             case sonar:
+            case sourcefare:
                 finsServer(taskType)
                 break
             case upload_hadess:
@@ -161,6 +163,8 @@ const FormsAuth = props =>{
             case gitpuk:
             case sonar:
                 return `${title}服务`
+            case sourcefare:
+                return 'SourceFare服务'
             case testhubo:
                 return 'TestHubo服务'
             case liunx:
@@ -194,6 +198,7 @@ const FormsAuth = props =>{
             case gitpuk:
             case testhubo:
             case sonar:
+            case sourcefare:
             case upload_hadess:
             case upload_nexus:
             case download_hadess:
@@ -236,6 +241,7 @@ const FormsAuth = props =>{
                 return <ServerAddBtn type={taskType} {...commonProps}/>;
             case gitpuk:
             case testhubo:
+            case sourcefare:
                 return version === 'cloud' ? null : <ServerAddBtn type={taskType} {...commonProps}/>;
             case upload_hadess:
             case download_hadess:
@@ -256,6 +262,7 @@ const FormsAuth = props =>{
             case gitpuk:
             case testhubo:
             case sonar:
+            case sourcefare:
             case upload_hadess:
             case upload_nexus:
             case download_hadess:
@@ -302,6 +309,7 @@ const FormsAuth = props =>{
             case gitlab:
             case pri_gitlab:
             case gitpuk:
+            case sourcefare:
                 rule = [{required:true,message:`${label()}不能为空`}];
                 break;
             default:

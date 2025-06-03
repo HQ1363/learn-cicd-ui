@@ -33,6 +33,7 @@ import {
     Test,
     TestSpotbugs,
     TestSonarQube,
+    TestSourceFare,
     TestHubo,
     TestMaven,
 
@@ -225,6 +226,11 @@ const routers=[
                             {
                                 path:"/pipeline/:id/test/sonar",
                                 component: TestSonarQube,
+                                exact: true,
+                            },
+                            {
+                                path:"/pipeline/:id/test/sourceFare",
+                                component: TestSourceFare,
                                 exact: true,
                             },
                             {

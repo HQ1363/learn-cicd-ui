@@ -22,7 +22,8 @@ import {
     serverTesthubo,
     serverSonar,
     serverNexus,
-    serverHadess
+    serverHadess,
+    serverSourceFare
 } from "../../../../common/utils/Constant";
 
 export const serverTitle = {
@@ -35,6 +36,7 @@ export const serverTitle = {
     [serverGitpuk]: 'GitPuk',
     [serverTesthubo]: 'TestHubo',
     [serverHadess]: 'Hadess',
+    [serverSourceFare]: 'SourceFare',
 }
 
 const ServerModal = props =>{
@@ -112,18 +114,13 @@ const ServerModal = props =>{
         }
     }
 
-
     /**
      * 服务地址是否禁用
      * @returns {boolean}
      */
-    const serverAddressDisabled = () => {
-        const type = formValue?.type
-        if(type===serverGitpuk || type===serverHadess || type===serverTesthubo){
-            return version === 'cloud'
-        }
-        return false
-    }
+    const serverAddressDisabled = () =>
+        [serverGitpuk, serverHadess, serverTesthubo, serverSourceFare].includes(formValue?.type)
+        && version === 'cloud';
 
     const serverWayHtml = () => {
         switch (serverWay) {
@@ -198,7 +195,7 @@ const ServerModal = props =>{
     const authTypeList = version==='cloud' ?
         [serverGitee,serverGithub,serverGitlab,serverPriGitlab,serverSonar,serverNexus]
         :
-        [serverGitee,serverGithub,serverGitlab,serverPriGitlab,serverGitpuk,serverTesthubo,serverSonar,serverNexus,serverHadess];
+        [serverGitee,serverGithub,serverGitlab,serverPriGitlab,serverGitpuk,serverTesthubo,serverSonar,serverNexus,serverHadess,serverSourceFare];
 
     return(
         <Modals

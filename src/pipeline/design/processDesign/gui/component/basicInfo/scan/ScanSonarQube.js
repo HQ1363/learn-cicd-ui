@@ -29,7 +29,7 @@ const ScanSonarQube = props =>{
         updateTask({[type]:value})
     }
 
-    return(
+    return (
         <>
             <FormsSelect
                 name={"codeType"}

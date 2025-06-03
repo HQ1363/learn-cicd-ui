@@ -128,6 +128,7 @@ const K8s = props => {
             key: "serverAddress",
             width:"20%",
             ellipsis:true,
+            render: text=>text || '--'
         },
         {
             title:"集群状态",

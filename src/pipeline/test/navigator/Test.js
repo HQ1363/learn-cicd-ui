@@ -26,6 +26,10 @@ const Test = (props) => {
                 {
                     id: `/pipeline/${pipelineId}/test/sonar`,
                     title: 'SonarQube',
+                },
+                {
+                    id: `/pipeline/${pipelineId}/test/sourceFare`,
+                    title: 'SourceFare',
                 }
             ]
         },

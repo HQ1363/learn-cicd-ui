@@ -50,7 +50,9 @@ const CodeThird = props =>{
      */
     const changeGitStoreHouse = (value) =>{
         const task = dataItem.task
-        if(task?.houseId===value){return;}
+        if(task?.houseId===value){
+            return;
+            }
         setProhibited(false)
         updateTask({houseId:value})
     }
@@ -60,7 +62,9 @@ const CodeThird = props =>{
      */
     const changeBranch = value => {
         const task = dataItem.task
-        if(task?.codeBranch===value){return;}
+        if(task?.codeBranch===value){
+            return;
+        }
         updateTask({codeBranch:value})
     }
 

@@ -25,6 +25,7 @@ import Variable from "../variable/components/Variable";
 import Postprocess from "../postprocess/components/Postprocess";
 import "./Design.scss";
 import {getUser} from "tiklab-core-ui";
+import {pipeline_task_run} from "../../../common/utils/Constant";
 
 const Design = props =>{
 
@@ -152,7 +153,7 @@ const Design = props =>{
                 <Button type={"disabled"} title={"运行"}/>
             )
         }
-        if(!pipelinePermissions?.includes('pipeline_task_run')){
+        if(!pipelinePermissions?.includes(pipeline_task_run)){
             return (
                 <Tooltip title={'当前没有运行权限，请联系管理员分配'}>
                     <span>

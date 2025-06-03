@@ -26,7 +26,7 @@ const ScanSpotbugs = props =>{
         updateTask({[type]:value})
     }
 
-    return(
+    return (
         <>
             <FormsTool
                 scmType={toolJdk}

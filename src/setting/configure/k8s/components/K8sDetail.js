@@ -12,11 +12,13 @@ import ListEmpty from "../../../../common/component/list/ListEmpty";
 import BreadCrumb from "../../../../common/component/breadcrumb/BreadCrumb";
 import {CloseOutlined} from "@ant-design/icons";
 
-
 const K8sDetail = (props) => {
 
     const {visible,setVisible,formValue,setFormValue} = props;
 
+    /**
+     * 返回
+     */
     const goBack = () => {
         setVisible(false);
         setFormValue(null);

@@ -7,7 +7,6 @@
  */
 import React,{useState,useEffect} from "react";
 import {message, Row, Col, Divider, Spin, Table} from "antd";
-import {applyJump} from "tiklab-core-ui"
 import BreadCrumb from "../../../../common/component/breadcrumb/BreadCrumb";
 import ListEmpty from "../../../../common/component/list/ListEmpty";
 import Page from "../../../../common/component/page/Page";
@@ -58,7 +57,7 @@ const TestHubo = props => {
         if(item.status===2){
             return message.info("当前测试报告详情已删除")
         }
-        return applyJump(`${item.url}`)
+        return window.open(`${item.url}`)
     }
 
     /**

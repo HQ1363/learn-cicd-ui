@@ -11,6 +11,7 @@ import {DeleteOutlined, ExclamationCircleOutlined, PlusOutlined} from "@ant-desi
 import {inject,observer} from "mobx-react";
 import pip_zengjia from "../../../../../assets/images/svg/pip_zengjia.svg";
 import {TaskIcon} from "./TaskCommon";
+import {git, gitee, github, gitlab, gitpuk, pri_gitlab, svn} from "../../../../../common/utils/Constant";
 
 const Task = props => {
 
@@ -75,13 +76,22 @@ const Task = props => {
         setTaskFormDrawer(false)
     }
 
+    const codeList = [
+        git,
+        gitee,
+        github,
+        gitlab,
+        pri_gitlab,
+        svn,
+        gitpuk,
+    ]
     /**
      * false：源码；true：不是源码
      * @param type
      * @returns {boolean}
      */
     const isCode = type =>{
-        return !(type === 'git' || type === 'gitee' || type === 'github' || type === 'gitlab' || type === 'svn' || type === 'gitpuk');
+        return !codeList.includes(type);
     }
 
     /**

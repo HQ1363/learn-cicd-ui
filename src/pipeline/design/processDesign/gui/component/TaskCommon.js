@@ -76,7 +76,7 @@ export const taskTitle = type =>{
         case k8s: return "Kubernetes部署"
         case sonar: return "SonarQube"
         case spotbugs: return "Java代码扫描"
-        case sourcefare: return "sourceFare代码扫描"
+        case sourcefare: return "SourceFare代码扫描"
         case upload_hadess: return "Hadess上传"
         case upload_ssh: return "SSH上传"
         case upload_nexus: return "Nexus上传"

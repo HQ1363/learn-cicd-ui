@@ -49,7 +49,7 @@ export const scmTitle = {
     [toolGo]: 'Go',
     [toolK8s]: 'kubectl',
     [toolSonarScanner]: 'Sonar Scanner',
-    [toolSourceFareScanner]: 'sourceFare Scanner',
+    [toolSourceFareScanner]: 'SourceFare Scanner',
 };
 
 //工具类型
@@ -62,7 +62,7 @@ export const scmNameSuffix = {
     [toolGo]: 'Go',
     [toolK8s]: 'kubectl',
     [toolSonarScanner]: 'Sonar',
-    [toolSourceFareScanner]: 'sourceFare',
+    [toolSourceFareScanner]: 'SourceFare',
 };
 
 //工具图片
@@ -88,5 +88,5 @@ export const scmPlaceholder = {
     [toolGo]: '请输入Go安装路径，如 D:\\Go-v18.20.7\\bin',
     [toolK8s]: '请输入kubectl安装路径，如 D:\\kubectl-v18.20.7\\kubectl',
     [toolSonarScanner]: '请输入Sonar Scanner安装路径，如 D:\\sonar-v18.20.7\\bin',
-    [toolSourceFareScanner]: '请输入sourceFare Scanner安装路径，如 D:\\sourceFare-v18.20.7\\bin',
+    [toolSourceFareScanner]: '请输入SourceFare Scanner安装路径，如 D:\\sourceFare-v18.20.7\\bin',
 };
