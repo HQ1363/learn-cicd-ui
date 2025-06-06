@@ -5,7 +5,7 @@
  * @LastEditors: gaomengyuan
  * @LastEditTime: 2025/5/06
  */
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {CheckCircleTwoTone} from "@ant-design/icons";
 import Modals from "./Modal";
 import {applySubscription} from 'tiklab-core-ui';
@@ -16,47 +16,58 @@ import pipResult from "../../../assets/images/pip-feature-result.png";
 import pipRelease from "../../../assets/images/pip-feature-release.png";
 import pipAgent from "../../../assets/images/pip-feature-agent.png";
 
+//数据
+const ENHANCE_DATA = {
+    resources: {
+        title: '系统',
+        desc: '资源监控',
+        data: [
+            {id: "resources", icon: pipResources, title: "资源监控"},
+        ],
+    },
+    statistics: {
+        title: '统计',
+        desc: '运行统计，结果统计',
+        data: [
+            {id: "operate", icon: pipOperate, title: "运行统计"},
+            {id: "result", icon: pipResult, title: "结果统计"},
+        ],
+    },
+    release: {
+        title: '发布',
+        desc: '发布，评审',
+        data: [
+            {id: "release", icon: pipRelease, title: "发布单"},
+        ],
+    },
+    configure: {
+        title: '配置',
+        desc: 'Agent自定义',
+        data: [
+            {id: 'agent',icon: pipAgent, title: "Agent"},
+        ]
+    },
+}
+
 const EnhanceModal = (props) => {
 
     const {type = 'resources',visible,setVisible} = props;
 
-    const data = {
-        resources: [
-            {id: "resources", icon: pipResources, title: "资源监控"},
-        ],
-        statistics: [
-            {id: "operate", icon: pipOperate, title: "运行统计"},
-            {id: "result", icon: pipResult, title: "结果统计"},
-        ],
-        release: [
-            {id: "release", icon: pipRelease, title: "发布计划"},
-        ],
-        configure: [
-            {id: 'agent',icon: pipAgent, title: "Agent"}
-        ]
-    }
+    // 使用useMemo缓存计算结果，避免重复计算
+    const { currentData={}, list=[] } = useMemo(() => {
+        const currentData = ENHANCE_DATA[type] || {};
+        return {
+            currentData,
+            list: currentData.data || [],
+        };
+    }, [type]);
 
-    const title = {
-        resources: '系统',
-        statistics: '统计',
-        release: '发布计划',
-        configure: '配置',
-    }
-
-    const desc = {
-        resources: '资源监控',
-        statistics: '运行统计，结果统计',
-        release: '发布，评审',
-        configure: 'Agent自定义',
-    }
-
-    const list = data[type];
-
-    const [active, setActive] = useState(list ? list[0] : {});
+    //选中的类型
+    const [active, setActive] = useState(null);
 
     useEffect(() => {
-        if(visible){
-            setActive(list ? list[0] : {})
+        if (visible) {
+            setActive(list[0] || {});
         }
     }, [visible]);
 
@@ -71,10 +82,10 @@ const EnhanceModal = (props) => {
         >
             <div className="enhance-free">
                 <div className="enhance-free-introduce">
-                    <div className="enhance-title">{title[type]}</div>
+                    <div className="enhance-title">{currentData?.title}</div>
                     <div className="enhance-title-desc">付费版本专属功能</div>
                     <div className="enhance-desc">
-                        {desc[type]}
+                        {currentData?.desc}
                     </div>
                     <div className="enhance-desc-box">
                         {

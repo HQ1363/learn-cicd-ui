@@ -57,8 +57,41 @@
             padding-top: var(--tiklab-padding-item);
             padding-bottom: var(--tiklab-padding);
         }
+        .body-taskForm-high{
+            display: flex;
+            align-items: center;
+            padding: var(--tiklab-padding-item) 0;
+            justify-content: space-between;
+            .body-taskForm-high-tabs{
+                display: flex;
+                align-items: center;
+                gap: 15px;
+                .body-taskForm-high-tab{
+                    padding: 2px 4px;
+                    cursor: pointer;
+                    font-size: 13px;
+                    background-color: var(--tiklab-gray);
+                    border-radius: 4px;
+                    max-width: 120px;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    -o-text-overflow: ellipsis;
+                    &:hover{
+                        background-color: var(--tiklab-gray-400);
+                    }
+                }
+                .high-tab-active{
+                    color: var(--tiklab-blue);
+                    background-color: var(--tiklab-gray-400);
+                }
+            }
+            .body-taskForm-high-num{
+                font-size: 12px;
+                padding-left: 3px;
+                color: #999;
+            }
+        }
     }
 }
-
-
 

@@ -107,7 +107,7 @@
 | 文件            | 说明      |
 |---------------|---------|
 | processDesign | 流水线流程设计 |
-| postprocess   | 流水线后置处理 |
+| message       | 流水线消息通知 |
 | trigger       | 流水线触发器  |
 | variable      | 流水线变量   |
 

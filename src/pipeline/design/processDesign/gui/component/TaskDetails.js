@@ -11,7 +11,9 @@ import {CloseOutlined} from "@ant-design/icons";
 import {inject,observer} from "mobx-react";
 import Button from "../../../../../common/component/button/Button";
 import PipelineDrawer from "../../../../../common/component/drawer/Drawer";
+import Tabs from "../../../../../common/component/tabs/Tabs";
 import BasicInfo from "./basicInfo/BasicInfo";
+import TaskDetailsSet from "./TaskDetailsSet";
 import {HeadlineTitle} from "./TaskCommon";
 import "./TaskDetails.scss";
 
@@ -23,6 +25,8 @@ const TaskDetails = props =>{
 
     //加载状态
     const [loading,setLoading] = useState(false);
+    //标签
+    const [handleType,setHandleType] = useState("base");
 
     useEffect(() => {
         if(taskFormDrawer && dataItem?.formType==="task"){
@@ -33,10 +37,19 @@ const TaskDetails = props =>{
     }, [taskFormDrawer]);
 
     /**
+     * task类型
+     * @param item
+     */
+    const changHandleType = item =>{
+        setHandleType(item.id)
+    }
+
+    /**
      * 关闭弹出框
      */
     const onClose = () =>{
-        setTaskFormDrawer(false)
+        setTaskFormDrawer(false);
+        setHandleType("base");
     }
 
     return(
@@ -53,9 +66,32 @@ const TaskDetails = props =>{
             </div>
             <div className="task-details-bottom">
                 <div className="body-taskForm">
-                    <Skeleton loading={loading}>
-                        <BasicInfo {...props}/>
-                    </Skeleton>
+                    {
+                        dataItem?.formType==='task' &&
+                        <Tabs
+                            tabLis={
+                                [
+                                    {id:"base", title: "基本信息"},
+                                    {id:"high", title: "高级设置"},
+                                ]
+                            }
+                            type={handleType}
+                            onClick={changHandleType}
+                        />
+                    }
+                    {
+                        handleType === 'base' &&
+                        <Skeleton loading={loading}>
+                            <BasicInfo {...props}/>
+                        </Skeleton>
+                    }
+                    {
+                        handleType === 'high' &&
+                        <TaskDetailsSet
+                            {...props}
+                            dataItem={dataItem}
+                        />
+                    }
                 </div>
             </div>
         </PipelineDrawer>

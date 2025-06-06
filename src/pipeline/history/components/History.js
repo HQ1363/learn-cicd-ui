@@ -186,7 +186,7 @@ const History = props =>{
     },1000);
 
     /**
-     * 开始运行
+     * 运行
      */
     const startPipeline = debounce(record=>{
         setIsLoading(true);
@@ -209,7 +209,7 @@ const History = props =>{
     },1000);
 
     /**
-     * 运行开启或终止
+     * 回滚
      */
     const rollBackPipeline = debounce(record => {
         setIsLoading(true);
@@ -282,7 +282,7 @@ const History = props =>{
                         text===2 &&
                             <>
                                 <img src={pip_trigger} alt={'trigger'} style={{width:22,height:22}}/>
-                                <div className="runWay-user">定时任务自动触发</div>
+                                <div className="runWay-user">定时触发</div>
                             </>
                     }
                     {
@@ -290,6 +290,13 @@ const History = props =>{
                         <>
                             <Profile userInfo={record?.user}/>
                             <div className="runWay-user">{record?.user?.nickname || "--"}回滚触发</div>
+                        </>
+                    }
+                    {
+                        text===4 &&
+                        <>
+                            <img src={pip_trigger} alt={'trigger'} style={{width:22,height:22}}/>
+                            <div className="runWay-user">WebHook触发</div>
                         </>
                     }
                 </div>

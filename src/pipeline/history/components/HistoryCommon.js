@@ -42,15 +42,15 @@ export const runStatusText = type =>{
 export const runStatusIcon = type =>{
     switch(type){
         case runError :
-            return  <CloseCircleOutlined style={{color:"red"}}/>
+            return <CloseCircleOutlined style={{color:"red"}}/>
         case runSuccess :
-            return  <CheckCircleOutlined style={{color:"var(--tiklab-blue)"}}/>
+            return <CheckCircleOutlined style={{color:"var(--tiklab-blue)"}}/>
         case runHalt:
-            return  <ExclamationCircleOutlined style={{color:"black"}}/>
+            return <ExclamationCircleOutlined style={{color:"black"}}/>
         case runRun:
-            return  <Spin indicator={<LoadingOutlined spin style={{color:"black"}}/>} />
+            return <Spin indicator={<LoadingOutlined spin style={{color:"black"}}/>} />
         case runWait:
-            return  <PlayCircleOutlined style={{color:"black"}}/>
+            return <PlayCircleOutlined style={{color:"black"}}/>
         case runSuspend:
             return <MinusCircleOutlined style={{color:"black"}}/>
         case runTimeout:
@@ -64,19 +64,19 @@ export const runStatusIcon = type =>{
  * @returns {string}
  */
 export const getTime = time =>{
-    let DateTimes ;
+    let DateTimes;
     let days = parseInt(time / ( 60 * 60 * 24));
     let hours = parseInt((time % ( 60 * 60 * 24)) / (60 * 60));
     let minutes = parseInt((time % ( 60 * 60)) /60);
-    let seconds =  parseInt(time % 60);
+    let seconds = parseInt(time % 60);
     if(days >= 1){
-        DateTimes= days + " 天 " + hours + " 时 " + minutes + " 分 " + seconds + " 秒"
+        DateTimes= days + " 天 " + hours + " 时 " + minutes + " 分 " + seconds + " 秒";
     }else if(hours >= 1){
-        DateTimes=hours + " 时 " + minutes + " 分 " + seconds + " 秒"
+        DateTimes=hours + " 时 " + minutes + " 分 " + seconds + " 秒";
     }else if(minutes >= 1){
-        DateTimes=minutes + " 分 " + seconds + " 秒"
+        DateTimes=minutes + " 分 " + seconds + " 秒";
     }else{
-        DateTimes=seconds + " 秒"
+        DateTimes=seconds + " 秒";
     }
-    return DateTimes
+    return DateTimes;
 }

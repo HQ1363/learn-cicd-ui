@@ -4,72 +4,27 @@ import {message} from "antd";
 
 class TriggerStore {
 
-    // 触发器
-    @observable
-    triggerData = []
+    /**
+     * 获取触发器
+     * @param value
+     * @returns {Promise<*>}
+     */
+    @action
+    findPipelineTrigger = async value =>{
+        const param = new FormData();
+        param.append('pipelineId',value)
+        const data = await Axios.post("/pipeline/trigger/findPipelineTrigger",param)
+        return data
+    }
 
     /**
      * 更新触发器
      * @param value
-     * @returns {Promise<*>}
+     * @returns {Promise<unknown>}
      */
     @action
-    updateTrigger = async value =>{
-        const data = await Axios.post("/trigger/updateTrigger",value)
-        if(data.code===0){
-            message.success("更新成功")
-        }
-        return data
-    }
-
-    /**
-     * 删除触发器
-     * @param value
-     * @returns {Promise<*>}
-     */
-    @action
-    deleteTrigger = async value =>{
-        const param = new FormData()
-        param.append("triggerId",value)
-        const data = await Axios.post("/trigger/deleteTrigger",param)
-        if(data.code===0){
-            message.success("删除成功")
-        }
-        return data
-    }
-
-    /**
-     * 添加触发器
-     * @param value
-     * @returns {Promise<*>}
-     */
-    @action
-    createTrigger = async value =>{
-        const data = await Axios.post("/trigger/createTrigger",value)
-        if (data.code===0){
-            message.success("添加成功")
-        }
-        if(data.code===58001){
-            message.error(data.msg)
-        }
-        return data
-    }
-
-    /**
-     * 获取所有触发器
-     * @param value
-     * @returns {Promise<*>}
-     */
-    @action
-    findAllTrigger = async value =>{
-        const param = {
-            pipelineId:value
-        }
-        const data = await Axios.post("/trigger/findAllTrigger",param)
-        if (data.code===0){
-            this.triggerData = data.data && data.data
-        }
-        return data
+    updateTrigger = async value=>{
+        return await Axios.post('/pipeline/trigger/updateTrigger',value)
     }
 
 }

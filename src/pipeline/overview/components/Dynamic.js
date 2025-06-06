@@ -86,43 +86,42 @@ const Dynamic = props =>{
                 setParams({
                     ...params,
                     pageParam,
-                    [field] : value?{pipelineId:[value]}:{}
+                    [field]: value ? {pipelineId:[value]}:{}
                 })
                 break
             case "timestamp":
                 setParams({
                     ...params,
                     pageParam,
-                    [field] : value[0]===''? null:value
+                    [field]: value[0]===''? null:value
                 })
                 break
             default:
                 setParams({
                     ...params,
                     pageParam,
-                    [field] : value
+                    [field]: value
                 })
         }
     }
 
     /**
-     * 切换分页
-     * @param pages
+     * 换页
+     * @param page
      */
-    const changPage = pages =>{
+    const changPage = page =>{
         setParams({
             ...params,
             pageParam:{
                 pageSize:pageSize,
-                currentPage:pages
+                currentPage:page
             }
         })
     }
 
-    const onscroll = () => {
-
-    }
-
+    /**
+     * 返回
+     */
     const goBack = () =>{
         if(route.path === '/dyna'){
             props.history.push('/index')
@@ -132,7 +131,7 @@ const Dynamic = props =>{
     }
 
     return(
-        <Row className="dyna" style={{height:"100%",width:"100%",overflow:"auto"}} onScroll={onscroll}>
+        <Row className="dyna" style={{height:"100%",width:"100%",overflow:"auto"}}>
             <Col
                 xs={{ span: "24" }}
                 sm={{ span: "24" }}
@@ -144,7 +143,7 @@ const Dynamic = props =>{
                 <div className="arbess-home-limited">
                     <BreadCrumb
                         crumbs={[
-                            {title:'动态',click:()=>goBack()}
+                            {title:'动态',click: goBack}
                         ]}
                     />
                     <div className="dyna-screen" style={{padding:"15px 0"}}>

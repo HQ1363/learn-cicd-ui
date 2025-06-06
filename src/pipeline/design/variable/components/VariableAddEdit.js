@@ -1,21 +1,23 @@
+/**
+ * @Description: 变量添加编辑
+ * @Author: gaomengyuan
+ * @Date:
+ * @LastEditors: gaomengyuan
+ * @LastEditTime: 2025/6/3
+ */
 import React,{useState,useEffect} from "react";
 import {Form,Input,Select} from "antd";
 import Modals from "../../../../common/component/modal/Modal";
 import {Validation} from "../../../../common/utils/Client";
 
-/**
- * 变量添加编辑
- * @param props
- * @returns {JSX.Element}
- * @constructor
- */
 const VariableAddEdit = props =>{
 
-    const {findVariable,variableVisible,setVariableVisible,formValue,pipelineId,
-        variableStore
+    const {
+        findVariable,variableVisible,setVariableVisible,formValue,setFormValue,pipelineId,variableData,
+        variableStore,findCount
     } = props
 
-    const {variableData,createVariable,updateVariable} = variableStore
+    const {createVariable,updateVariable} = variableStore
 
     const [form] = Form.useForm()
 
@@ -37,56 +39,41 @@ const VariableAddEdit = props =>{
      * 变量添加编辑确定
      */
     const onOk = () =>{
-        form.validateFields().then((values)=>{
+        form.validateFields().then(async (values)=>{
+            let res;
             if(formValue){
-                const params = {
+                res = await updateVariable({
                     ...values,
                     type:1,
                     varId:formValue.varId
-                }
-                updateVariable(params).then(res=>{
-                    if(res.code===0){
-                        findVariable()
-                    }
                 })
-            }else {
-                const params = {
+            } else {
+                res = await createVariable({
                     ...values,
                     type:1,
-                    taskId:pipelineId,
-                }
-                createVariable(params).then(res=>{
-                    if(res.code===0){
-                        findVariable()
-                    }
+                    pipelineId: pipelineId,
                 })
             }
-            setVariableVisible(false)
+            if(res.code===0){
+                findVariable()
+                findCount()
+                onCancel()
+            }
         })
     }
 
-    const [opt,setOpt] = useState([])
-
-    // 聚焦获取默认选项
-    const fouceVarValue = () =>{
-        const list = form.getFieldValue("valueList")
-        let newArr = []
-        list && list.map(item=>{
-            item && newArr.push(item)
-        })
-        setOpt([...newArr])
-    }
-
-    // chang可选项
-    const changeValueList = () =>{
-        const list = form.getFieldValue("valueList").some(item=>item===form.getFieldValue("varValue"))
-        !list && form.setFieldsValue({varValue:null})
+    /**
+     * 关闭弹出框
+     */
+    const onCancel = () =>{
+        setFormValue(null);
+        setVariableVisible(false);
     }
 
     return(
         <Modals
             visible={variableVisible}
-            onCancel={()=>setVariableVisible(false)}
+            onCancel={onCancel}
             onOk={onOk}
             width={500}
             title={formValue?"修改":"添加"}
@@ -104,20 +91,6 @@ const VariableAddEdit = props =>{
                         rules={[
                             {required:true,message:"变量名不能为空"},
                             Validation("变量名"),
-                            ({ getFieldValue }) => ({
-                                validator(rule,value) {
-                                    let nameArray = []
-                                    if(formValue){
-                                        nameArray = variableData && variableData.map(list=>list.varKey).filter(list=>list!==formValue.varKey)
-                                    } else {
-                                        nameArray = variableData && variableData.map(list=>list.varKey)
-                                    }
-                                    if (nameArray.includes(value)) {
-                                        return Promise.reject("变量名已经存在");
-                                    }
-                                    return Promise.resolve()
-                                },
-                            }),
                         ]}
                     >
                         <Input placeholder="变量名"/>
@@ -125,67 +98,11 @@ const VariableAddEdit = props =>{
                     <Form.Item name="varType" label="类别" rules={[{required:true,message:"类别不能为空"}]}>
                         <Select>
                             <Select.Option value={"str"}>字符串</Select.Option>
-                            {/*<Select.Option value={"single"}>单选</Select.Option>*/}
                         </Select>
                     </Form.Item>
                     <Form.Item name="varValue" label="默认值" rules={[{required:true,message:"默认值不能为空"}]}>
                         <Input  placeholder="默认值"/>
                     </Form.Item>
-                    {/*<Form.Item shouldUpdate={(prevValues,currentValues)=> prevValues.varType!==currentValues.varType}>*/}
-                    {/*    {({ getFieldValue })=>*/}
-                    {/*        getFieldValue("varType") === 1 ? (*/}
-                    {/*            <Form.Item name="varValue" label="默认值" rules={[{required:true,message:"默认值不能为空"}]}>*/}
-                    {/*                <Input/>*/}
-                    {/*            </Form.Item>) :*/}
-                    {/*             <>*/}
-                    {/*             <Form.List name="valueList">*/}
-                    {/*                 {(fields,{add,remove},{errors}) =>{*/}
-                    {/*                 return(*/}
-                    {/*                     <>*/}
-                    {/*                         {fields.map((field,index) => (*/}
-                    {/*                            <Form.Item label={index===0 && "可选项"} required={false} key={field.key}>*/}
-                    {/*                                <Form.Item*/}
-                    {/*                                    {...field}*/}
-                    {/*                                    key={field.key}*/}
-                    {/*                                    validateTrigger={["onChange","onBlur"]}*/}
-                    {/*                                    rules={[{*/}
-                    {/*                                            required: index===0,*/}
-                    {/*                                            whitespace: true,*/}
-                    {/*                                            message: "请输入可选项",*/}
-                    {/*                                        }]}*/}
-                    {/*                                    noStyle*/}
-                    {/*                                 >*/}
-                    {/*                                    <Input placeholder="可选项" style={{width:"60%",marginRight:30}} onChange={changeValueList}/>*/}
-                    {/*                                </Form.Item>*/}
-                    {/*                                {fields.length > 1 && <MinusCircleOutlined onClick={()=>{*/}
-                    {/*                                    remove(field.name)*/}
-                    {/*                                    changeValueList()*/}
-                    {/*                                }}/>}*/}
-                    {/*                            </Form.Item>*/}
-                    {/*                         ))}*/}
-                    {/*                        <Form.Item>*/}
-                    {/*                            <Button*/}
-                    {/*                                type="link-nopadding"*/}
-                    {/*                                title="添加可选项"*/}
-                    {/*                                onClick={() => add()}*/}
-                    {/*                                icon={<PlusOutlined />}*/}
-                    {/*                            />*/}
-                    {/*                        </Form.Item>*/}
-                    {/*                     </>*/}
-                    {/*                 )}}*/}
-                    {/*             </Form.List>*/}
-                    {/*             <Form.Item name="varValue" label="默认选项"  rules={[{required:true,message:"默认选项不能为空"}]} >*/}
-                    {/*                 <Select onFocus={()=>fouceVarValue()} placeholder="默认选项">*/}
-                    {/*                     {*/}
-                    {/*                         opt && opt.map((item,index)=>{*/}
-                    {/*                             return <Select.Option value={item} key={index}>{item}</Select.Option>*/}
-                    {/*                         })*/}
-                    {/*                     }*/}
-                    {/*                 </Select>*/}
-                    {/*             </Form.Item>*/}
-                    {/*         </>*/}
-                    {/*    }*/}
-                    {/*</Form.Item>*/}
                 </Form>
             </div>
         </Modals>

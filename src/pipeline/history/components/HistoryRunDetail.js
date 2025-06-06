@@ -165,6 +165,8 @@ const HistoryRunDetail = (props) => {
                 return "定时触发";
             case 3:
                 return historyItem?.user?.nickname + " · 回滚触发"
+            case 4:
+                return "WebHook触发"
         }
     }
 

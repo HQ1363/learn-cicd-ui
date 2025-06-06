@@ -224,11 +224,7 @@ const TaskAdd = props =>{
                         </div>
                     </Col>
                     <Col span={20} className="gui-drawer-content-right" >
-                        <div
-                            className="drawerRight"
-                            ref={scrollRef}
-                            onScroll={onScroll}
-                        >
+                        <div className="drawerRight" ref={scrollRef} onScroll={onScroll}>
                             {
                                 lis && lis.map((group)=>(
                                     <div className="group" key={group.id} id={group.id}>

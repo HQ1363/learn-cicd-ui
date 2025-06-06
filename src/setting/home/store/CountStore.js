@@ -5,6 +5,27 @@ import {Axios, getUser} from "tiklab-core-ui";
 class CountStore {
 
     /**
+     * 获取设置统计数
+     */
+    @action
+    findPipelineCount = async value => {
+        const pipelineId = new FormData();
+        pipelineId.append('pipelineId',value)
+        return await Axios.post('/count/findPipelineCount',pipelineId)
+    }
+
+    /**
+     * 获取任务统计数
+     */
+    @action
+    findTaskCount = async value => {
+        const param = new FormData();
+        param.append('pipelineId',value.pipelineId);
+        param.append('taskId',value.taskId);
+        return await Axios.post('/count/findTaskCount',param)
+    }
+
+    /**
      * 获取统计数
      */
     @action

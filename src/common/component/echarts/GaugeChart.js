@@ -13,6 +13,31 @@ const GaugeChart = props =>{
     const {runResult} = props
 
     return (
+        <div className='gauge-chart'>
+            {
+                ['allNumber','successNumber','errorNumber','execTime','successRate'].map(key=>{
+                    return (
+                        <div className='chart-result' key={key}>
+                            <div className={`chart-result-value chart-result-text-${key}`}>
+                                {runResult?.[key]||'0'}
+                            </div>
+                            <div className='chart-result-key'>
+                                {
+                                    key === 'allNumber' && '运行次数' ||
+                                    key === 'successNumber' && '成功数' ||
+                                    key === 'errorNumber' && '失败数' ||
+                                    key === 'execTime' && '平均时长' ||
+                                    key === 'successRate' && '成功率'
+                                }
+                            </div>
+                        </div>
+                    )
+                })
+            }
+        </div>
+    )
+
+    return (
         <div className='gauge-statistics'>
             {
                 ['allNumber','successNumber','errorNumber','execTime','successRate'].map(key=>{
@@ -52,6 +77,7 @@ const GaugeChart = props =>{
             }
         </div>
     )
+
 }
 
 export default GaugeChart

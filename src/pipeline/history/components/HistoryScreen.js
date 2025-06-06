@@ -149,8 +149,9 @@ const HistoryScreen = props =>{
             >
                 <Select.Option value={0}>全部</Select.Option>
                 <Select.Option value={1}>手动</Select.Option>
-                <Select.Option value={2}>自动</Select.Option>
+                <Select.Option value={2}>定时</Select.Option>
                 <Select.Option value={3}>回滚</Select.Option>
+                <Select.Option value={4}>WebHook</Select.Option>
             </SearchSelect>
         </Space>
     )

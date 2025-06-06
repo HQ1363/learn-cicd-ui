@@ -1,13 +1,20 @@
+/**
+ * @Description: 添加消息通知对象
+ * @Author: gaomengyuan
+ * @Date:
+ * @LastEditors: gaomengyuan
+ * @LastEditTime: 2025/6/6
+ */
 import React,{useEffect,useState} from "react";
 import {Table, Dropdown} from "antd";
 import Button from "../../../../common/component/button/Button";
 import ListEmpty from "../../../../common/component/list/ListEmpty";
 import Page from "../../../../common/component/page/Page";
 import SearchInput from "../../../../common/component/search/SearchInput";
-import "./PostprocessUserAdd.scss";
+import "./MessageUserAdd.scss";
 import {inject,observer} from "mobx-react";
 
-const PostprocessUserAdd = props =>{
+const MessageUserAdd = props =>{
 
     const {pipelineStore,yUserList,setYUserList,type} = props
 
@@ -85,7 +92,6 @@ const PostprocessUserAdd = props =>{
         return newArr && newArr.some(item=>item.user.id===record.user.id)
     }
 
-
     /**
      * 表格行
      * @param record
@@ -99,10 +105,7 @@ const PostprocessUserAdd = props =>{
             } else {
                 // 如果没有选中 -- 选中
                 selectedRowKeys.push(record.id)
-                addUser.push({
-                    ...record,
-                    receiveType:1,
-                })
+                addUser.push(record)
             }
             setSelectedRowKeys([...selectedRowKeys])
         }
@@ -124,7 +127,7 @@ const PostprocessUserAdd = props =>{
      */
     const onSelectAll = (selected,selectedRows,changeRows) => {
         const newArr = changeRows.map(item=>item && item.id).filter(Boolean)
-        const newUser = changeRows.map(item=>({...item,receiveType: 1})).filter(Boolean)
+        const newUser = changeRows.map(item=>item).filter(Boolean)
         let row,user
         if(selected){
             row = Array.from(new Set([...selectedRowKeys,...newArr]))
@@ -228,4 +231,4 @@ const PostprocessUserAdd = props =>{
     )
 }
 
-export default inject('pipelineStore')(observer(PostprocessUserAdd))
+export default inject('pipelineStore')(observer(MessageUserAdd))

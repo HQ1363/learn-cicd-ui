@@ -95,7 +95,7 @@ const HistoryDetail = props =>{
         }
     }
 
-    // 控制台日志
+    //控制台日志
     const renderLog = () =>{
         if(scrollRef.current && isActiveSlide){
             scrollRef.current.scrollTop = scrollRef.current.scrollHeight
@@ -125,7 +125,7 @@ const HistoryDetail = props =>{
         )
     }
 
-    // 获取时间
+    //获取时间
     const setTime = execData && execData.reduce((pre, cur) => {
         return pre + cur.stageTime;
     }, 0);
@@ -139,6 +139,8 @@ const HistoryDetail = props =>{
                 return "定时触发";
             case 3:
                 return historyItem?.user?.nickname + " · 回滚触发"
+            case 4:
+                return "WebHook触发"
         }
     }
 

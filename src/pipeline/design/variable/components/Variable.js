@@ -6,7 +6,7 @@
  * @LastEditTime: 2025/3/28
  */
 import React,{useState,useEffect} from "react";
-import {Row, Col, Table} from "antd";
+import {Row, Col, Table, Spin} from "antd";
 import {inject,observer} from "mobx-react";
 import Button from "../../../../common/component/button/Button";
 import ListEmpty from "../../../../common/component/list/ListEmpty";
@@ -14,51 +14,98 @@ import ListAction from "../../../../common/component/list/ListAction";
 import VariableAddEdit from "./VariableAddEdit";
 import "./Variable.scss";
 import {pipeline_task_update} from "../../../../common/utils/Constant";
+import Page from "../../../../common/component/page/Page";
+import {deleteSuccessReturnCurrenPage} from "../../../../common/utils/Client";
+
+const pageSize = 13;
 
 const Variable = props =>{
 
-    const {taskStore,variableStore,match:{params}} = props
+    const {findCount,taskStore,variableStore,match} = props
 
-    const {findAllVariable,deleteVariable,variableData} = variableStore
-    const {taskPermissions} = taskStore
-
-    const [variableVisible,setVariableVisible] = useState(false)
-    const [formValue,setFormValue] = useState("")
-
+    const {findVariablePage,deleteVariable} = variableStore;
+    const {taskPermissions} = taskStore;
+    const pageParam = {
+        pageSize: pageSize,
+        currentPage: 1,
+    }
+    //弹出框
+    const [variableVisible,setVariableVisible] = useState(false);
+    //编辑内容
+    const [formValue,setFormValue] = useState(null);
+    //变量数据
+    const [variableData,setVariableData] = useState([]);
+    //加载
+    const [spinning,setSpinning] = useState(false);
+    //请求数据
+    const [requestParam,setRequestParam] = useState({pageParam})
+    //流水线更新
     const taskUpdate = taskPermissions?.includes(pipeline_task_update);
+    //流水线id
+    const pipelineId = match.params.id;
+
+    useEffect(() => {
+        //获取变量
+        findVariable();
+    }, [requestParam]);
 
     /**
      * 获取变量
      */
     const findVariable = () =>{
-        findAllVariable(params.id)
+        setSpinning(true)
+        findVariablePage({
+            pipelineId,
+            type:1,
+            ...requestParam
+        }).then(res=>{
+            if(res.code===0){
+                setVariableData(res.data)
+            }
+        }).finally(()=>{
+            setSpinning(false)
+        })
+    }
+
+    /**
+     * 换页
+     */
+    const changPage = (page) => {
+        setRequestParam({
+            ...requestParam,
+            pageParam: {
+                currentPage: page,
+                pageSize: pageSize
+            }
+        })
     }
 
     /**
      * 添加变量
      */
     const addVariable = () =>{
-        setFormValue("")
         setVariableVisible(true)
     }
 
     /**
      * 编辑变量
-     * @param reocrd
+     * @param record
      */
-    const editVariable = reocrd =>{
-        setFormValue(reocrd)
+    const editVariable = record =>{
+        setFormValue(record)
         setVariableVisible(true)
     }
 
     /**
      * 删除变量
-     * @param reocrd
+     * @param record
      */
-    const delVariable = reocrd =>{
-        deleteVariable(reocrd.varId).then(res=>{
+    const delVariable = record =>{
+        deleteVariable(record.varId).then(res=>{
             if(res.code===0){
-                findVariable()
+                const page = deleteSuccessReturnCurrenPage(variableData.totalRecord,pageSize,variableData.currentPage)
+                changPage(page)
+                findCount()
             }
         })
     }
@@ -113,28 +160,38 @@ const Variable = props =>{
                 xxl={{ span: "16", offset: "4" }}
                 className="variable"
             >
-                <div className="variable-up">
-                    <div className="variable-up-num">共{variableData && variableData.length?variableData.length:0}条</div>
-                    { taskUpdate && <Button title={"添加"} onClick={addVariable}/> }
-                    <VariableAddEdit
-                        {...props}
-                        findVariable={findVariable}
-                        variableVisible={variableVisible}
-                        setVariableVisible={setVariableVisible}
-                        formValue={formValue}
-                        pipelineId={params.id}
-                    />
-                </div>
-                <div className="variable-tables">
-                    <Table
-                        bordered={false}
-                        columns={columns}
-                        dataSource={variableData}
-                        rowKey={record=>record.varId}
-                        pagination={false}
-                        locale={{emptyText: <ListEmpty />}}
-                    />
-                </div>
+                <Spin spinning={spinning}>
+                    <div className="variable-up">
+                        <div className="variable-up-num">共{variableData?.totalRecord||0}条</div>
+                        { taskUpdate && <Button title={"添加"} onClick={addVariable}/> }
+                        <VariableAddEdit
+                            {...props}
+                            findVariable={findVariable}
+                            findCount={findCount}
+                            variableData={variableData}
+                            variableVisible={variableVisible}
+                            setVariableVisible={setVariableVisible}
+                            formValue={formValue}
+                            setFormValue={setFormValue}
+                            pipelineId={pipelineId}
+                        />
+                    </div>
+                    <div className="variable-tables">
+                        <Table
+                            bordered={false}
+                            columns={columns}
+                            dataSource={variableData?.dataList || []}
+                            rowKey={record=>record.varId}
+                            pagination={false}
+                            locale={{emptyText: <ListEmpty />}}
+                        />
+                        <Page
+                            currentPage={variableData.currentPage}
+                            changPage={changPage}
+                            page={variableData}
+                        />
+                    </div>
+                </Spin>
            </Col>
        </Row>
     )

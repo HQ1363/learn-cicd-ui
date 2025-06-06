@@ -12,8 +12,10 @@ import taskStore from "../processDesign/gui/store/TaskStore";
 import stageStore from "../processDesign/gui/store/StageStore";
 import historyStore from "../../history/store/HistoryStore";
 import variableStore from "../variable/store/VariableStore";
-import postprocessStore from "../postprocess/store/PostprocessStore";
+import pipelineMessageStore from "../message/store/PipelineMessageStore";
 import triggerStore from "../trigger/store/TriggerStore";
+import webhookStore from "../trigger/store/WebhookStore";
+import countStore from "../../../setting/home/store/CountStore";
 import Button from "../../../common/component/button/Button";
 import BreadCrumb from "../../../common/component/breadcrumb/BreadCrumb";
 import HistoryRunDetail from "../../history/components/HistoryRunDetail";
@@ -22,7 +24,7 @@ import PipelineDrawer from "../../../common/component/drawer/Drawer";
 import Gui from "../processDesign/gui/component/Gui";
 import Trigger from "../trigger/components/Trigger";
 import Variable from "../variable/components/Variable";
-import Postprocess from "../postprocess/components/Postprocess";
+import Message from "../message/components/Message";
 import "./Design.scss";
 import {getUser} from "tiklab-core-ui";
 import {pipeline_task_run} from "../../../common/utils/Constant";
@@ -32,9 +34,10 @@ const Design = props =>{
     const store = {
         taskStore,
         stageStore,
-        postprocessStore,
+        pipelineMessageStore,
         variableStore,
         triggerStore,
+        webhookStore,
     }
 
     const {match,pipelineStore,systemRoleStore} = props
@@ -44,9 +47,7 @@ const Design = props =>{
     const {execStart} = historyStore;
     const {setTaskPermissions,taskFresh,mustFieldFresh} = taskStore;
     const {validStagesMustField,stageMustField,stageFresh} = stageStore;
-    const {findPipelinePost,postprocessData} = postprocessStore;
-    const {findAllTrigger,triggerData} = triggerStore;
-    const {findAllVariable,variableData} = variableStore;
+    const {findPipelineCount} = countStore;
 
     const userId = getUser().userId;
     const pipelineId = match.params.id;
@@ -63,19 +64,28 @@ const Design = props =>{
     const [defaultAgent,setDefaultAgent] = useState(null);
     //选择类型
     const [active,setActive] = useState('config');
+    //统计数
+    const [pipelineCount,setPipelineCount] = useState({});
 
     useEffect(()=>{
-        //后置处理
-        findPipelinePost(pipelineId).then();
-        //触发器
-        findAllTrigger(pipelineId).then();
-        //变量
-        findAllVariable(pipelineId).then();
+        //获取设计统计
+        findCount()
     },[])
 
+    /**
+     * 获取设计统计
+     */
+    const findCount = () => {
+        findPipelineCount(pipelineId).then(res=>{
+            if(res.code===0){
+                setPipelineCount(res.data)
+            }
+        })
+    }
+
     useEffect(() => {
-        //权限
         if(pipelinePermissions){
+            //权限
             setTaskPermissions(pipelinePermissions);
         }
     }, [pipelinePermissions]);
@@ -86,7 +96,7 @@ const Design = props =>{
     }, [taskFresh,stageFresh,mustFieldFresh]);
 
     useEffect(()=>{
-        // 监听运行状态，获取流水线信息
+        //监听运行状态，获取流水线信息
         if(!isDetails){
             findOnePipeline(pipelineId)
         }
@@ -112,22 +122,22 @@ const Design = props =>{
         {
             id:`config`,
             title:"流程设计",
-            long:false,
+            long: false,
         },
         {
             id:`tigger`,
             title:"触发设置",
-            long: triggerData?.length || '0'
+            long: false
         },
         {
-            id:`vari`,
+            id:`variable`,
             title:"变量",
-            long: variableData?.length || '0'
+            long: pipelineCount?.variableNumber || '0'
         },
         {
-            id:`postprocess`,
+            id:`message`,
             title:"消息通知",
-            long: postprocessData?.length || '0'
+            long: pipelineCount?.massageNumber || '0'
         }
     ]
 
@@ -166,7 +176,6 @@ const Design = props =>{
             <Button type={"primary"} title={"运行"} onClick={run}/>
         )
     }
-
 
     return(
         <Provider {...store}>
@@ -209,10 +218,24 @@ const Design = props =>{
                             </div>
                         </div>
                     </div>
-                    { active==='config'  && <Gui {...props}/> }
-                    { active==='tigger'  && <Trigger {...props}/> }
-                    { active==='vari'  && <Variable {...props}/> }
-                    { active==='postprocess'  && <Postprocess {...props}/> }
+                    { active==='config' &&
+                        <Gui {...props}/>
+                    }
+                    { active==='tigger' &&
+                        <Trigger {...props}/>
+                    }
+                    { active==='variable' &&
+                        <Variable
+                            {...props}
+                            findCount={findCount}
+                        />
+                    }
+                    { active==='message' &&
+                        <Message
+                            {...props}
+                            findCount={findCount}
+                        />
+                    }
                 </Spin>
             </div>
             <PipelineDrawer

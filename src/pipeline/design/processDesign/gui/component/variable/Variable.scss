@@ -1,5 +1,4 @@
 .pose-variable{
-    padding-top: 10px;
     padding-bottom: var(--tiklab-padding);
     .pose-variable-up{
         display: flex;
@@ -22,7 +21,13 @@
         cursor: pointer;
     }
     .pose-variable-content{
-        padding-top: 10px;
+        .ant-empty-image{
+            height: 80px;
+        }
+        .add-title{
+            font-weight: bold;
+            padding-bottom: 8px;
+        }
     }
     .pose-variable-inputs{
         position: relative;

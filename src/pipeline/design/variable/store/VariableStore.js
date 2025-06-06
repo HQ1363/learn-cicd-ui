@@ -1,12 +1,8 @@
-import {action,observable} from "mobx";
+import {action, observable} from "mobx";
 import {Axios} from "tiklab-core-ui";
 import {message} from "antd";
 
 class VariableStore{
-
-    // 变量数据
-    @observable
-    variableData = []
 
     /**
      * 添加变量
@@ -15,9 +11,11 @@ class VariableStore{
      */
     @action
     createVariable = async value =>{
-        const data = await Axios.post("/pipelineVariable/createVariable",value)
+        const data = await Axios.post("/pipeline/variable/createVariable",value)
         if(data.code===0){
-            message.success("添加成功")
+            message.success('添加成功')
+        } else {
+            message.error('添加失败')
         }
         return data
     }
@@ -29,9 +27,11 @@ class VariableStore{
     deleteVariable = async value =>{
         const param = new FormData()
         param.append("varId",value)
-        const data = await Axios.post("/pipelineVariable/deleteVariable",param)
+        const data = await Axios.post("/pipeline/variable/deleteVariable",param)
         if(data.code===0){
-            message.success("删除成功")
+            message.success('删除成功')
+        } else {
+            message.error('删除失败')
         }
         return data
     }
@@ -43,9 +43,11 @@ class VariableStore{
      */
     @action
     updateVariable = async value =>{
-        const data = await Axios.post("/pipelineVariable/updateVariable",value)
+        const data = await Axios.post("/pipeline/variable/updateVariable",value)
         if(data.code===0){
-            message.success("更新成功")
+            message.success('更新成功')
+        } else {
+            message.error('更新失败')
         }
         return data
     }
@@ -54,18 +56,16 @@ class VariableStore{
      * 获取所有变量
      */
     @action
-    findAllVariable = async (value,type) =>{
-        const param = new FormData()
-        param.append("taskId",value)
-        const data = await Axios.post("/pipelineVariable/findAllVariable",param)
-        if(data.code===0){
-            if(type==='task'){
+    findVariablePage = async (value) =>{
+        return await Axios.post("/pipeline/variable/findVariablePage", value)
+    }
 
-            } else {
-                this.variableData = data.data && data.data
-            }
-        }
-        return data
+    /**
+     * 获取所有变量
+     */
+    @action
+    findVariableList = async (value) =>{
+        return await Axios.post("/pipeline/variable/findVariableList", value)
     }
 
 }

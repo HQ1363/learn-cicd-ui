@@ -7,8 +7,8 @@
  */
 import React,{useEffect,useState} from "react";
 import {inject,observer} from "mobx-react";
-import {Input, Popconfirm, Select, Form} from "antd";
-import {PlusCircleOutlined, DeleteOutlined, CaretDownOutlined,CaretRightOutlined} from "@ant-design/icons";
+import {Input, Popconfirm, Select, Form, Spin} from "antd";
+import {DeleteOutlined, CaretDownOutlined,CaretRightOutlined} from "@ant-design/icons";
 import Button from "../../../../../../common/component/button/Button";
 import ListEmpty from "../../../../../../common/component/list/ListEmpty";
 import {Validation} from "../../../../../../common/utils/Client";
@@ -16,48 +16,56 @@ import "./Variable.scss";
 
 const Variable = props => {
 
-    const {variableStore,dataItem} = props
+    const {variableStore,dataItem,pipeline,findCount,variableObj,setVariableObj} = props
 
-    const {createVariable,findAllVariable,deleteVariable, updateVariable} = variableStore
+    const {createVariable,findVariableList,deleteVariable, updateVariable} = variableStore;
 
     const [formVar] = Form.useForm();
 
-    const [variableData,setVariableData] = useState([])
-
-    const [variableObj,setVariableObj] = useState(null);
-
+    //变量数据
+    const [variableData,setVariableData] = useState([]);
+    //是否显示下拉框
     const [showArrow,setShowArrow] = useState(false);
+    //加载
+    const [spinning,setSpinning] = useState(false);
 
     useEffect(()=>{
-        // 初始化变量
-        findVariable()
+        //获取变量
+        findVariable("init")
     },[dataItem.taskId])
 
     /**
      * 获取变量
      */
-    const findVariable = () =>{
-        findAllVariable(dataItem.taskId,'task').then(res=>{
+    const findVariable = (mode) =>{
+        setSpinning(true)
+        findVariableList({
+            taskId:dataItem.taskId,
+            type:2
+        }).then(res=>{
             if(res.code===0){
                 setVariableData(res?.data || [])
+                if(mode!=='init'){
+                    findCount()
+                }
             }
+        }).finally(()=>{
+            setSpinning(false)
         })
     }
 
     useEffect(()=>{
-        if(variableObj){
+        //初始化表单
+        if(!variableObj){
+            return;
+        }
+        if(variableObj?.var==='edit'){
             formVar.setFieldsValue(variableObj)
         }
+        if(variableObj?.var==='add'){
+            formVar.resetFields()
+        }
     },[variableObj])
-
-    /**
-     * 添加环境变量
-     */
-    const addInput = () =>{
-        setVariableObj({
-            var:"add",
-        })
-    }
 
     /**
      * 编辑变量
@@ -83,46 +91,47 @@ const Variable = props => {
         })
     }
 
+    /**
+     * 取消编辑状态
+     */
     const onCancel = () =>{
-        setVariableObj(null)
+        setVariableObj(null);
     }
 
     /**
      * 确定添加或修改
      */
     const onOk = item =>{
-        formVar.validateFields().then(value => {
+        formVar.validateFields().then(async value => {
             const {varKey,varValue,varType} = value
             if(item && item.varKey===varKey && item.varValue===varValue && item.varType===varType){
                 onCancel()
                 return;
             }
+            let res;
             if(variableObj.var==='add'){
-                createVariable({
+                res = await createVariable({
                     type:2,
                     taskId:dataItem.taskId,
+                    pipelineId: pipeline.id,
                     ...value,
-                }).then(res=>{
-                    if(res.code===0){
-                        onCancel()
-                        findVariable()
-                    }
                 })
-                return
+            } else {
+                res = await updateVariable({
+                    type:2,
+                    varId:variableObj.varId,
+                    pipelineId: pipeline.id,
+                    ...value
+                })
             }
-            updateVariable({
-                type:2,
-                varId:variableObj.varId,
-                ...value
-            }).then(res=>{
-                if(res.code===0){
-                    onCancel()
-                    findVariable()
-                }
-            })
+            if(res.code===0){
+                onCancel()
+                findVariable()
+            }
         })
     }
 
+    //表单
     const inputHtml = item =>{
         return (
             <Form
@@ -137,20 +146,6 @@ const Variable = props => {
                     rules={[
                         {required:true,message:"变量名不能为空"},
                         Validation("变量名"),
-                        ({ getFieldValue }) => ({
-                            validator(rule,value) {
-                                let nameArray = []
-                                if(item){
-                                    nameArray = variableData && variableData.map(list=>list.varKey).filter(list=>list!==item.varKey)
-                                } else {
-                                    nameArray = variableData && variableData.map(list=>list.varKey)
-                                }
-                                if (nameArray.includes(value)) {
-                                    return Promise.reject("变量名已经存在");
-                                }
-                                return Promise.resolve()
-                            },
-                        }),
                     ]}
                 >
                     <Input/>
@@ -226,25 +221,17 @@ const Variable = props => {
 
     return(
         <div className="pose-variable">
-            <div className="pose-variable-up">
-                <div>
-                    <span style={{paddingRight:5}}>变量</span>
-                    <span style={{fontSize:13}}>({variableData && variableData.length?variableData.length:0}个)</span>
-                </div>
-                <Button
-                    title={"添加变量"}
-                    type={"link-nopadding"}
-                    onClick={()=>addInput()}
-                />
-            </div>
             <div className="pose-variable-content">
+                {variableObj?.var==='add' &&  <div className='add-title'>添加变量</div>}
                 {variableObj?.var==='add' && inputHtml()}
-                {
-                    variableData && variableData.length>0 ?
-                    variableData.map((item,index)=>renderInputs(item,index))
-                    :
-                    <ListEmpty />
-                }
+                <Spin spinning={spinning}>
+                    {
+                        variableData && variableData.length>0 ?
+                            variableData.map((item,index)=>renderInputs(item,index))
+                            :
+                            <ListEmpty />
+                    }
+                </Spin>
             </div>
         </div>
     )
