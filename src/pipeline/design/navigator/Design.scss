@@ -11,7 +11,7 @@
         z-index: 9;
     }
     .design-top{
-        padding: var(--tiklab-padding-item) 30px 0;
+        padding: 0 30px;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -35,7 +35,7 @@
     }
     .design-tabs{
         display: flex;
-        height: 40px;
+        height: 55px;
         .design-tab{
             cursor: pointer;
             display: flex;
@@ -58,14 +58,23 @@
         }
     }
     .design-content{
-        height: calc(100% - 90px);
+        height: calc(100% - 56px);
         padding: 20px 30px;
         overflow: auto;
     }
 
-    .design-agent{
-        margin-right: 15px;
-        width: 120px;
+    .changeView-btn{
+        .changeView-btn-more{
+            margin-left: 15px;
+            display: inline-block;
+            white-space: nowrap;
+            text-align: center;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 4px;
+            background-color: var(--tiklab-gray);
+            border: 1px solid var(--tiklab-gray);
+        }
     }
 }
 

@@ -6,7 +6,7 @@
  * @LastEditTime: 2025/3/12
  */
 import React,{useEffect,useState} from "react";
-import {Space,Table, Row, Col} from "antd";
+import {Space, Table, Row, Col, Spin} from "antd";
 import authStore from "../store/AuthStore"
 import BreadCrumb from "../../../../common/component/breadcrumb/BreadCrumb";
 import ListEmpty from "../../../../common/component/list/ListEmpty";
@@ -26,6 +26,8 @@ const Auth = props =>{
     const [visible,setVisible] = useState(false)
     //弹出框form表单value
     const [formValue,setFormValue] = useState(null)
+    //加载
+    const [spinning,setSpinning] = useState(false)
 
     useEffect(()=>{
         // 初始化认证配置
@@ -36,10 +38,13 @@ const Auth = props =>{
      * 获取认证配置
      */
     const findAuth = () =>{
+        setSpinning(true)
         findAllAuth().then(res=>{
             if(res.code===0){
                 setAuthList(res.data || [])
             }
+        }).finally(()=>{
+            setSpinning(false)
         })
     }
 
@@ -150,15 +155,17 @@ const Auth = props =>{
                             findAuth={findAuth}
                         />
                     </BreadCrumb>
-                    <div className="auth-content">
-                        <Table
-                            columns={commonColumns}
-                            dataSource={authList}
-                            rowKey={record=>record.authId}
-                            pagination={false}
-                            locale={{emptyText: <ListEmpty />}}
-                        />
-                    </div>
+                    <Spin spinning={spinning}>
+                        <div className="auth-content">
+                            <Table
+                                columns={commonColumns}
+                                dataSource={authList}
+                                rowKey={record=>record.authId}
+                                pagination={false}
+                                locale={{emptyText: <ListEmpty />}}
+                            />
+                        </div>
+                    </Spin>
                 </div>
             </Col>
         </Row>

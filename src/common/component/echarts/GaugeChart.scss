@@ -1,3 +1,40 @@
+.gauge-chart{
+  display: flex;
+  gap: 10px;
+  padding-top: 10px;
+  overflow: hidden;
+  flex-wrap: wrap;
+  height: 98px;
+  .chart-result{
+    flex: 1;
+    min-width: 150px;
+    max-width: 25%;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    background-color: var(--arbess-backdrop-color);
+    .chart-result-value{
+      padding-bottom: 15px;
+      font-weight: var(--tiklab-font-weight-bold);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    .chart-result-key {
+      color: var(--tiklab-gray-500);
+    }
+    .chart-result-text{
+      &-successNumber{
+        color: var(--tiklab-blue);
+      }
+      &-errorNumber{
+        color: #f06f6f;
+      }
+    }
+  }
+}
+
 .gauge-statistics{
   display: flex;
   gap: 10px;
@@ -50,43 +87,6 @@
       font-weight: var(--tiklab-font-weight-bold);
     }
     .statistics-result-text{
-      &-successNumber{
-        color: var(--tiklab-blue);
-      }
-      &-errorNumber{
-        color: #f06f6f;
-      }
-    }
-  }
-}
-
-.gauge-chart{
-  display: flex;
-  gap: 10px;
-  padding-top: 10px;
-  overflow: hidden;
-  flex-wrap: wrap;
-  height: 98px;
-  .chart-result{
-    flex: 1;
-    min-width: 150px;
-    max-width: 25%;
-    padding: 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    text-align: center;
-    background-color: var(--arbess-backdrop-color);
-    .chart-result-value{
-      padding-bottom: 15px;
-      font-weight: var(--tiklab-font-weight-bold);
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
-    }
-    .chart-result-key {
-      color: var(--tiklab-gray-500);
-    }
-    .chart-result-text{
       &-successNumber{
         color: var(--tiklab-blue);
       }

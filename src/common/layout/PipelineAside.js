@@ -38,26 +38,31 @@ const PipelineAside = (props) => {
     const firstRouters=[
         {
             id:`/pipeline/${id}/overview`,
+            to:`/pipeline/${id}/overview`,
             title:"概况",
             icon:<ApartmentOutlined />,
         },
         {
             id:`/pipeline/${id}/config`,
+            to:`/pipeline/${id}/config`,
             title: "设计",
             icon: <CreditCardOutlined />,
         },
         {
             id:`/pipeline/${id}/history`,
+            to:`/pipeline/${id}/history`,
             title: "历史",
             icon: <ClockCircleOutlined />,
         },
         {
             id:`/pipeline/${id}/test`,
+            to:`/pipeline/${id}/test/home`,
             title: "测试报告",
             icon: <ExperimentOutlined />,
         },
         {
             id:`/pipeline/${id}/statistics`,
+            to:`/pipeline/${id}/statistics/home`,
             title: "统计",
             icon: <RadarChartOutlined />,
             isEnhance: true,

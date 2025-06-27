@@ -69,7 +69,6 @@ const TaskAdd = props =>{
             title: "代码扫描",
             desc: [
                 {type: sonar},
-                {type: spotbugs},
                 {type: sourcefare},
             ]
         },
@@ -77,7 +76,6 @@ const TaskAdd = props =>{
             id:"test",
             title:"测试",
             desc:[
-                {type: maventest},
                 {type: testhubo},
             ]
         },

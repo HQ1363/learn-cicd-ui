@@ -54,7 +54,7 @@ const Trigger = props =>{
         } else {
             form.setFieldsValue({
                 ...triggerData,
-                data: triggerData.data && moment(triggerData.data, "HH:mm"),
+                data: triggerData?.data ? moment(triggerData.data, "HH:mm") : null,
                 status: triggerData?.status===1
             });
         }

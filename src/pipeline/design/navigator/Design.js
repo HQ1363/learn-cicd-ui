@@ -6,7 +6,7 @@
  * @LastEditTime: 2025/3/11
  */
 import React,{useState,useEffect} from "react";
-import {Spin,Tooltip} from "antd";
+import {Dropdown, Spin, Tooltip} from "antd";
 import {inject,observer,Provider} from "mobx-react";
 import taskStore from "../processDesign/gui/store/TaskStore";
 import stageStore from "../processDesign/gui/store/StageStore";
@@ -28,6 +28,8 @@ import Message from "../message/components/Message";
 import "./Design.scss";
 import {getUser} from "tiklab-core-ui";
 import {pipeline_task_run} from "../../../common/utils/Constant";
+import {ControlOutlined} from "@ant-design/icons";
+import pip_more from "../../../assets/images/svg/pie_more.svg";
 
 const Design = props =>{
 
@@ -66,14 +68,16 @@ const Design = props =>{
     const [active,setActive] = useState('config');
     //统计数
     const [pipelineCount,setPipelineCount] = useState({});
+    //配置agent弹出框
+    const [agentVisible,setAgentVisible] = useState(false);
 
     useEffect(()=>{
-        //获取设计统计
+        //获取统计
         findCount()
     },[])
 
     /**
-     * 获取设计统计
+     * 获取统计
      */
     const findCount = () => {
         findPipelineCount(pipelineId).then(res=>{
@@ -149,6 +153,13 @@ const Design = props =>{
         setHistoryItem(null);
     }
 
+    /**
+     * 配置agent
+     */
+    const configAgent = () =>{
+        setAgentVisible(true)
+    }
+
     //按钮组件
     const runButtonHtml = () => {
         if(!pipeline){return}
@@ -183,38 +194,53 @@ const Design = props =>{
                 <Spin spinning={isSpin}>
                     <div className="design-up">
                         <div className="design-top">
-                            <div>
-                                <BreadCrumb
-                                    crumbs={[
-                                        {title:'设计'}
-                                    ]}
-                                />
-                                <div className="design-tabs">
-                                    {
-                                        typeLis.map(item=>{
-                                            return(
-                                                <div key={item.id} className={`design-tab ${active===item.id?"design-active":""}`}
-                                                     onClick={()=>setActive(item.id)}
-                                                >
-                                                    <div className="design-tab-title">
-                                                        {item.title}
-                                                        {
-                                                            item?.long &&
-                                                            <span className="design-tab-long">{item.long}</span>
-                                                        }
-                                                    </div>
+                            <BreadCrumb
+                                crumbs={[
+                                    {title:'设计'}
+                                ]}
+                            />
+                            <div className="design-tabs">
+                                {
+                                    typeLis.map(item=>{
+                                        return(
+                                            <div key={item.id} className={`design-tab ${active===item.id?"design-active":""}`}
+                                                 onClick={()=>setActive(item.id)}
+                                            >
+                                                <div className="design-tab-title">
+                                                    {item.title}
+                                                    {
+                                                        item?.long &&
+                                                        <span className="design-tab-long">{item.long}</span>
+                                                    }
                                                 </div>
-                                            )
-                                        })
-                                    }
-                                </div>
+                                            </div>
+                                        )
+                                    })
+                                }
                             </div>
                             <div className="changeView-btn">
+                                {runButtonHtml()}
+                                <Dropdown
+                                    overlay={
+                                        <div className='arbess-dropdown-more'>
+                                            <div className="dropdown-more-item" onClick={configAgent}>
+                                                <ControlOutlined /> 配置Agent
+                                            </div>
+                                        </div>
+                                    }
+                                    trigger={['click']}
+                                    placement={'bottomRight'}
+                                >
+                                    <div className='changeView-btn-more'>
+                                        <img src={pip_more} alt={''} width={20} height={19}/>
+                                    </div>
+                                </Dropdown>
                                 <DesignAgent
                                     defaultAgent={defaultAgent}
                                     setDefaultAgent={setDefaultAgent}
+                                    agentVisible={agentVisible}
+                                    setAgentVisible={setAgentVisible}
                                 />
-                                {runButtonHtml()}
                             </div>
                         </div>
                     </div>

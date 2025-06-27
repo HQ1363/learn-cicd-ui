@@ -1,5 +1,5 @@
 /**
- * @Description: SonarQubeScan 扫描
+ * @Description: SonarQube 扫描
  * @Author: gaomengyuan
  * @Date: 2025/5/26
  * @LastEditors: gaomengyuan
@@ -41,6 +41,14 @@ const SonarQubeScan = (props) => {
     const [scanParam,setScanParam] = useState({pageParam});
 
     useEffect(() => {
+        //获取SonarQube
+        findSonarQubeScan()
+    }, [scanParam]);
+
+    /**
+     * 获取SonarQube
+     */
+    const findSonarQubeScan = () =>{
         setSpinning(true)
         findSonarQubeScanPage({
             pipelineId:params.id,
@@ -50,7 +58,7 @@ const SonarQubeScan = (props) => {
                 setScanData(res.data)
             }
         }).finally(()=>setSpinning(false))
-    }, [scanParam]);
+    }
 
     /**
      * 换页

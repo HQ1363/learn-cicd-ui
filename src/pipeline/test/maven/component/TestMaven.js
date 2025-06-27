@@ -41,8 +41,15 @@ const TestMaven = props => {
     const [mavenTestObj,setMavenTestObj] = useState(null);
 
     useEffect(()=>{
-        setIsLoading(true)
         // 获取测试列表
+        findMavenTest()
+    },[param])
+
+    /**
+     * 获取测试列表
+     */
+    const findMavenTest = () => {
+        setIsLoading(true)
         findMavenTestPage({
             pipelineId:params.id,
             ...param
@@ -51,7 +58,7 @@ const TestMaven = props => {
                 setTestData(Res.data)
             }
         }).finally(()=>setIsLoading(false))
-    },[param])
+    }
 
     /**
      * 查看maven测试详情

@@ -6,15 +6,17 @@
  * @LastEditTime: 2025/3/11
  */
 import React,{useEffect,useState} from "react";
-import {Select} from "antd";
+import {Select,Form} from "antd";
 import agentStore from "../../../setting/configure/agent/store/AgentStore";
-import SearchSelect from "../../../common/component/search/SearchSelect";
+import Modal from "../../../common/component/modal/Modal";
 
 const DesignAgent = (props) => {
 
-    const {defaultAgent,setDefaultAgent} = props;
+    const {defaultAgent,setDefaultAgent,agentVisible,setAgentVisible} = props;
 
     const {findAgentList} = agentStore;
+
+    const [form] = Form.useForm();
 
     //agent列表
     const [agentList,setAgentList] = useState([]);
@@ -32,22 +34,63 @@ const DesignAgent = (props) => {
         })
     },[])
 
+    useEffect(() => {
+        if(agentVisible){
+            form.setFieldsValue({
+                agent: defaultAgent
+            })
+        }
+    }, [agentVisible]);
+
+    /**
+     * 确定
+     */
+    const onOk = () => {
+        form.validateFields().then(value=>{
+            setDefaultAgent(value.agent);
+            onCancel();
+        })
+    }
+
+    /**
+     * 关闭弹出框
+     */
+    const onCancel = () => {
+        setAgentVisible(false)
+    }
+
     return (
-        <SearchSelect
-            showSearch
-            className='design-agent'
-            value={defaultAgent}
-            onChange={value=>setDefaultAgent(value)}
-            filterOption = {(input, option) =>
-                (Array.isArray(option.children) ? option.children.join('') : option.children).toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
+        <Modal
+            title={'配置Agent'}
+            visible={agentVisible}
+            onCancel={onCancel}
+            onOk={onOk}
         >
-            {
-                agentList && agentList.map(item=>(
-                    <Select.Option key={item.id} value={item.id}>{item.name}</Select.Option>
-                ))
-            }
-        </SearchSelect>
+            <Form
+                form={form}
+                layout="vertical"
+                autoComplete="off"
+            >
+                <Form.Item
+                    label={'Agent'}
+                    name={'agent'}
+                >
+                    <Select
+                        showSearch
+                        onChange={value=>setDefaultAgent(value)}
+                        filterOption = {(input, option) =>
+                            (Array.isArray(option.children) ? option.children.join('') : option.children).toLowerCase().indexOf(input.toLowerCase()) >= 0
+                        }
+                    >
+                        {
+                            agentList && agentList.map(item=>(
+                                <Select.Option key={item.id} value={item.id}>{item.name}</Select.Option>
+                            ))
+                        }
+                    </Select>
+                </Form.Item>
+            </Form>
+        </Modal>
     )
 }
 

@@ -6,7 +6,7 @@
  * @LastEditTime: 2025/3/12
  */
 import React, {useEffect, useState} from "react";
-import {Space, Table, Row, Col, Select} from "antd";
+import {Space, Table, Row, Col, Select, Spin} from "antd";
 import hostStore from "../store/HostStore";
 import BreadCrumb from "../../../../common/component/breadcrumb/BreadCrumb";
 import ListEmpty from "../../../../common/component/list/ListEmpty";
@@ -32,7 +32,8 @@ const Host = props =>{
     const [formValue,setFormValue] = useState(null);
     //主机
     const [host,setHost] = useState({});
-
+    //加载
+    const [spinning,setSpinning] = useState(false);
     const pageParam = {
         pageSize:pageSize,
         currentPage: 1,
@@ -50,10 +51,13 @@ const Host = props =>{
      * 获取主机配置
      */
     const findAuth = () =>{
+        setSpinning(true)
         findAuthHostPage(requestParams).then(r=>{
             if(r.code===0){
                 setHost(r.data)
             }
+        }).finally(()=>{
+            setSpinning(false)
         })
     }
 
@@ -231,20 +235,22 @@ const Host = props =>{
                             <Select.Option value={'tencent'}>腾讯云主机</Select.Option>
                         </SearchSelect>
                     </div>
-                    <div className="auth-content">
-                        <Table
-                            columns={column}
-                            dataSource={host?.dataList || []}
-                            rowKey={record=>record.hostId}
-                            pagination={false}
-                            locale={{emptyText: <ListEmpty />}}
-                        />
-                        <Page
-                            currentPage={requestParams.pageParam.currentPage}
-                            changPage={changPage}
-                            page={host}
-                        />
-                    </div>
+                    <Spin spinning={spinning}>
+                        <div className="auth-content">
+                            <Table
+                                columns={column}
+                                dataSource={host?.dataList || []}
+                                rowKey={record=>record.hostId}
+                                pagination={false}
+                                locale={{emptyText: <ListEmpty />}}
+                            />
+                            <Page
+                                currentPage={requestParams.pageParam.currentPage}
+                                changPage={changPage}
+                                page={host}
+                            />
+                        </div>
+                    </Spin>
                 </div>
             </Col>
         </Row>

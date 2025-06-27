@@ -39,8 +39,15 @@ const SpotbugsScan = (props) => {
     const [detailObj,setDetailObj] = useState(null);
 
     useEffect(()=>{
-        setIsLoading(true)
         //获取代码扫描
+        findSpotbugsScan()
+    },[scanParam])
+
+    /**
+     * 获取代码扫描
+     */
+    const findSpotbugsScan = () => {
+        setIsLoading(true)
         spotbugsScan({
             pipelineId:params.id,
             ...scanParam
@@ -49,7 +56,7 @@ const SpotbugsScan = (props) => {
                 setScanData(r.data)
             }
         }).finally(()=>setIsLoading(false))
-    },[scanParam])
+    }
 
     /**
      * 详情

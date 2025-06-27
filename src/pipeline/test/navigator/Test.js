@@ -20,26 +20,12 @@ const Test = (props) => {
             title: '代码扫描',
             children: [
                 {
-                    id: `/pipeline/${pipelineId}/test/spotbugs`,
-                    title: 'Java',
-                },
-                {
                     id: `/pipeline/${pipelineId}/test/sonar`,
                     title: 'SonarQube',
                 },
                 {
                     id: `/pipeline/${pipelineId}/test/sourceFare`,
                     title: 'SourceFare',
-                }
-            ]
-        },
-        {
-            id: 'unit',
-            title: '单元测试',
-            children: [
-                {
-                    id: `/pipeline/${pipelineId}/test/maven`,
-                    title: 'Maven',
                 }
             ]
         },

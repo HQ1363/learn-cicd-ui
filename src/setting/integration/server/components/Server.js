@@ -6,7 +6,7 @@
  * @LastEditTime: 2025/3/12
  */
 import React,{useState,useEffect} from "react";
-import {Space, Table, Row, Col, Select} from "antd";
+import {Space, Table, Row, Col, Select, Spin} from "antd";
 import serverStore from "../store/ServerStore";
 import BreadCrumb from "../../../../common/component/breadcrumb/BreadCrumb";
 import ListEmpty from "../../../../common/component/list/ListEmpty";
@@ -52,6 +52,8 @@ const Server = props =>{
     const [requestParams,setRequestParams] = useState({
         pageParam
     });
+    //加载
+    const [spinning,setSpinning] = useState(false)
 
     useEffect(()=>{
         // 初始化服务配置
@@ -62,10 +64,13 @@ const Server = props =>{
      * 获取服务配置
      */
     const findAuth = () =>{
+        setSpinning(true)
         findAuthServerPage(requestParams).then(r=>{
             if(r.code===0){
                 setAuthServer(r.data)
             }
+        }).finally(()=>{
+            setSpinning(false)
         })
     }
 
@@ -422,20 +427,22 @@ const Server = props =>{
                             }
                         </SearchSelect>
                     </div>
-                    <div className="auth-content">
-                        <Table
-                            columns={columns()}
-                            dataSource={authServer?.dataList || []}
-                            rowKey={record=>record.serverId}
-                            pagination={false}
-                            locale={{emptyText: <ListEmpty />}}
-                        />
-                        <Page
-                            currentPage={requestParams.pageParam.currentPage}
-                            changPage={changPage}
-                            page={authServer}
-                        />
-                    </div>
+                   <Spin spinning={spinning}>
+                       <div className="auth-content">
+                           <Table
+                               columns={columns()}
+                               dataSource={authServer?.dataList || []}
+                               rowKey={record=>record.serverId}
+                               pagination={false}
+                               locale={{emptyText: <ListEmpty />}}
+                           />
+                           <Page
+                               currentPage={requestParams.pageParam.currentPage}
+                               changPage={changPage}
+                               page={authServer}
+                           />
+                       </div>
+                   </Spin>
                 </div>
             </Col>
         </Row>

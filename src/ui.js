@@ -26,7 +26,6 @@ const HomePage=AsyncComponent(()=>import("./home/components/HomePage"))
  * 流水线
  */
 const Pipeline=AsyncComponent(()=>import("./pipeline/pipeline/components/Pipeline"))
-const PipelineAdd=AsyncComponent(()=>import("./pipeline/pipeline/components/pipelineAdd"))
 const PipelineDetails=AsyncComponent(()=>import("./pipeline/navigator/PipelineAside"))
 const Overview=AsyncComponent(()=>import("./pipeline/overview/components/Overview"))
 const Dynamic=AsyncComponent(()=>import("./pipeline/overview/components/Dynamic"))
@@ -39,6 +38,7 @@ const Authorize=AsyncComponent(()=>import("./pipeline/authorize/Authorize"))
 const History=AsyncComponent(()=>import("./pipeline/history/components/History"))
 const HistoryInstance=AsyncComponent(()=>import("./pipeline/history/components/HistoryInstance"))
 const Test=AsyncComponent(()=>import("./pipeline/test/navigator/Test"))
+const TestHome=AsyncComponent(()=>import("./pipeline/test/home/component/TestHome"))
 const TestHubo=AsyncComponent(()=>import("./pipeline/test/testhubo/component/TestHubo"))
 const TestMaven=AsyncComponent(()=>import("./pipeline/test/maven/component/TestMaven"))
 const TestSpotbugs=AsyncComponent(()=>import("./pipeline/test/spotbugs/component/SpotbugsScan"))
@@ -135,7 +135,6 @@ export {
     HomePage,
 
     Pipeline,
-    PipelineAdd,
     PipelineDetails,
     Overview,
     Dynamic,
@@ -152,6 +151,7 @@ export {
     HistoryInstance,
 
     Test,
+    TestHome,
     TestSpotbugs,
     TestSonarQube,
     TestSourceFare,

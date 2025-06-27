@@ -118,15 +118,6 @@ class StatisticsStore {
     }
 
     /**
-     * 所有流水线发布总次数
-     * @returns {Promise | Promise<unknown>}
-     */
-    @action
-    findRunTimeSpan = async data => {
-        return await Axios.post('/pipeline/count/findRunTimeSpan',data);
-    }
-
-    /**
      * 发布次数TOP10统计
      * @returns {Promise | Promise<unknown>}
      */
@@ -145,6 +136,31 @@ class StatisticsStore {
         return await Axios.post('/pipeline/count/findRecentDaysFormatted',value);
     }
 
+    /**
+     * 运行统计
+     */
+    @action
+    findRunResultSpan = async data => {
+        return await Axios.post('/pipeline/count/findRunResultSpan',data);
+    }
+
+    /**
+     * 时间段统计
+     * @returns {Promise | Promise<unknown>}
+     */
+    @action
+    findRunTimeSpan = async data => {
+        return await Axios.post('/pipeline/count/findRunTimeSpan',data);
+    }
+
+    /**
+     * 结果次数统计
+     * @returns {Promise | Promise<unknown>}
+     */
+    @action
+    findRunNumberSpan = async data => {
+        return await Axios.post('/pipeline/count/findRunNumberSpan',data);
+    }
 
 
 }

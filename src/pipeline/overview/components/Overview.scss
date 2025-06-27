@@ -74,11 +74,16 @@ $inline-spacing: 15px;
     }
     .overview-center{
         margin-bottom: $block-spacing;
-        .overview-center-release{
-            background-color: var(--arbess-backdrop-color);
-            border-radius: 4px;
-            padding: 20px 10px 10px;
-            margin-top: 15px;
+        .overview-center-content{
+            display: flex;
+            gap: 10px;
+            padding-top: 10px;
+            .overview-center-release{
+                flex: 1;
+                background-color: var(--arbess-backdrop-color);
+                border-radius: 4px;
+                padding: 15px 10px;
+            }
         }
     }
     .overview-bottom{

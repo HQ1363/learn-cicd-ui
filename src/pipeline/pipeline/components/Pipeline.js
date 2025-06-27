@@ -18,6 +18,7 @@ import {debounce} from "../../../common/utils/Client";
 import pipelineStore from "../store/PipelineStore";
 import envStore from "../../../setting/configure/env/store/EnvStore";
 import groupingStore from "../../../setting/configure/grouping/store/GroupingStore";
+import PipelineAdd from "./PipelineAdd";
 import "./Pipeline.scss";
 
 const pageSize = 15;
@@ -44,13 +45,15 @@ const Pipeline = props =>{
         pageParam
     });
     //流水线列表
-    const [pipelineListPage,setPipelineListPage] = useState([]);
+    const [pipelineData,setPipelineData] = useState([]);
     //流水线分页
     const [pipPage,setPipPage] = useState({});
     //环境管理列表
     const [envList,setEnvList] = useState([]);
     //应用管理列表
     const [groupList,setGroupList] = useState([]);
+    //添加弹出框
+    const [visible,setVisible] = useState(false);
 
     useEffect(()=>{
         // 获取环境和应用管理
@@ -98,7 +101,7 @@ const Pipeline = props =>{
         }
         findUserPipelinePage(param).then(res=>{
             if(res.code===0){
-                setPipelineListPage(res.data.dataList || [])
+                setPipelineData(res.data.dataList || [])
                 setPipPage({
                     currentPage: res.data.currentPage,
                     totalPage: res.data.totalPage,
@@ -175,7 +178,9 @@ const Pipeline = props =>{
     /**
      * 去添加流水线页面
      */
-    const onClick = () =>props.history.push('/pipelineAdd')
+    const onClick = () =>{
+        setVisible(true)
+    }
 
     return(
         <Row className="pipeline">
@@ -195,6 +200,11 @@ const Pipeline = props =>{
                     >
                         <Button onClick={onClick} type={"primary"} title={"新建流水线"}/>
                     </BreadCrumb>
+                    <PipelineAdd
+                        {...props}
+                        visible={visible}
+                        setVisible={setVisible}
+                    />
                     <div className="pipeline-flex">
                         <Tabs type={listType} tabLis={[
                             {id:'all', title:"所有"},
@@ -249,7 +259,7 @@ const Pipeline = props =>{
                             changPage={changPage}
                             changFresh={changFresh}
                             pipPage={pipPage}
-                            pipelineListPage={pipelineListPage}
+                            pipelineData={pipelineData}
                         />
                     </Spin>
                 </div>

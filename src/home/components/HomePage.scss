@@ -76,11 +76,16 @@ $block-spacing: 30px;
 
         .home-statistics{
             margin-bottom: $block-spacing;
-            .home-statistics-release{
-                background-color: var(--arbess-backdrop-color);
-                border-radius: 4px;
-                padding: 20px 10px 10px;
-                margin-top: 15px;
+            .home-statistics-content{
+                display: flex;
+                gap: 10px;
+                padding-top: 10px;
+                .home-statistics-release{
+                    flex: 1;
+                    background-color: var(--arbess-backdrop-color);
+                    border-radius: 4px;
+                    padding: 15px 10px;
+                }
             }
         }
 

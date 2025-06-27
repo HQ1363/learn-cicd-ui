@@ -5,9 +5,9 @@
  * @LastEditors: gaomengyuan
  * @LastEditTime: 2025/3/12
  */
-import React, {useEffect,useState} from "react";
+import React, {useEffect,useState,forwardRef,useImperativeHandle} from "react";
 import {Form, Input, Select, Space, Table, Tooltip,Dropdown} from "antd";
-import {DeleteOutlined, LockOutlined, PlusOutlined, UnlockOutlined} from "@ant-design/icons";
+import {DeleteOutlined, LockOutlined, UnlockOutlined} from "@ant-design/icons";
 import {observer} from "mobx-react";
 import {getUser} from "tiklab-core-ui";
 import {PrivilegeProjectButton} from "tiklab-privilege-ui";
@@ -17,13 +17,16 @@ import ListEmpty from "../../../common/component/list/ListEmpty";
 import PipelineUserAdd from "./PipelineUserAdd";
 import envStore from "../../../setting/configure/env/store/EnvStore";
 import groupingStore from "../../../setting/configure/grouping/store/GroupingStore";
+import pipelineStore from "../store/PipelineStore";
 import "./PipelineAddInfo.scss";
 
-const PipelineAddInfo = props =>{
+const PipelineAddInfo = forwardRef((props, ref) =>{
 
-    const {set,pipelineStore,setCurrent,onClick,baseInfo,setBaseInfo,setIsLoading} = props
+    const {
+        set,setCurrent,baseInfo,setBaseInfo,onClick,pipeline,setPipeline,changFresh,
+    } = props
 
-    const {findUserPipeline,updatePipeline,pipeline,setPipeline,pipelineList} = pipelineStore;
+    const {findUserPipeline,updatePipeline,pipelineList} = pipelineStore;
     const {findEnvList} = envStore;
     const {findGroupList} = groupingStore;
 
@@ -40,22 +43,26 @@ const PipelineAddInfo = props =>{
     const [yUserList,setYUserList] = useState(baseInfo?.userList || []);
     //环境管理列表
     const [envList,setEnvList] = useState([]);
-    //应用管理列表
+    //应用管理列表id: "a2b9ea4e802
     const [groupList,setGroupList] = useState([]);
 
     useEffect(()=>{
         // 获取环境和应用管理
         findEnvAndGroup();
-        if(set){
-            // 初始化权限
-            setPowerType(pipeline.power)
-        } else {
+        if(!set){
             // 初始化权限
             setPowerType(baseInfo?.power || 1)
             // 获取所有流水线
             findUserPipeline().then()
         }
     },[]);
+
+    useEffect(() => {
+        if(pipeline){
+            form.setFieldsValue(pipeline);
+            setPowerType(pipeline?.power)
+        }
+    }, [pipeline]);
 
     /**
      * 获取环境和应用管理
@@ -108,16 +115,19 @@ const PipelineAddInfo = props =>{
                     power: powerType,
                     ...value,
                 }
-                setIsLoading(true)
                 updatePipeline(params).then(res => {
                     if (res.code === 0) {
-                        setPipeline({
-                            ...pipeline,
-                            ...params,
-                        })
-                        props.history.push(`/pipeline/${pipeline.id}/overview`)
+                        if(typeof changFresh === 'function'){
+                            onClick();
+                            changFresh();
+                        } else {
+                            setPipeline({
+                                ...pipeline,
+                                ...params,
+                            })
+                            props.history.push(`/pipeline/${pipeline.id}/overview`)
+                        }
                     }
-                    setIsLoading(false)
                 })
                 return
             }
@@ -130,6 +140,10 @@ const PipelineAddInfo = props =>{
             })
         })
     }
+
+    useImperativeHandle(ref, () => ({
+        onOk,
+    }));
 
     const powerLis = [
         {
@@ -304,43 +318,47 @@ const PipelineAddInfo = props =>{
                     </Form.Item>
                     { renderPowerType }
                 </Form>
-                <Button onClick={onClick} title={"取消"} isMar={true}/>
-                <PrivilegeProjectButton code={"pipeline_update"} domainId={pipeline && pipeline.id}>
-                    <Button type={"primary"} title={"确定"} onClick={onOk}/>
-                </PrivilegeProjectButton>
+                {
+                    typeof changFresh === 'function' ? null :
+                        <>
+                            <Button onClick={onClick} title={"取消"} isMar={true}/>
+                            <PrivilegeProjectButton code={"pipeline_update"} domainId={pipeline && pipeline.id}>
+                                <Button type={"primary"} title={"确定"} onClick={onOk}/>
+                            </PrivilegeProjectButton>
+                        </>
+                }
             </>
         )
     }
 
     return(
-        <>
-            <Form
-                form={form}
-                autoComplete="off"
-                layout={"vertical"}
-                initialValues={baseInfo}
-            >
-                <Form.Item label={"流水线名称"} name="name" rules={rules}>
-                    <Input allowClear style={{width:'50%'}} placeholder={'流水线名称'}/>
-                </Form.Item>
-                <Form.Item label={"流水线应用"} name={['group','id']}>
-                    <Select style={{width:'50%'}} placeholder={'流水线应用'}>
-                        {
-                            groupList && groupList.map(item=>(
-                                <Select.Option value={item.id} key={item.id}>{item.groupName}</Select.Option>
-                            ))
-                        }
-                    </Select>
-                </Form.Item>
-                <Form.Item label={"流水线环境"} name={['env','id']}>
-                    <Select style={{width:'50%'}} placeholder={'流水线环境'}>
-                        {
-                            envList && envList.map(item=>(
-                                <Select.Option value={item.id} key={item.id}>{item.envName}</Select.Option>
-                            ))
-                        }
-                    </Select>
-                </Form.Item>
+        <Form
+            form={form}
+            autoComplete="off"
+            layout={"vertical"}
+            initialValues={baseInfo}
+        >
+            <Form.Item label={"流水线名称"} name="name" rules={rules}>
+                <Input allowClear style={{width:'50%'}} placeholder={'流水线名称'}/>
+            </Form.Item>
+            <Form.Item label={"流水线应用"} name={['group','id']}>
+                <Select style={{width:'50%'}} placeholder={'流水线应用'}>
+                    {
+                        groupList && groupList.map(item=>(
+                            <Select.Option value={item.id} key={item.id}>{item.groupName}</Select.Option>
+                        ))
+                    }
+                </Select>
+            </Form.Item>
+            <Form.Item label={"流水线环境"} name={['env','id']}>
+                <Select style={{width:'50%'}} placeholder={'流水线环境'}>
+                    {
+                        envList && envList.map(item=>(
+                            <Select.Option value={item.id} key={item.id}>{item.envName}</Select.Option>
+                        ))
+                    }
+                </Select>
+            </Form.Item>
             {/*<div className="pipeline-add-type">*/}
             {/*    <div className="pipeline-type-title">流水线类型</div>*/}
             {/*    <div className="pipeline-type-ul">*/}
@@ -392,11 +410,8 @@ const PipelineAddInfo = props =>{
                     </div>
                 </Form.Item>
             }
-            </Form>
-            <Button onClick={()=>props.history.push("/pipeline")} title={"取消"} isMar={true}/>
-            <Button type={"primary"} title={"下一步"} onClick={onOk}/>
-        </>
+        </Form>
     )
-}
+})
 
 export default observer(PipelineAddInfo)

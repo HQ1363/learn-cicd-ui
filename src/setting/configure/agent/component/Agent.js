@@ -6,7 +6,7 @@
  * @LastEditTime: 2025/3/12
  */
 import React,{useState,useEffect} from 'react';
-import {Row, Col, Table, Tag, Space, Tooltip} from "antd";
+import {Row, Col, Table, Tag, Space, Tooltip, Spin} from "antd";
 import BreadCrumb from "../../../../common/component/breadcrumb/BreadCrumb";
 import ListIcon from "../../../../common/component/list/ListIcon";
 import ListEmpty from "../../../../common/component/list/ListEmpty";
@@ -43,6 +43,8 @@ const Agent = (props) => {
     const [visible,setVisible] = useState(false);
     //特性弹出框
     const [featureModal,setFeatureModal] = useState(false);
+    //加载
+    const [spinning,setSpinning] = useState(false);
 
     useEffect(()=>{
         //获取agent
@@ -53,6 +55,7 @@ const Agent = (props) => {
      * 获取Agent
      */
     const findAgent = () =>{
+        setSpinning(true)
         findAgentPage({
             ...agentRequest,
             displayType: 'yes',
@@ -60,6 +63,8 @@ const Agent = (props) => {
             if(res.code===0){
                 setAgentData(res.data)
             }
+        }).finally(()=>{
+            setSpinning(false)
         })
     }
 
@@ -219,20 +224,22 @@ const Agent = (props) => {
                         visible={featureModal}
                         setVisible={setFeatureModal}
                     />
-                    <div className="auth-content">
-                        <Table
-                            columns={columns}
-                            dataSource={agentData?.dataList || []}
-                            rowKey={record=>record.id}
-                            pagination={false}
-                            locale={{emptyText: <ListEmpty />}}
-                        />
-                        <Page
-                            currentPage={agentRequest.pageParam.currentPage}
-                            changPage={changPage}
-                            page={agentData}
-                        />
-                    </div>
+                    <Spin spinning={spinning}>
+                        <div className="auth-content">
+                            <Table
+                                columns={columns}
+                                dataSource={agentData?.dataList || []}
+                                rowKey={record=>record.id}
+                                pagination={false}
+                                locale={{emptyText: <ListEmpty />}}
+                            />
+                            <Page
+                                currentPage={agentRequest.pageParam.currentPage}
+                                changPage={changPage}
+                                page={agentData}
+                            />
+                        </div>
+                    </Spin>
                 </div>
             </Col>
         </Row>

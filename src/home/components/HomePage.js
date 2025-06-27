@@ -13,28 +13,28 @@ import ListEmpty from "../../common/component/list/ListEmpty";
 import ListIcon from "../../common/component/list/ListIcon";
 import echarts from "../../common/component/echarts/Echarts";
 import Profile from "../../common/component/profile/Profile";
-import GaugeChart from "../../common/component/echarts/GaugeChart";
 import SearchSelect from "../../common/component/search/SearchSelect";
 import "./HomePage.scss";
 
 const HomePage = props =>{
 
     const {findAllOpen} = homePageStore;
-    const {findRunResultCount,findRunTimeSpan,findDayRateCount,findRecentDaysFormatted} = statisticsStore;
+    const {findRunTimeSpan,findRunResultSpan,findDayRateCount,findRecentDaysFormatted,findRunNumberSpan} = statisticsStore;
 
     const chartRefs = {
         releaseTrend: useRef(null),
+        resultTrend: useRef(null),
+        numberTrend: useRef(null),
     }
 
     //最近构建的流水线列表
     const [newlyOpen,setNewlyOpen] = useState([]);
-    //最近运行统计
-    const [runResult,setRunResult] = useState(null);
     //加载
     const [spinning,setSpinning] = useState({
         allOpen:false,
-        runResult:false,
+        resultTrend:false,
         releaseTrend:false,
+        numberTrend:false,
         dayRateUserTrend:false,
         dayRatePipelineTrend:false,
     })
@@ -86,10 +86,12 @@ const HomePage = props =>{
     },[])
 
     useEffect(() => {
-        //最近运行统计
-        findRunResult('runResult');
-        //发布总次数
+        //结果次数统计
+        // findRunResult('resultTrend');
+        //时间段统计
         findRunTime('releaseTrend');
+        //结果次数统计
+        findRunNumber('numberTrend');
     }, [runParams]);
 
     useEffect(() => {
@@ -111,26 +113,39 @@ const HomePage = props =>{
     }
 
     /**
-     * 最近运行统计
+     * 结果次数统计
      * @param chartKey
      */
     const findRunResult = (chartKey) => {
         setSpinning(pev=>({...pev, [chartKey]: true}));
-        findRunResultCount({countDay:runParams}).then(res=> {
+        findRunResultSpan({countDay:runParams}).then(res=> {
             if(res.code===0){
-                setRunResult(res.data)
+                renderRunResultSpanChart(res.data,chartKey)
             }
         }).finally(()=>setSpinning(pev=>({...pev, [chartKey]: false})))
     }
 
     /**
-     * 发布总次数
+     * 时间段统计
      */
     const findRunTime = (chartKey) => {
         setSpinning(pev=>({...pev, [chartKey]: true}));
         findRunTimeSpan({countDay:runParams}).then(res=> {
             if(res.code===0){
                 renderRunTimeSpanChart(res.data,chartKey)
+            }
+        }).finally(()=>setSpinning(pev=>({...pev, [chartKey]: false})))
+    }
+
+    /**
+     * 结果次数统计
+     * @param chartKey
+     */
+    const findRunNumber = (chartKey) => {
+        setSpinning(pev=>({...pev, [chartKey]: true}));
+        findRunNumberSpan({countDay:runParams}).then(res=> {
+            if(res.code===0){
+                renderRunNumberSpanChart(res.data,chartKey)
             }
         }).finally(()=>setSpinning(pev=>({...pev, [chartKey]: false})))
     }
@@ -151,14 +166,50 @@ const HomePage = props =>{
         }).finally(()=>setSpinning(pev=>({...pev, [chartKey]: false})))
     }
 
-    //图表--发布次数
+    //图表--流水线结果统计
+    const renderRunResultSpanChart = (data, chartKey) => {
+        const chartDom = chartRefs[chartKey].current;
+        if(!chartDom){return;}
+        let chart = echarts.getInstanceByDom(chartDom) || echarts.init(chartDom);
+        // 限制最多只使用5条数据
+        const limitedData = data ? data.slice(0, 5) : [];
+
+        const option = {
+            title: {
+                text: '时间段统计',
+                textStyle: {
+                    fontSize: 14,
+                    fontWeight: 'normal',
+                },
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            xAxis: {
+                type: 'category',
+                data: limitedData?.map(item=>item.pipeline?.name),
+            },
+            yAxis: [
+                {type: 'value'}
+            ],
+            series:  [
+                {
+                    data: limitedData?.map(item=>item?.number || 0),
+                    type: 'bar'
+                }
+            ]
+        };
+        chart.setOption(option);
+    }
+
+    //图表--时间段统计
     const renderRunTimeSpanChart = (data, chartKey) => {
         const chartDom = chartRefs[chartKey].current;
         if(!chartDom){return;}
         let chart = echarts.getInstanceByDom(chartDom) || echarts.init(chartDom);
         const option = {
             title: {
-                text: '发布次数',
+                text: '时间段统计',
                 textStyle: {
                     fontSize: 14,
                     fontWeight: 'normal',
@@ -166,10 +217,10 @@ const HomePage = props =>{
             },
             tooltip: {trigger: 'axis'},
             legend: {data: ['全部', '成功', '失败']},
-            color: ['#ffa500', '#0d66e4', '#f06f6f'],
+            color: ['#5470C6', '#91CC75', '#f06f6f'],
             xAxis: {
                 type: 'category',
-                data: data && data.map(item=>item.time),
+                data: data?.map(item=>item.time),
             },
             yAxis: [{type: 'value'}],
             series:  [
@@ -194,6 +245,51 @@ const HomePage = props =>{
         chart.setOption(option);
     }
 
+    //图表--结果次数统计
+    const renderRunNumberSpanChart = (data, chartKey) => {
+        const chartDom = chartRefs[chartKey].current;
+        if(!chartDom){return;}
+        let chart = echarts.getInstanceByDom(chartDom) || echarts.init(chartDom);
+        const option = {
+            title: {
+                text: '结果次数统计',
+                textStyle: {
+                    fontSize: 14,
+                    fontWeight: 'normal',
+                },
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            xAxis: {
+                type: 'category',
+                data: ['全部','成功','失败','终止'],
+            },
+            yAxis: [
+                {type: 'value'}
+            ],
+            series:  [
+                {
+                    data: [
+                        data?.allNumber || 0,
+                        data?.successNumber || 0,
+                        data?.errorNumber || 0,
+                        data?.haltNumber || 0
+                    ],
+                    type: 'bar',
+                    itemStyle: {
+                        color: function(params) {
+                            const colorList = ['#5470C6', '#91CC75', '#f06f6f', '#FAC858'];
+                            return colorList[params.dataIndex];
+                        }
+                    }
+                }
+            ]
+        };
+        chart.setOption(option);
+    }
+
+    //发布次数TOP10统计
     const columns = [
         {
             title: '总数',
@@ -302,13 +398,17 @@ const HomePage = props =>{
                                 }
                             </SearchSelect>
                         </div>
-                        <Spin spinning={spinning.runResult}>
-                            <GaugeChart runResult={runResult}/>
-                        </Spin>
-                        <div className="home-statistics-release">
-                            <Spin spinning={spinning['releaseTrend']}>
-                                <div ref={chartRefs['releaseTrend']} style={{ height: 360 }} />
-                            </Spin>
+                        <div className='home-statistics-content'>
+                            <div className="home-statistics-release">
+                                <Spin spinning={spinning['numberTrend']}>
+                                    <div ref={chartRefs['numberTrend']} style={{ height: 460 }} />
+                                </Spin>
+                            </div>
+                            <div className="home-statistics-release">
+                                <Spin spinning={spinning['releaseTrend']}>
+                                    <div ref={chartRefs['releaseTrend']} style={{ height: 460 }} />
+                                </Spin>
+                            </div>
                         </div>
                     </div>
                     <div className="home-release">
@@ -330,7 +430,7 @@ const HomePage = props =>{
                         </div>
                         <div className="home-release-content">
                             <div className='home-release-pipeline'>
-                                <div className='home-release-title'>流水线发布次数TOP10统计</div>
+                                <div className='home-release-title'>流水线发布次数统计</div>
                                 <Table
                                     loading={spinning.dayRatePipelineTrend}
                                     columns={[
@@ -363,7 +463,7 @@ const HomePage = props =>{
                                 />
                             </div>
                             <div className='home-release-user'>
-                                <div className='home-release-title'>用户发布次数TOP10统计</div>
+                                <div className='home-release-title'>用户发布次数统计</div>
                                 <Table
                                     loading={spinning.dayRateUserTrend}
                                     rowClassName='arbess-user-avatar'

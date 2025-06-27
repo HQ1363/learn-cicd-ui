@@ -6,7 +6,7 @@
  * @LastEditTime: 2025/3/12
  */
 import React,{useEffect,useState} from "react";
-import {Space,Table,Row,Col} from "antd";
+import {Space, Table, Row, Col, Spin} from "antd";
 import BreadCrumb from "../../../../common/component/breadcrumb/BreadCrumb";
 import ListEmpty from "../../../../common/component/list/ListEmpty";
 import ListIcon from "../../../../common/component/list/ListIcon";
@@ -27,6 +27,8 @@ const Grouping = props =>{
     const [visible,setVisible] = useState(false)
     //弹出框form表单value
     const [formValue,setFormValue] = useState(null)
+    //加载
+    const [spinning,setSpinning] = useState(false)
 
     useEffect(()=>{
         // 初始化认证配置
@@ -37,10 +39,13 @@ const Grouping = props =>{
      * 获取应用管理
      */
     const findGrouping = () =>{
+        setSpinning(true)
         findGroupList().then(res=>{
             if(res.code===0){
                 setGroupList(res.data || [])
             }
+        }).finally(()=>{
+            setSpinning(false)
         })
     }
 
@@ -155,15 +160,17 @@ const Grouping = props =>{
                         formValue={formValue}
                         findGrouping={findGrouping}
                     />
-                    <div className="auth-content">
-                        <Table
-                            columns={columns}
-                            dataSource={groupList}
-                            rowKey={record=>record.id}
-                            pagination={false}
-                            locale={{emptyText: <ListEmpty />}}
-                        />
-                    </div>
+                    <Spin spinning={spinning}>
+                        <div className="auth-content">
+                            <Table
+                                columns={columns}
+                                dataSource={groupList}
+                                rowKey={record=>record.id}
+                                pagination={false}
+                                locale={{emptyText: <ListEmpty />}}
+                            />
+                        </div>
+                    </Spin>
                 </div>
             </Col>
         </Row>

@@ -14,7 +14,6 @@ import {
     HomePage,
 
     Pipeline,
-    PipelineAdd,
     PipelineDetails,
     Overview,
     Dynamic,
@@ -31,6 +30,7 @@ import {
     HistoryInstance,
 
     Test,
+    TestHome,
     TestSpotbugs,
     TestSonarQube,
     TestSourceFare,
@@ -137,11 +137,6 @@ const routers=[
                 exact: true,
             },
             {
-                path:"/pipelineAdd",
-                component:PipelineAdd,
-                exact: true,
-            },
-            {
                 path:"/dyna",
                 component:Dynamic,
                 exact: true,
@@ -218,6 +213,11 @@ const routers=[
                         path:"/pipeline/:id/test",
                         component: Test,
                         routes:[
+                            {
+                                path:"/pipeline/:id/test/home",
+                                component: TestHome,
+                                exact: true,
+                            },
                             {
                                 path:"/pipeline/:id/test/spotbugs",
                                 component: TestSpotbugs,

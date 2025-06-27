@@ -119,7 +119,10 @@ export function debounce(func, wait = 50, immediate = true) {
     return immediate ? immediateDebounce(func, wait) : laterDebounce(func, wait)
 }
 
-
+/**
+ * 复制
+ * @param text
+ */
 export const copyText = (text) => {
     //创建input元素
     let copyInput = document.createElement('input');

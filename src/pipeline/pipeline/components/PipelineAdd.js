@@ -5,20 +5,23 @@
  * @LastEditors: gaomengyuan
  * @LastEditTime: 2025/3/12
  */
-import React,{useState} from "react";
+import React, {useRef, useState} from "react";
 import {Spin, Steps, Row, Col} from "antd";
 import {getUser} from "tiklab-core-ui";
 import Button from "../../../common/component/button/Button";
-import BreadCrumb from "../../../common/component/breadcrumb/BreadCrumb";
 import PipelineAddMould from "./PipelineAddMould";
 import PipelineAddInfo from "./PipelineAddInfo";
 import pipelineStore from "../store/PipelineStore";
+import Modal from "../../../common/component/modal/Modal";
 import "./pipelineAdd.scss";
 
 const PipelineAdd = props =>{
 
-    const {createPipeline} = pipelineStore
-    const user = getUser()
+    const {visible,setVisible} = props;
+
+    const {createPipeline} = pipelineStore;
+    const user = getUser();
+    const pipelineAddInfoRef = useRef(null);
 
     //添加状态
     const [isLoading,setIsLoading] = useState(false)
@@ -54,6 +57,23 @@ const PipelineAdd = props =>{
         }).finally(()=>setIsLoading(false))
     }
 
+    /**
+     * 下一步
+     */
+    const okNext = () => {
+        if (pipelineAddInfoRef.current) {
+            pipelineAddInfoRef.current.onOk();
+        }
+    }
+
+    /**
+     * 关闭弹出框
+     */
+    const onCancel = ()=>{
+        setVisible(false);
+        setCurrent(0);
+    }
+
     // 渲染模板
     const renderTemplate = (
            <div className="pipeline-template">
@@ -81,10 +101,10 @@ const PipelineAdd = props =>{
         <PipelineAddInfo
             {...props}
             set={false}
+            ref={pipelineAddInfoRef}
             setCurrent={setCurrent}
             baseInfo={baseInfo}
             setBaseInfo={setBaseInfo}
-            pipelineStore={pipelineStore}
         />
     )
 
@@ -100,56 +120,40 @@ const PipelineAdd = props =>{
     ]
 
     return (
-        <Row className="pipeline-add">
-            <Col
-                xs={{ span: "24" }}
-                sm={{ span: "24" }}
-                md={{ span: "24" }}
-                lg={{ span: "18", offset: "3" }}
-                xl={{ span: "14", offset: "5" }}
-                xxl={{ span: "12", offset: "6" }}
-            >
-               <Spin spinning={isLoading}>
-                   <div className="arbess-home-limited">
-                       <BreadCrumb
-                           crumbs={[
-                               {title:'新建流水线',click:()=>props.history.push("/pipeline")},
-                           ]}
-                       />
-                       <div className="steps-top">
-                           <Steps current={current}>
-                               {steps.map(item => (
-                                   <Steps.Step key={item.title} title={item.title} />
-                               ))}
-                           </Steps>
-                       </div>
-                       <div className="steps-content">
-                           {steps[current].content}
-                       </div>
-                       {
-                           current===1 &&
-                           <div className="steps-bottom">
-                               <Button
-                                   onClick={()=>props.history.push("/pipeline")}
-                                   title={"取消"}
-                                   isMar={true}
-                               />
-                               <Button
-                                   onClick={()=>setCurrent(0)}
-                                   title={"上一步"}
-                                   isMar={true}
-                               />
-                               <Button
-                                   type={"primary"}
-                                   onClick={()=>createPip()}
-                                   title={"确定"}
-                               />
-                           </div>
-                       }
-                   </div>
-               </Spin>
-            </Col>
-        </Row>
+        <Modal
+            className="pipeline-add"
+            title={'添加流水线'}
+            visible={visible}
+            width={800}
+            onCancel={onCancel}
+            destroyOnClose
+            footer={
+                current === 0 ?
+                    <>
+                        <Button onClick={onCancel} title={"取消"} isMar={true}/>
+                        <Button type={"primary"} title={"下一步"} onClick={okNext}/>
+                    </>
+                    :
+                    <>
+                        <Button onClick={onCancel} title={"取消"} isMar={true}/>
+                        <Button onClick={()=>setCurrent(0)} title={"上一步"} isMar={true}/>
+                        <Button type={"primary"} onClick={createPip} title={"确定"}/>
+                    </>
+            }
+        >
+            <Spin spinning={isLoading}>
+                <div className="steps-top">
+                    <Steps current={current}>
+                        {steps.map(item => (
+                            <Steps.Step key={item.title} title={item.title} />
+                        ))}
+                    </Steps>
+                </div>
+                <div className="steps-content">
+                    {steps[current].content}
+                </div>
+            </Spin>
+        </Modal>
     )
 
 }

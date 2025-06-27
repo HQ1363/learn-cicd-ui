@@ -38,12 +38,12 @@ const PipelineAside = (props) => {
      * 跳转
      */
     const onSelect = (item) => {
-        const {id,isEnhance} = item;
+        const {to,isEnhance} = item;
         if(disable && isEnhance) {
             setFeatureModal(true);
             return;
         }
-        props.history.push(id)
+        props.history.push(to)
     }
 
     /**

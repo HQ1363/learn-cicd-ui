@@ -37,8 +37,15 @@ const TestHubo = props => {
     })
 
     useEffect(()=>{
-        setIsLoading(true);
         //获取测试列表
+        findRelevance()
+    },[param])
+
+    /**
+     * 获取测试列表
+     */
+    const findRelevance = () => {
+        setIsLoading(true);
         findRelevancePage({
             pipelineId:params.id,
             ...param
@@ -47,7 +54,7 @@ const TestHubo = props => {
                 setTestData(Res.data)
             }
         }).finally(()=>setIsLoading(false))
-    },[param])
+    }
 
     /**
      * 查看测试详情
@@ -89,13 +96,12 @@ const TestHubo = props => {
     const columns = [
         {
             title: "测试信息",
-            dataIndex: ["object","testPlanName"],
-            key: "testPlanName",
+            dataIndex: "testPlanId",
+            key: "testPlanId",
             width:"65%",
             ellipsis:true,
             render:(text,record) =>{
-                const { object } = record;
-                const { passNum='0', failNum='0' } = object || {};
+                const { passNum, failNum } = record;
                 return (
                     <div className='data-item-left'>
                         <span className='data-item-name' onClick={()=>goTestHubo(record)}>
@@ -104,12 +110,12 @@ const TestHubo = props => {
                         <div className='data-item-count'>
                             <div className='data-item-pass'>
                                 <span className='count-key'>成功数</span>
-                                {passNum}
+                                {passNum || '0'}
                             </div>
                             <Divider type="vertical" />
                             <div className='data-item-fail'>
                                 <span className='count-key'>失败数</span>
-                                {failNum}
+                                {failNum || '0'}
                             </div>
                         </div>
                     </div>

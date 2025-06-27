@@ -1,0 +1,51 @@
+$block-spacing: 30px;
+$inline-spacing: 15px;
+$inline-padding: 15px;
+
+.test-home{
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+
+  .test-home-title{
+    font-weight: var(--tiklab-font-weight-bold);
+    padding-bottom: 8px;
+  }
+  .home-count-box{
+    margin-bottom: $block-spacing;
+    background-color: var(--arbess-backdrop-color);
+    border-radius: 4px;
+    .home-count{
+      display: flex;
+      gap: 10px;
+      .home-count-item{
+        flex: 1;
+        padding: 10px;
+        max-width: calc(100% / 3);
+        cursor: pointer;
+        text-align: center;
+        .home-count-item-label{
+          color: var(--tiklab-gray-500);
+        }
+        .home-count-item-value{
+          padding-top: 15px;
+          font-weight: var(--tiklab-font-weight-bold);
+        }
+      }
+    }
+  }
+  .home-statistics-box{
+    display: flex;
+    gap: 10px;
+    .home-statistics{
+      flex: 1;
+      background-color: var(--arbess-backdrop-color);
+      border-radius: 4px;
+      padding: 15px 10px;
+    }
+  }
+
+
+}
+
+

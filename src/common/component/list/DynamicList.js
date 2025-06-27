@@ -47,16 +47,12 @@ const DynamicList = props =>{
                                 <Profile userInfo={user}/>
                                 <div className='dynamic-item-log-info'>
                                     <div className='dynamic-item-log-info-name' onClick={()=>goDynaLink(logItem)}>
-                                        {user?.nickname || user?.name}{actionType?.name}
+                                        {actionType?.name}  {action}  {dataObj?.message && dataObj.message}
                                     </div>
                                     <div className='dynamic-item-log-desc'>
-                                        <div className='log-desc-action'> {action}</div>
-                                        {
-                                            dataObj?.message &&
-                                            <div className='log-desc-message' title={dataObj.message}>
-                                                {dataObj.message}
-                                            </div>
-                                        }
+                                        <div className='log-desc-action'>
+                                            {user?.nickname || user?.name}
+                                        </div>
                                     </div>
                                 </div>
                             </div>

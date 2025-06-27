@@ -1,5 +1,5 @@
 /**
- * @Description: SonarQubeScan 扫描
+ * @Description: SonarQube 扫描
  * @Author: gaomengyuan
  * @Date: 2025/5/26
  * @LastEditors: gaomengyuan
@@ -17,7 +17,6 @@ import "./SourceFareScan.scss";
 import {
     CheckCircleOutlined,
     CloseCircleOutlined,
-    ExclamationCircleOutlined,
 } from "@ant-design/icons";
 
 const pageSize = 15;
@@ -40,6 +39,14 @@ const SourceFareScan = (props) => {
     const [scanParam,setScanParam] = useState({pageParam});
 
     useEffect(() => {
+        //获取SonarQube
+        findSourceFareScan()
+    }, [scanParam]);
+
+    /**
+     * 获取SonarQube
+     */
+    const findSourceFareScan = () => {
         setSpinning(true)
         findSourceFareScanPage({
             pipelineId:params.id,
@@ -49,7 +56,7 @@ const SourceFareScan = (props) => {
                 setScanData(res.data)
             }
         }).finally(()=>setSpinning(false))
-    }, [scanParam]);
+    }
 
     /**
      * 换页

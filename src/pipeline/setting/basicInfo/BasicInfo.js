@@ -16,8 +16,8 @@ import {
 import {PrivilegeProjectButton} from "tiklab-privilege-ui";
 import {inject,observer} from "mobx-react";
 import PipelineAddInfo from "../../pipeline/components/PipelineAddInfo";
+import PipelineDelete from "../../pipeline/components/PipelineDelete";
 import BreadCrumb from "../../../common/component/breadcrumb/BreadCrumb";
-import Modals from "../../../common/component/modal/Modal";
 import Button from "../../../common/component/button/Button";
 import "./BasicInfo.scss";
 
@@ -25,48 +25,12 @@ const BasicInfo = props =>{
 
     const {pipelineStore} = props
 
-    const {deletePipeline,pipeline}=pipelineStore
+    const {pipeline,setPipeline}=pipelineStore
 
     //树的展开与闭合
     const [expandedTree,setExpandedTree] = useState([])
-    //删除加载状态
-    const [isLoading,setIsLoading] = useState(false)
     //删除弹出框
     const [delVisible,setDelVisible] = useState(false)
-    //删除文本框内容
-    const [delValue,setDelValue] = useState("")
-    //删除效验提示内容
-    const [delError,setDelError] = useState(null)
-
-    /**
-     * 删除流水线
-     */
-    const delPipeline = () =>{
-        if(isLoading){
-            return;
-        }
-        if(delValue.trim()==="" || delValue!==pipeline.name){
-            setDelError("流水线名称错误")
-            return;
-        }
-        setIsLoading(true)
-        deletePipeline(pipeline.id).then(()=>{
-            onCancel()
-            props.history.push("/pipeline")
-        })
-    }
-
-    /**
-     * 关闭删除流水线弹出框
-     */
-    const onCancel = () =>{
-        if(!isLoading){
-            setIsLoading(false)
-            setDelVisible(false)
-            setDelValue("")
-            setDelError(null)
-        }
-    }
 
     const lis = [
         {
@@ -80,7 +44,8 @@ const BasicInfo = props =>{
                     <PipelineAddInfo
                         {...props}
                         set={true}
-                        setIsLoading={setIsLoading}
+                        pipeline={pipeline}
+                        setPipeline={setPipeline}
                         onClick={()=>setOpenOrClose(1)}
                     />
                 </div>
@@ -186,35 +151,11 @@ const BasicInfo = props =>{
                         </div>
                     </div>
                 </div>
-                <Modals
-                    visible={delVisible}
-                    onCancel={onCancel}
-                    onOk={delPipeline}
-                    title={"删除流水线"}
-                    okText={'确认删除'}
-                    okType={'dangerous'}
-                >
-                    <Spin spinning={isLoading} tip="删除中...">
-                        <div className="pipelineReDel-modal">
-                            <div className="pipelineReDel-modal-warn">危险：流水线删除无法恢复！请慎重操作！</div>
-                            <div className="pipelineReDel-modal-warn">
-                                <div>该操作将永久删除流水线<span className="warn-pipeline"> {pipeline?.name} </span>的相关数据，包括（配置、历史、制品）等。</div>
-                                <div className="warn-continue">为防止意外，确认继续操作请输入以下内容：</div>
-                                <div className="warn-pipeline-title">{pipeline?.name}</div>
-                            </div>
-                            <div className="pipelineReDel-modal-input">
-                                <Input
-                                    className={`${delError?"inputs-error":""}`}
-                                    placeholder="请输入提示内容以确认继续操作"
-                                    onChange={e=>setDelValue(e.target.value)}
-                                />
-                            </div>
-                            <div className="pipelineReDel-modal-error">
-                                {delError}
-                            </div>
-                        </div>
-                    </Spin>
-                </Modals>
+                <PipelineDelete
+                    pipeline={pipeline}
+                    delVisible={delVisible}
+                    setDelVisible={setDelVisible}
+                />
             </Col>
         </Row>
     )
