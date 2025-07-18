@@ -20,8 +20,6 @@ const FormsSelect = props => {
 
     const taskUpdate = taskPermissions?.includes(pipeline_task_update);
 
-    //是否显示下拉图标
-    const [showArrow,setShoeArrow] = useState(false);
     //下拉框聚焦
     const [bordered,setBordered] = useState(false);
 
@@ -32,12 +30,10 @@ const FormsSelect = props => {
         <Form.Item name={name} label={label} rules={rules}>
             <Select
                 showSearch
+                showArrow
                 {...res}
-                placeholder={bordered ? placeholder : "未选择"}
+                placeholder={placeholder}
                 className={bordered ? '':'input-hover'}
-                showArrow={showArrow}
-                onMouseEnter={()=>setShoeArrow(true)}
-                onMouseLeave={()=>setShoeArrow(false)}
                 onFocus={()=>{
                     if (res.onFocus) {
                         res.onFocus();

@@ -22,6 +22,7 @@ import BuildDocker from "./build/BuildDocker";
 import DeployLinux from "./deploy/DeployLinux";
 import DeployDocker from "./deploy/DeployDocker";
 import DeployK8s from "./deploy/DeployK8s";
+import BuildPython from "./build/BuildPython";
 import {
     pipeline_task_update,
     build_docker,
@@ -48,6 +49,9 @@ import {
     download_ssh,
     build_go,
     sourcefare,
+    build_python,
+    build_php,
+    build_net_core,
 } from "../../../../../../common/utils/Constant";
 import ToolScript from "./tool/ToolScript";
 import UploadHadess from "./upload/UploadHadess";
@@ -56,6 +60,8 @@ import DownloadHadess from "./download/DownloadHadess";
 import DownloadSsh from "./download/DownloadSsh";
 import BuildGo from "./build/BuildGo";
 import ScanSourceFare from "./scan/ScanSourceFare";
+import BuildPhp from "./build/BuildPhp";
+import BuildNetCore from "./build/BuildNetCore";
 
 const BasicInfo = props => {
 
@@ -141,11 +147,17 @@ const BasicInfo = props => {
                 return <DownloadSsh {...props}/>
             case script:
                 return <ToolScript {...props}/>
+            case build_python:
+                return <BuildPython {...props}/>
+            case build_php:
+                return <BuildPhp {...props}/>
+            case build_net_core:
+                return <BuildNetCore {...props} />
         }
     }
 
     /**
-     * 改变阶段名称
+     * 更新名称
      * @param e
      */
     const changName = e =>{
@@ -179,7 +191,7 @@ const BasicInfo = props => {
                 >
                     <Input
                         disabled={!taskUpdate}
-                        placeholder={enter? "阶段名称，回车保存":"未设置"}
+                        placeholder={`${dataItem?.formType==='task'? "任务名称":"阶段名称"}，回车保存`}
                         className={`${enter?'':'input-hover'}`}
                         onFocus={()=>setEnter(true)}
                         onBlur={(e)=>changName(e)}

@@ -70,6 +70,9 @@ const PipelineAdd = props =>{
      * 关闭弹出框
      */
     const onCancel = ()=>{
+        if (pipelineAddInfoRef.current) {
+            pipelineAddInfoRef.current.onRest();
+        }
         setVisible(false);
         setCurrent(0);
     }
@@ -81,10 +84,6 @@ const PipelineAdd = props =>{
                    <span>流水线名称：</span>
                    <span>{baseInfo.name}</span>
                </div>
-               {/*<div className="template-base">*/}
-               {/*    <span>流水线类型：</span>*/}
-               {/*    <span>{baseInfo.type===1?"多任务":"多阶段"}</span>*/}
-               {/*</div>*/}
                <div className="template-base">
                    <span>流水线权限：</span>
                    <span>{baseInfo.power===1?"全局":"私有"}</span>
@@ -124,7 +123,7 @@ const PipelineAdd = props =>{
             className="pipeline-add"
             title={'添加流水线'}
             visible={visible}
-            width={800}
+            width={600}
             onCancel={onCancel}
             destroyOnClose
             footer={

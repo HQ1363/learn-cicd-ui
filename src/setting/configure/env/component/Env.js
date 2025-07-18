@@ -15,7 +15,7 @@ import Profile from "../../../../common/component/profile/Profile";
 import Button from "../../../../common/component/button/Button";
 import EnvModal from "./EnvModal";
 import envStore from "../store/EnvStore";
-import "../../../common/Common.scss";
+import "./Env.scss";
 
 const Env = props =>{
 
@@ -132,14 +132,14 @@ const Env = props =>{
     ]
 
     return(
-        <Row className="auth">
+        <Row className="env">
             <Col
                 xs={{ span: "24" }}
                 sm={{ span: "24" }}
                 md={{ span: "24" }}
                 lg={{ span: "24" }}
-                xl={{ span: "20", offset: "2" }}
-                xxl={{ span: "18", offset: "3" }}
+                xl={{ span: "18", offset: "3" }}
+                xxl={{ span: "16", offset: "4" }}
             >
                 <div className='arbess-home-limited'>
                     <BreadCrumb
@@ -159,8 +159,8 @@ const Env = props =>{
                         formValue={formValue}
                         findEnv={findEnv}
                     />
-                    <Spin spinning={spinning}>
-                        <div className="auth-content">
+                    <div className="env-content">
+                        <Spin spinning={spinning}>
                             <Table
                                 columns={columns}
                                 dataSource={envList}
@@ -168,8 +168,8 @@ const Env = props =>{
                                 pagination={false}
                                 locale={{emptyText: <ListEmpty />}}
                             />
-                        </div>
-                    </Spin>
+                        </Spin>
+                    </div>
                 </div>
             </Col>
         </Row>

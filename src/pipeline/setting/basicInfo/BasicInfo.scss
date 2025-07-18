@@ -4,20 +4,24 @@
     }
     .pipelineReDel-ul{
         border-radius: 4px;
-        border: 1px solid #ececec;
+        border: 1px solid var(--arbess-border-color);
     }
     .pipelineReDel-li{
         &:not(:last-child){
-            border-bottom: 1px solid #ececec;
+            border-bottom: 1px solid var(--arbess-border-color);
+        }
+        &:first-child .pipelineReDel-li-top{
+            border-radius: 4px 4px 0 0;
+        }
+        &:last-child .pipelineReDel-li-unSelect{
+            border-radius: 0 0 4px 4px;
         }
         .pipelineReDel-li-top{
             display: flex;
             align-items: flex-start;
             padding: 10px 20px;
             cursor: pointer;
-            &:hover{
-                background: #fafafa;
-            }
+            background: var(--arbess-backdrop-color);
         }
         .pipelineReDel-li-icon{
             width: 16px;
@@ -39,9 +43,6 @@
         }
         .pipelineReDel-li-down{
             align-self: center;
-        }
-        .pipelineReDel-li-select{
-            background: #fafafa;
         }
         .pipelineReDel-li-bottom{
             padding:10px 20px;

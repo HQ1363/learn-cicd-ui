@@ -110,7 +110,7 @@ export class PipelineStore {
     findOnePipeline = async value =>{
         const param = new FormData()
         param.append("pipelineId",value)
-        const data = await Axios.post("/pipeline/findPipelineNoQuery",param)
+        const data = await Axios.post("/pipeline/findPipelineAndQuery",param)
         if(data.code===0){
             this.pipeline = data.data && data.data
         }
@@ -194,7 +194,7 @@ export class PipelineStore {
     @action
     findRecentlyPipeline =async value =>{
         const params = new FormData();
-        params.append("number",5);
+        params.append("number",4);
         params.append("pipelineId",value);
         return await Axios.post("/pipeline/findRecentlyPipeline",params)
     }
@@ -236,6 +236,18 @@ export class PipelineStore {
     @action
     updatePipelineRootUser = async (value)=>{
         return await Axios.post('/pipeline/updatePipelineRootUser',value)
+    }
+
+    /**
+     * 流水线统计
+     */
+    @action
+    findPipelineCount = async (value)=>{
+        const param = {
+            ...value,
+            userId:getUser().userId
+        }
+        return await Axios.post('/pipeline/findPipelineCount',param)
     }
 
 }

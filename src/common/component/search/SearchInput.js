@@ -16,7 +16,6 @@ const SearchInput = props =>{
 
     return (
         <Input
-            {...res}
             allowClear
             bordered={false}
             autoComplete={"off"}
@@ -27,6 +26,7 @@ const SearchInput = props =>{
                     res.onPressEnter(e);
                 }
             }}
+            {...res}
         />
     )
 }

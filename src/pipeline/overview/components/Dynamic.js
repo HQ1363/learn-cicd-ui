@@ -38,12 +38,10 @@ const Dynamic = props =>{
             {pageParam, data:{pipelineId:[match.params.id]},}
     )
 
-    //动态列表
-    const [dynamicList,setDynamicList] = useState([]);
-    //动态分页
-    const [dynaPage,setDynaPage] = useState([]);
     //动态操作类型
     const [dynamicType,setDynamicType] = useState([]);
+    //动态数据
+    const [dynaData,setDynaData] = useState({});
     //加载状态
     const [spinning,setSpinning] = useState(false);
 
@@ -65,12 +63,7 @@ const Dynamic = props =>{
         setSpinning(true);
         findLogPageByTime(params).then(res=>{
             if(res.code===0){
-                setDynamicList(res.data?.dataList || [])
-                setDynaPage({
-                    currentPage: res.data.currentPage,
-                    totalPage: res.data.totalPage,
-                    totalRecord: res.data.totalRecord,
-                })
+                setDynaData(res.data);
             }
         }).finally(()=>setSpinning(false))
     },[params])
@@ -189,12 +182,12 @@ const Dynamic = props =>{
                     <Spin spinning={spinning} tip={'获取动态中……'}>
                         <DynamicList
                             {...props}
-                            dynamicList={dynamicList}
+                            dynamicList={dynaData?.dataList || []}
                         />
                         <Page
                             currentPage={params.pageParam.currentPage}
                             changPage={changPage}
-                            page={dynaPage}
+                            page={dynaData}
                         />
                     </Spin>
                 </div>

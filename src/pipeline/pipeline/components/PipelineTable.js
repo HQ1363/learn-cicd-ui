@@ -6,13 +6,15 @@
  * @LastEditTime: 2025/3/12
  */
 import React, {useState, useEffect, useRef} from "react";
-import {message,Tooltip,Table,Space,Spin,Dropdown,Form,Input} from "antd";
+import {message, Tooltip, Table, Space, Spin, Dropdown, Form, Input} from "antd";
 import {
     PlayCircleOutlined,
     LoadingOutlined,
-    LockOutlined,
-    UnlockOutlined,
-    MinusCircleOutlined, EditOutlined, DeleteOutlined, CopyOutlined, SettingOutlined, ExportOutlined,
+    MinusCircleOutlined,
+    EditOutlined,
+    DeleteOutlined,
+    CopyOutlined,
+    ExportOutlined,
 } from "@ant-design/icons";
 import {inject, observer} from "mobx-react";
 import historyStore from "../../history/store/HistoryStore";
@@ -24,8 +26,9 @@ import Page from "../../../common/component/page/Page";
 import Modals from "../../../common/component/modal/Modal";
 import {debounce} from "../../../common/utils/Client";
 import pip_xingxing from "../../../assets/images/svg/pip_xingxing.svg";
-import pip_xingxing_kong from "../../../assets/images/svg/pip_xingxing-kong.svg";
+import pip_xingxing_kong from "../../../assets/images/svg/pip_xingxing_kong.svg";
 import pip_more from "../../../assets/images/svg/pie_more.svg";
+import pip_setting from "../../../assets/images/svg/pip_setting.svg";
 import "./PipelineTable.scss";
 import {runStatusIcon} from "../../history/components/HistoryCommon";
 import PipelineDelete from "./PipelineDelete";
@@ -35,11 +38,11 @@ import {PrivilegeProjectButton} from "tiklab-privilege-ui";
 
 const PipelineTable = props =>{
 
-    const {pipPage,pipelineData,changPage,changFresh,setIsLoading,systemRoleStore}=props
+    const {pipelineData,changPage,changFresh,setIsLoading,systemRoleStore}=props
 
     const {updateFollow,findPipelineCloneName,pipelineClone, importPipelineYaml,findUserPipeline} = pipelineStore;
     const {execStart,execStop}=historyStore;
-    const {getInitProjectPermissions,domainPermissions} = systemRoleStore;
+    const {getInitProjectPermissions} = systemRoleStore;
 
     const [form] = Form.useForm();
     const pipelineAddInfoRef = useRef(null);
@@ -220,6 +223,9 @@ const PipelineTable = props =>{
      * 关闭弹出框
      */
     const cancelEdit = () => {
+        if (pipelineAddInfoRef.current) {
+            pipelineAddInfoRef.current.onRest();
+        }
         setEditVisible(false);
         setPipeline(null);
     }
@@ -261,7 +267,7 @@ const PipelineTable = props =>{
             title: "流水线名称",
             dataIndex: "name",
             key: "name",
-            width:"28%",
+            width:"33%",
             ellipsis:true,
             render:(text,record)=>{
                 return  <span className='pipelineTable-name' onClick={()=>goPipelineTask(text,record)}>
@@ -274,7 +280,7 @@ const PipelineTable = props =>{
             title: "最近构建信息",
             dataIndex: "lastBuildTime",
             key: "lastBuildTime",
-            width:"28%",
+            width:"33%",
             ellipsis:true,
             render:(text,record) =>{
                 const {buildStatus,number} = record
@@ -294,7 +300,7 @@ const PipelineTable = props =>{
             title: "负责人",
             dataIndex: ["user","nickname"],
             key: "user",
-            width:"17%",
+            width:"20%",
             ellipsis: true,
             render:(text,record) => {
                 return (
@@ -303,27 +309,6 @@ const PipelineTable = props =>{
                         { text || '--'}
                     </Space>
                 )
-            }
-        },
-        {
-            title: "可见范围",
-            dataIndex: "power",
-            key: "power",
-            width:"13%",
-            ellipsis: true,
-            render:text => {
-                switch (text) {
-                    case 1:
-                        return  <Space>
-                                    <UnlockOutlined />
-                                    全局
-                                </Space>
-                    case 2:
-                        return  <Space>
-                                    <LockOutlined />
-                                    私有
-                                </Space>
-                }
             }
         },
         {
@@ -336,6 +321,11 @@ const PipelineTable = props =>{
                 const {state,collect,exec} = record
                 return(
                     <Space size="middle">
+                        <Tooltip title="收藏">
+                            <span className="pipelineTable-action" onClick={()=>collectAction(record)}>
+                                <img src={collect === 0 ? pip_xingxing_kong : pip_xingxing} alt={"收藏"} width={20} height={20}/>
+                            </span>
+                        </Tooltip>
                         {
                             exec ? (
                                 <Tooltip title={state===3 ? "等待":"运行"} >
@@ -353,11 +343,6 @@ const PipelineTable = props =>{
                                 </Tooltip>
                             )
                         }
-                        <Tooltip title="收藏">
-                            <span className="pipelineTable-action" onClick={()=>collectAction(record)}>
-                                <img src={collect === 0 ? pip_xingxing_kong : pip_xingxing} alt={"收藏"} width={20} height={20}/>
-                            </span>
-                        </Tooltip>
                         <Dropdown
                             overlay={
                                 <div className="arbess-dropdown-more">
@@ -372,15 +357,17 @@ const PipelineTable = props =>{
                                         </div>
                                     </PrivilegeProjectButton>
                                     <PrivilegeProjectButton code={"pipeline_seting"} domainId={record.id}>
-                                        <div className="dropdown-more-item" onClick={()=>toSetting(record)}>
-                                            <SettingOutlined /> 设置
+                                        <div className='dropdown-more-setting'>
+                                            <div className="dropdown-more-item dropdown-more-item-setting" onClick={()=>toSetting(record)}>
+                                                <img src={pip_setting} width={16} height={16}/> 设置
+                                            </div>
                                         </div>
                                     </PrivilegeProjectButton>
                                     <div className="dropdown-more-item" onClick={()=>toClone(record)}>
                                         <CopyOutlined /> 克隆
                                     </div>
                                     <div className="dropdown-more-item" onClick={()=>toYaml(record)}>
-                                        <ExportOutlined /> 导出YAML文件
+                                        <ExportOutlined /> 导出
                                     </div>
                                 </div>
                             }
@@ -419,28 +406,29 @@ const PipelineTable = props =>{
         <div className="pipelineTable">
             <Table
                 columns={columns}
-                dataSource={pipelineData}
+                dataSource={pipelineData?.dataList || []}
                 rowKey={record=>record.id}
                 pagination={false}
                 locale={{emptyText: <ListEmpty />}}
             />
             <Page
-                currentPage={pipPage.currentPage}
+                currentPage={pipelineData.currentPage}
                 changPage={changPage}
-                page={pipPage}
+                page={pipelineData}
             />
             <PipelineDelete
                 pipeline={pipeline}
                 delVisible={delVisible}
                 setDelVisible={setDelVisible}
                 changPage={changPage}
-                page={pipPage}
+                page={pipelineData}
             />
             <Modals
                 title={`编辑流水线`}
                 visible={editVisible}
                 onCancel={cancelEdit}
                 onOk={okEdit}
+                className='pipeline-edit'
             >
                 <PipelineAddInfo
                     set={true}

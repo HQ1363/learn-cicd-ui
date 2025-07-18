@@ -5,20 +5,25 @@
         justify-content: space-between;
         align-items: center;
         font-weight: var(--tiklab-font-weight-bold);
-        height: 40px;
+        height: 45px;
         padding: 0 var(--tiklab-padding);
+        .task-add-up-action{
+            cursor: pointer;
+            font-size: 16px;
+        }
     }
     .task-add-bottom{
         overflow: hidden;
-        height: calc(100% - 46px);
+        height: calc(100% - 47px);
         padding: 0;
+        border-top: 1px solid var(--arbess-border-color);
         .gui-drawer-content{
             height: 100%;
             .gui-drawer-content-left{
-                border-right: 1px solid var(--tiklab-gray-200);
                 .drawerLeft{
                     height: 100%;
                     overflow-y: auto;
+                    background: #f4f4f4;
                     .item{
                         padding: 5px var(--tiklab-padding);
                         cursor: pointer;
@@ -36,7 +41,6 @@
                         }
                     }
                     .item-select{
-                        background: #f4f4f4;
                         &:before{
                             background:var(--tiklab-blue);
                         }

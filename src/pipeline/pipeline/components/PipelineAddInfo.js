@@ -6,7 +6,7 @@
  * @LastEditTime: 2025/3/12
  */
 import React, {useEffect,useState,forwardRef,useImperativeHandle} from "react";
-import {Form, Input, Select, Space, Table, Tooltip,Dropdown} from "antd";
+import {Form, Select, Space, Table, Tooltip,Dropdown , Input} from "antd";
 import {DeleteOutlined, LockOutlined, UnlockOutlined} from "@ant-design/icons";
 import {observer} from "mobx-react";
 import {getUser} from "tiklab-core-ui";
@@ -110,10 +110,10 @@ const PipelineAddInfo = forwardRef((props, ref) =>{
         form.validateFields().then(value=>{
             if(set){
                 const params={
-                    id: pipeline.id,
-                    name: value.name==="" ? pipeline.name : value.name,
-                    power: powerType,
                     ...value,
+                    id: pipeline.id,
+                    name: value.name=== "" ? pipeline.name : value.name,
+                    power: powerType,
                 }
                 updatePipeline(params).then(res => {
                     if (res.code === 0) {
@@ -141,8 +141,13 @@ const PipelineAddInfo = forwardRef((props, ref) =>{
         })
     }
 
+    const onRest = () =>{
+        form.resetFields();
+    }
+
     useImperativeHandle(ref, () => ({
         onOk,
+        onRest,
     }));
 
     const powerLis = [
@@ -176,10 +181,6 @@ const PipelineAddInfo = forwardRef((props, ref) =>{
                                     <div className="power-title power-icon">{item.icon}</div>
                                     <div className="power-title power-name">{item.title}</div>
                                 </div>
-                                {
-                                    powerType===item.id &&
-                                    <div className="power-select-show"/>
-                                }
                             </div>
                             <div className="power-desc">{item.desc}</div>
                         </div>
@@ -194,7 +195,7 @@ const PipelineAddInfo = forwardRef((props, ref) =>{
             title:"姓名",
             dataIndex:"nickname",
             key:"nickname",
-            width:"40%",
+            width:"35%",
             ellipsis:true,
             render: text => text || '--'
         },
@@ -217,7 +218,7 @@ const PipelineAddInfo = forwardRef((props, ref) =>{
             title:"权限",
             dataIndex:"roleType",
             key:"roleType",
-            width:"25",
+            width:"28",
             ellipsis:true,
             render: (_,record)=>(
                 <Select
@@ -241,7 +242,7 @@ const PipelineAddInfo = forwardRef((props, ref) =>{
             title:"操作",
             dataIndex:"action",
             key:"action",
-            width:"5%",
+            width:"7%",
             ellipsis:true,
             render: (_,record) => {
                 if (record.id !== user.userId) {
@@ -286,6 +287,14 @@ const PipelineAddInfo = forwardRef((props, ref) =>{
         }),
     ]
 
+    const [nameLength,setNameLength] = useState(0);
+
+    useEffect(() => {
+        if(set) {
+            setNameLength(pipeline?.name?.length || 0)
+        }
+    }, [pipeline]);
+
     if(set){
         return (
             <>
@@ -296,7 +305,13 @@ const PipelineAddInfo = forwardRef((props, ref) =>{
                     initialValues={pipeline}
                 >
                     <Form.Item label={"流水线名称"} name="name" rules={rules}>
-                        <Input allowClear placeholder={'流水线名称'}/>
+                        <Input
+                            allowClear
+                            placeholder={'流水线名称'}
+                            maxLength={50}
+                            suffix={<span style={{ color: '#999' }}>{nameLength}/50</span>}
+                            onChange={(e) => setNameLength(e.target.value.length)}
+                        />
                     </Form.Item>
                     <Form.Item label={"流水线应用"} name={['group','id']}>
                         <Select placeholder={'流水线应用'}>
@@ -338,11 +353,21 @@ const PipelineAddInfo = forwardRef((props, ref) =>{
             layout={"vertical"}
             initialValues={baseInfo}
         >
-            <Form.Item label={"流水线名称"} name="name" rules={rules}>
-                <Input allowClear style={{width:'50%'}} placeholder={'流水线名称'}/>
+            <Form.Item
+                label={"流水线名称"}
+                name="name"
+                rules={rules}
+            >
+                <Input
+                    allowClear
+                    placeholder={'流水线名称'}
+                    maxLength={50}
+                    suffix={<span style={{ color: '#999' }}>{nameLength}/50</span>}
+                    onChange={(e) => setNameLength(e.target.value.length)}
+                />
             </Form.Item>
             <Form.Item label={"流水线应用"} name={['group','id']}>
-                <Select style={{width:'50%'}} placeholder={'流水线应用'}>
+                <Select placeholder={'流水线应用'}>
                     {
                         groupList && groupList.map(item=>(
                             <Select.Option value={item.id} key={item.id}>{item.groupName}</Select.Option>
@@ -351,7 +376,7 @@ const PipelineAddInfo = forwardRef((props, ref) =>{
                 </Select>
             </Form.Item>
             <Form.Item label={"流水线环境"} name={['env','id']}>
-                <Select style={{width:'50%'}} placeholder={'流水线环境'}>
+                <Select placeholder={'流水线环境'}>
                     {
                         envList && envList.map(item=>(
                             <Select.Option value={item.id} key={item.id}>{item.envName}</Select.Option>
@@ -359,17 +384,6 @@ const PipelineAddInfo = forwardRef((props, ref) =>{
                     }
                 </Select>
             </Form.Item>
-            {/*<div className="pipeline-add-type">*/}
-            {/*    <div className="pipeline-type-title">流水线类型</div>*/}
-            {/*    <div className="pipeline-type-ul">*/}
-            {/*        <div onClick={()=>setType(1)}*/}
-            {/*             className={`${type===1?"pipeline-type-li pipeline-type-select":"pipeline-type-li"}`}*/}
-            {/*        >多任务</div>*/}
-            {/*        <div onClick={()=>setType(2)}*/}
-            {/*             className={`${type===2?"pipeline-type-li pipeline-type-select":"pipeline-type-li"}`}*/}
-            {/*        >多阶段</div>*/}
-            {/*    </div>*/}
-            {/*</div>*/}
             { renderPowerType }
             {
                 powerType === 2 &&

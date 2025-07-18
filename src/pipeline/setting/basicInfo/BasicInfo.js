@@ -76,7 +76,7 @@ const BasicInfo = props =>{
                     </PrivilegeProjectButton>
                 </div>
             )
-        }
+        },
     ]
 
     /**
@@ -104,7 +104,7 @@ const BasicInfo = props =>{
 
     const lisItem = item =>{
         return <div key={item.key} className="pipelineReDel-li">
-            <div className={`pipelineReDel-li-top ${isExpandedTree(item.key) ?"pipelineReDel-li-select":""}`}
+            <div className={`pipelineReDel-li-top ${isExpandedTree(item.key) ?"pipelineReDel-li-select":"pipelineReDel-li-unSelect"}`}
                 onClick={()=>setOpenOrClose(item.key)}
             >
                 <div className="pipelineReDel-li-icon">{item.icon}</div>
@@ -152,6 +152,7 @@ const BasicInfo = props =>{
                     </div>
                 </div>
                 <PipelineDelete
+                    {...props}
                     pipeline={pipeline}
                     delVisible={delVisible}
                     setDelVisible={setDelVisible}

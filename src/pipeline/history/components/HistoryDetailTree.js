@@ -72,6 +72,7 @@ const HistoryDetailTree = props =>{
         changeAnchor(item.id,false)
     }
 
+    //任务
     const renderDeployLi = (item,deep) => {
         return (
             <div className={`tree-li ${id===item.id?"tree-li-active":""}`} key={item.id}
@@ -88,6 +89,7 @@ const HistoryDetailTree = props =>{
         )
     }
 
+    //阶段
     const renderLi = (item,deep) =>{
         const {deployInstanceList} = item
         return(
@@ -112,6 +114,7 @@ const HistoryDetailTree = props =>{
         )
     }
 
+    //阶段
     const renderSubLi = (group,deep) =>{
         const {taskInstanceList} = group
         return(
@@ -142,7 +145,7 @@ const HistoryDetailTree = props =>{
         )
     }
 
-    return(
+    return (
         <div className="bottom-tree">
             <div className="tree-ul">
                 {
@@ -167,7 +170,7 @@ const HistoryDetailTree = props =>{
                                     <div className="tree-li-state">{runStatusIcon(group.stageState)}</div>
                                     <div className="tree-li-time">{getTime(group.stageTime)}</div>
                                 </div>
-                                <div className={`tree-ul ${isExpandedTree(group.id) ? null:"tree-li-hidden"}`}>
+                                <div className={`tree-ul ${isExpandedTree(group.id) ? "":"tree-li-hidden"}`}>
                                     {
                                         stageInstanceList && stageInstanceList.map(list=>{
                                             return renderSubLi(list,25)

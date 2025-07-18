@@ -11,9 +11,114 @@ $inline-spacing: 15px;
         align-items: center;
     }
     .overview-guide-title{
-        font-size: 15px;
         font-weight: var(--tiklab-font-weight-bold);
     }
+    .overview-top{
+        display: flex;
+        gap: 10px;
+        margin-bottom: $block-spacing;
+        .overview-pipeline{
+            flex: 1;
+            padding: $inline-spacing ;
+            background: var(--arbess-backdrop-color);
+            border-radius: 4px;
+            .overview-pipeline-up{
+                display: flex;
+                align-items: center;
+                padding-bottom: 20px;
+                .overview-pipeline-up-info{
+                    flex: 1;
+                    margin-right: 10px;
+                    .overview-up-name{
+                        font-size: 16px;
+                        font-weight: bold;
+                    }
+                    .overview-up-info{
+                        padding-top: 5px;
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                        font-size: 12px;
+                        .overview-up-info-item{
+                            background: #ffffff;
+                            border-radius: 4px;
+                            padding: 1px 4px;
+                        }
+                    }
+                    .overview-up-collect{
+                        cursor: pointer;
+                    }
+                }
+                .overview-pipeline-up-setting{
+                    cursor: pointer;
+                }
+            }
+            .arbess-listname-icon{
+                width: 28px;
+                height: 28px;
+                line-height: 28px;
+            }
+            .tiklab-profile{
+                margin-right: 4px;
+                .ant-avatar{
+                    width: 24px;
+                    height: 24px;
+                    line-height: 24px;
+                    font-size: 12px;
+                }
+            }
+            .overview-pipeline-center{
+                .pipeline-space{
+                    margin-bottom: 20px;
+                }
+                .overview-pipeline-status{
+                    display: grid;
+                    grid-template-columns: repeat(4, 1fr);
+                    gap: 10px;
+                }
+                .overview-pipeline-flex{
+                    display: grid;
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 10px;
+                }
+                .overview-pipeline-item{
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    min-width: 0;
+                    .overview-pipeline-item-label{
+                        width: 28px;
+                        text-align: center;
+                    }
+                    .overview-pipeline-item-value{
+                        min-width: 0;
+                        flex: 1;
+                        .value-value{
+                            max-width: 100%;
+                            overflow: hidden;
+                            white-space: nowrap;
+                            text-overflow: ellipsis;
+                            -o-text-overflow: ellipsis;
+                        }
+                        .value-desc{
+                            font-size: 12px;
+                            color: #999999;
+                            padding-top: 5px;
+                        }
+                    }
+                }
+            }
+        }
+        .overview-quick-entrance{
+            flex: 1;
+            padding: $inline-spacing ;
+            background: var(--arbess-backdrop-color);
+            border-radius: 4px;
+
+        }
+    }
+
+
     .overview-upper{
         margin-bottom: $block-spacing;
         .overview-upper-content{

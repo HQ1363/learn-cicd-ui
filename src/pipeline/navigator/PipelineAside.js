@@ -49,7 +49,7 @@ const PipelineAside= (props)=>{
                 }
                 // 获取流水线权限
                 getInitProjectPermissions(userId,pipelineId,data?.power===1)
-                // 当前流水线打开
+                // 更新最近打开的流水线
                 updateOpen(pipelineId).then()
             }
         })

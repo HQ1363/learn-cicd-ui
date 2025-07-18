@@ -14,7 +14,7 @@ import ListIcon from "../../../../common/component/list/ListIcon";
 import ListAction from "../../../../common/component/list/ListAction";
 import Profile from "../../../../common/component/profile/Profile";
 import ServerAddBtn from "./ServerAddBtn";
-import "../../../common/Common.scss";
+import "./Server.scss";
 import SearchInput from "../../../../common/component/search/SearchInput";
 import SearchSelect from "../../../../common/component/search/SearchSelect";
 import Page from "../../../../common/component/page/Page";
@@ -384,7 +384,7 @@ const Server = props =>{
     }
 
     return(
-        <Row className="auth">
+        <Row className="server">
             <Col
                 xs={{ span: "24" }}
                 sm={{ span: "24" }}
@@ -408,7 +408,7 @@ const Server = props =>{
                             findAuth={findAuth}
                         />
                     </BreadCrumb>
-                    <div className="auth-select">
+                    <div className="server-search">
                         <SearchInput
                             placeholder="搜索名称、服务地址"
                             style={{ width: 190 }}
@@ -427,22 +427,22 @@ const Server = props =>{
                             }
                         </SearchSelect>
                     </div>
-                   <Spin spinning={spinning}>
-                       <div className="auth-content">
-                           <Table
-                               columns={columns()}
-                               dataSource={authServer?.dataList || []}
-                               rowKey={record=>record.serverId}
-                               pagination={false}
-                               locale={{emptyText: <ListEmpty />}}
-                           />
-                           <Page
-                               currentPage={requestParams.pageParam.currentPage}
-                               changPage={changPage}
-                               page={authServer}
-                           />
-                       </div>
-                   </Spin>
+                    <div className="server-content">
+                        <Spin spinning={spinning}>
+                            <Table
+                                columns={columns()}
+                                dataSource={authServer?.dataList || []}
+                                rowKey={record=>record.serverId}
+                                pagination={false}
+                                locale={{emptyText: <ListEmpty />}}
+                            />
+                            <Page
+                                currentPage={requestParams.pageParam.currentPage}
+                                changPage={changPage}
+                                page={authServer}
+                            />
+                        </Spin>
+                    </div>
                 </div>
             </Col>
         </Row>

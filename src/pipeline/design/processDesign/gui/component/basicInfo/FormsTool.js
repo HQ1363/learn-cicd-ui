@@ -85,7 +85,7 @@ const FormsTool = (props) => {
                 scmList && scmList.map(item=>{
                     return (
                         <Select.Option value={item.scmId} key={item.scmId}>
-                            {item.scmName}({item.scmAddress})
+                            {item.scmName}
                         </Select.Option>
                     )
                 })

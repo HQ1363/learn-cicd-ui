@@ -34,7 +34,7 @@ import {
     upload_hadess,
     upload_ssh,
     download_hadess,
-    download_ssh, build_go, sourcefare,
+    download_ssh, build_go, sourcefare, build_python, build_php, build_net_core,
 } from '../../../../../common/utils/Constant';
 import "./TaskAdd.scss";
 
@@ -87,6 +87,9 @@ const TaskAdd = props =>{
                 {type: nodejs},
                 {type: build_docker},
                 {type: build_go},
+                {type: build_python},
+                {type: build_php},
+                {type: build_net_core},
             ]
         },
         {
@@ -203,8 +206,11 @@ const TaskAdd = props =>{
             className="task-add"
         >
             <div className="task-add-up">
-                <div className="wrapper-head-title">选择任务组</div>
-                <Button onClick={()=>setNewStageDrawer(false)} title={<CloseOutlined />} type="text"/>
+                <div className="wrapper-head-title">选择任务</div>
+                <CloseOutlined
+                    onClick={()=>setNewStageDrawer(false)}
+                    className='task-add-up-action'
+                />
             </div>
             <div className="task-add-bottom">
                 <Row className="gui-drawer-content">

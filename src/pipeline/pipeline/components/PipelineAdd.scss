@@ -117,3 +117,15 @@
         font-size: 12px;
     }
 }
+
+.pipeline-add,.pipeline-edit{
+    .ant-select-selector{
+        border: none !important;
+        box-shadow: none !important;
+        background-color: var(--arbess-backdrop-color) !important;
+        &:hover{
+            background-color: var(--arbess-hover-color) !important;
+        }
+    }
+
+}

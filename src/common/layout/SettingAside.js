@@ -118,7 +118,7 @@ const applicationRouters =  [
     },
     {
         id:"integration",
-        title:"集成与开放",
+        title:"集成开放",
         icon: <MacCommandOutlined />,
         children: [
             {
@@ -133,7 +133,7 @@ const applicationRouters =  [
             },
             {
                 id:"/setting/openApi",
-                title: "openApi",
+                title: "OpenApi",
             },
         ]
     },

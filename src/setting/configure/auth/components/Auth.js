@@ -14,7 +14,7 @@ import ListIcon from "../../../../common/component/list/ListIcon";
 import ListAction from "../../../../common/component/list/ListAction";
 import Profile from "../../../../common/component/profile/Profile";
 import AuthAddBtn from "./AuthAddBtn";
-import "../../../common/Common.scss";
+import "./Auth.scss";
 
 const Auth = props =>{
 
@@ -155,8 +155,8 @@ const Auth = props =>{
                             findAuth={findAuth}
                         />
                     </BreadCrumb>
-                    <Spin spinning={spinning}>
-                        <div className="auth-content">
+                    <div className="auth-content">
+                        <Spin spinning={spinning}>
                             <Table
                                 columns={commonColumns}
                                 dataSource={authList}
@@ -164,8 +164,8 @@ const Auth = props =>{
                                 pagination={false}
                                 locale={{emptyText: <ListEmpty />}}
                             />
-                        </div>
-                    </Spin>
+                        </Spin>
+                    </div>
                 </div>
             </Col>
         </Row>

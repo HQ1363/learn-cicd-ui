@@ -18,6 +18,9 @@ import pip_spotbugs from "../../../../../assets/images/svg/pip_spotbugs.svg";
 import pip_ssh from "../../../../../assets/images/svg/pip_ssh.svg";
 import pip_nexus from "../../../../../assets/images/svg/pip_nexus.svg";
 import pip_go from "../../../../../assets/images/svg/pip_go.svg";
+import pip_python from "../../../../../assets/images/svg/pip_python.svg";
+import pip_php from "../../../../../assets/images/svg/pip_php.svg";
+import pip_net_core from "../../../../../assets/images/svg/pip_net_core.svg";
 import {productImg} from "tiklab-core-ui";
 import {
     git,
@@ -35,6 +38,8 @@ import {
     nodejs,
     build_docker,
     build_go,
+    build_python,
+    build_php,
     docker,
     k8s,
     liunx,
@@ -47,7 +52,7 @@ import {
     download_hadess,
     download_ssh,
     download_nexus,
-    sourcefare,
+    sourcefare, build_net_core,
 } from '../../../../../common/utils/Constant';
 
 /**
@@ -70,7 +75,10 @@ export const taskTitle = type =>{
         case mvn: return "Maven构建"
         case nodejs: return "Node.Js构建"
         case build_docker: return "Docker构建"
+        case build_python: return "Python构建"
         case build_go: return "Go构建"
+        case build_php: return "PHP构建"
+        case build_net_core: return ".Net Core构建"
         case liunx: return "主机部署"
         case docker: return "Docker部署"
         case k8s: return "Kubernetes部署"
@@ -112,15 +120,18 @@ export const TaskIcon = props =>{
             case nodejs: return pip_nodejs
             case build_docker: return pip_docker
             case build_go: return pip_go
+            case build_python: return pip_python
+            case build_php: return pip_php
+            case build_net_core: return pip_net_core
             case liunx: return pip_liunx
             case docker: return pip_docker
             case k8s: return pip_k8s
             case sonar: return pip_sonar
             case spotbugs: return pip_spotbugs
             case sourcefare: return productImg.sourcefare
-            case upload_hadess : return productImg.hadess
-            case upload_ssh : return pip_ssh
-            case upload_nexus : return pip_nexus
+            case upload_hadess: return productImg.hadess
+            case upload_ssh: return pip_ssh
+            case upload_nexus: return pip_nexus
             case download_hadess: return productImg.hadess
             case download_ssh: return pip_ssh
             case download_nexus: return pip_nexus
@@ -163,6 +174,9 @@ export const HeadlineTitle = type =>{
         case nodejs:
         case build_docker:
         case build_go:
+        case build_python:
+        case build_php:
+        case build_net_core:
             return '构建'
         case liunx:
         case docker:
@@ -180,6 +194,9 @@ export const HeadlineTitle = type =>{
     }
 }
 
+/**
+ * 新旧值更新
+ */
 export const WhetherChange = (newValue,lastValue) => {
     if (newValue == null){
         return false

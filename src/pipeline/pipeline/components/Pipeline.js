@@ -6,26 +6,26 @@
  * @LastEditTime: 2025/3/12
  */
 import React,{useEffect,useState} from "react";
-import {Select, Space, Row, Col, Spin} from "antd";
+import {Select, Space, Row, Col, Spin, Dropdown, Form, Input} from "antd";
 import {getUser} from "tiklab-core-ui";
 import PipelineTable from "./PipelineTable";
 import BreadCrumb from "../../../common/component/breadcrumb/BreadCrumb";
 import Button from "../../../common/component/button/Button";
 import Tabs from "../../../common/component/tabs/Tabs";
 import SearchInput from "../../../common/component/search/SearchInput";
-import SearchSelect from "../../../common/component/search/SearchSelect";
 import {debounce} from "../../../common/utils/Client";
 import pipelineStore from "../store/PipelineStore";
 import envStore from "../../../setting/configure/env/store/EnvStore";
 import groupingStore from "../../../setting/configure/grouping/store/GroupingStore";
 import PipelineAdd from "./PipelineAdd";
 import "./Pipeline.scss";
+import pipScreen from "../../../assets/images/svg/pip_screen.svg";
 
 const pageSize = 15;
 
 const Pipeline = props =>{
 
-    const {findUserPipelinePage} = pipelineStore;
+    const {findUserPipelinePage,findPipelineCount,findUserPage} = pipelineStore;
     const {findEnvList} = envStore;
     const {findGroupList} = groupingStore;
 
@@ -44,16 +44,18 @@ const Pipeline = props =>{
     const [pipelineParam,setPipelineParam] = useState({
         pageParam
     });
-    //流水线列表
-    const [pipelineData,setPipelineData] = useState([]);
-    //流水线分页
-    const [pipPage,setPipPage] = useState({});
+    //流水线数据
+    const [pipelineData,setPipelineData] = useState({});
     //环境管理列表
     const [envList,setEnvList] = useState([]);
     //应用管理列表
     const [groupList,setGroupList] = useState([]);
     //添加弹出框
     const [visible,setVisible] = useState(false);
+    //流水线统计
+    const [pipCount,setPipCount] = useState({});
+    //高级筛选下拉框
+    const [screenVisible,setScreenVisible] = useState(false);
 
     useEffect(()=>{
         // 获取环境和应用管理
@@ -76,9 +78,22 @@ const Pipeline = props =>{
         })
     }
 
+    /**
+     * 获取流水线统计
+     */
+    const findPipCount = () => {
+        findPipelineCount(pipelineParam).then(res=>{
+            if(res.code===0){
+                setPipCount(res.data)
+            }
+        })
+    }
+
     useEffect(()=>{
-        // 初始化获取流水线
+        // 流水线
         findPipeline()
+        // 获取流水线统计
+        findPipCount()
     },[pipelineParam,fresh])
 
     /**
@@ -86,29 +101,19 @@ const Pipeline = props =>{
      */
     const findPipeline = () =>{
         setIsLoading(true)
-        let param = pipelineParam
+        let param = {...pipelineParam};
         if(listType==='create'){
-            param = {
-                ...pipelineParam,
-                createUserId:getUser().userId
-            }
+            param.createUserId = getUser().userId;
         }
         if(listType==='follow'){
-            param = {
-                ...pipelineParam,
-                pipelineFollow:1
-            }
+            param.pipelineFollow = 1;
         }
         findUserPipelinePage(param).then(res=>{
             if(res.code===0){
-                setPipelineData(res.data.dataList || [])
-                setPipPage({
-                    currentPage: res.data.currentPage,
-                    totalPage: res.data.totalPage,
-                    totalRecord: res.data.totalRecord,
-                })
+                setPipelineData(res.data)
             }
         }).finally(()=>setIsLoading(false))
+
     }
 
     /**
@@ -143,29 +148,10 @@ const Pipeline = props =>{
      */
     const clickType = item => {
         setPipelineParam({
+            ...pipelineParam,
             pageParam
         })
         setListType(item.id)
-    }
-
-    /**
-     * 筛选
-     * @param value
-     * @param type
-     */
-    const screen = (value,type) => {
-        if(value==='all'){
-            delete pipelineParam[type]
-            setPipelineParam({
-                ...pipelineParam,
-            })
-        }else {
-            setPipelineParam({
-                ...pipelineParam,
-                [type]:value,
-                pageParam
-            })
-        }
     }
 
     /**
@@ -180,6 +166,75 @@ const Pipeline = props =>{
      */
     const onClick = () =>{
         setVisible(true)
+    }
+
+    const [form] = Form.useForm();
+
+    //流水线成员
+    const [userList,setUserList] = useState([]);
+    //当前页
+    const [currentPage,setCurrentPage] = useState(1)
+    //分页
+    const [userPage,setUserPage] = useState({})
+
+    useEffect(() => {
+        findUser()
+    }, [currentPage]);
+
+    /**
+     * 获取流水线成员
+     */
+    const findUser = () => {
+        findUserPage({
+            pageParam:{pageSize:9,currentPage}
+        }).then(res=>{
+            if(res.code===0){
+                setUserPage(res.data);
+                if(currentPage===1){
+                    setUserList(res.data.dataList)
+                } else {
+                    setUserList([...userList,...res.data.dataList])
+                }
+            }
+        })
+    }
+
+
+    /**
+     * 下拉滚动加载用户
+     * @param e
+     */
+    const scrollEnd = (e) => {
+        e.persist();
+        const { target } = e;
+        if (target.scrollTop + target.offsetHeight === target.scrollHeight) {
+            if (currentPage < userPage.totalPage) {
+                setCurrentPage(currentPage+1)
+            }
+        }
+    }
+
+    /**
+     * 字段更新
+     */
+    const onValuesChange = (changedValues) => {
+        const updatedParams = { ...pipelineParam,...changedValues,pageParam };
+        Object.keys(changedValues).forEach((key) => {
+            if (changedValues[key] === "all") {
+                delete updatedParams[key];
+            }
+        });
+        setPipelineParam(updatedParams)
+    }
+
+    /**
+     * 重置
+     */
+    const onReset = () =>{
+        form.resetFields();
+        setPipelineParam({
+            pageParam
+        })
     }
 
     return(
@@ -207,48 +262,84 @@ const Pipeline = props =>{
                     />
                     <div className="pipeline-flex">
                         <Tabs type={listType} tabLis={[
-                            {id:'all', title:"所有"},
-                            {id:'create', title:"我创建的"},
-                            {id:'follow', title:"我收藏的"}
+                            {id:'all', title:<>所有<span className="count-number">{pipCount?.pipelineNumber || 0}</span></>},
+                            {id:'create', title:<>我创建的<span className="count-number">{pipCount?.userPipelineNumber || 0}</span></>},
+                            {id:'follow', title:<>我收藏的<span className="count-number">{pipCount?.userFollowNumber || 0}</span></>},
                         ]} onClick={clickType}/>
-                        <Space size={'middle'}>
+                        <Space>
                             <SearchInput
                                 placeholder="搜索名称"
                                 onPressEnter={onChangeSearch}
                                 style={{ width: 180 }}
                             />
-                            <SearchSelect
-                                showSearch
-                                filterOption={(input, option) =>
-                                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                            <Dropdown
+                                overlay={
+                                    <div className='pipeline-senior-screen-drop'>
+                                        <Form
+                                            form={form}
+                                            layout={'vertical'}
+                                            onValuesChange={onValuesChange}
+                                        >
+                                            <Form.Item label={'创建人'} name={'createUserId'}>
+                                                <Select placeholder={"创建人"} onPopupScroll={scrollEnd}>
+                                                    <Select.Option value={'all'} key={'all'}>全部</Select.Option>
+                                                    {
+                                                        userList && userList.map(item=>(
+                                                            <Select.Option key={item.id} value={item.id}>{item.nickname}</Select.Option>
+                                                        ))
+                                                    }
+                                                </Select>
+                                            </Form.Item>
+                                            <Form.Item label={'应用'} name={'groupId'}>
+                                                <Select placeholder={"应用"}>
+                                                    <Select.Option value={'all'} key={'all'}>全部</Select.Option>
+                                                    {
+                                                        groupList && groupList.map(item=>(
+                                                            <Select.Option value={item.id} key={item.id}>{item.groupName}</Select.Option>
+                                                        ))
+                                                    }
+                                                </Select>
+                                            </Form.Item>
+                                            <Form.Item label={'环境'} name={'envId'}>
+                                                <Select placeholder={"环境"}>
+                                                    <Select.Option value={'all'} key={'all'}>全部</Select.Option>
+                                                    {
+                                                        envList && envList.map(item=>(
+                                                            <Select.Option value={item.id} key={item.id}>{item.envName}</Select.Option>
+                                                        ))
+                                                    }
+                                                </Select>
+                                            </Form.Item>
+                                            <Form.Item label={'权限'} name={'pipelinePower'}>
+                                                <Select placeholder={"权限"}>
+                                                    <Select.Option value={'all'} key={'all'}>全部</Select.Option>
+                                                    <Select.Option value={1} key={1}>全局</Select.Option>
+                                                    <Select.Option value={2} key={2}>私有</Select.Option>
+                                                </Select>
+                                            </Form.Item>
+                                        </Form>
+                                        <div className='screen-drop-button'>
+                                            <Button isMar={true} onClick={onReset}>
+                                                重置
+                                            </Button>
+                                            <Button isMar={true} onClick={()=>setScreenVisible(false)}>
+                                                取消
+                                            </Button>
+                                            <Button type={'primary'} onClick={()=>setScreenVisible(false)}>
+                                                确定
+                                            </Button>
+                                        </div>
+                                    </div>
                                 }
-                                style={{width:150}}
-                                placeholder={"应用"}
-                                onChange={value=>screen(value,"groupId")}
+                                trigger={['click']}
+                                visible={screenVisible}
+                                onVisibleChange={visible=>setScreenVisible(visible)}
+                                getPopupContainer={e=>e.parentElement}
                             >
-                                <Select.Option value={'all'} key={'all'}>全部</Select.Option>
-                                {
-                                    groupList && groupList.map(item=>(
-                                        <Select.Option value={item.id} key={item.id}>{item.groupName}</Select.Option>
-                                    ))
-                                }
-                            </SearchSelect>
-                            <SearchSelect
-                                showSearch
-                                filterOption={(input, option) =>
-                                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                }
-                                style={{width:150}}
-                                placeholder={"环境"}
-                                onChange={value=>screen(value,"envId")}
-                            >
-                                <Select.Option value={'all'} key={'all'}>全部</Select.Option>
-                                {
-                                    envList && envList.map(item=>(
-                                        <Select.Option value={item.id} key={item.id}>{item.envName}</Select.Option>
-                                    ))
-                                }
-                            </SearchSelect>
+                                <div className='pipeline-senior-screen'>
+                                    <img src={pipScreen} width={22} height={22}/>
+                                </div>
+                            </Dropdown>
                         </Space>
                     </div>
                     <Spin spinning={isLoading}>
@@ -258,7 +349,6 @@ const Pipeline = props =>{
                             setIsLoading={setIsLoading}
                             changPage={changPage}
                             changFresh={changFresh}
-                            pipPage={pipPage}
                             pipelineData={pipelineData}
                         />
                     </Spin>

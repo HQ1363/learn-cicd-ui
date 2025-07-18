@@ -120,7 +120,7 @@ const FormsInput = props =>{
         disabled: !taskUpdate,
         ref: inputRef,
         addonBefore: enter && addonBefore,
-        placeholder: enter ? `${placeholder || '请输入'}，回车保存` : '未设置',
+        placeholder: `${placeholder || '请输入'}，回车保存`,
         className: enter ? '' : 'input-hover',
         onFocus: () => setEnter(true),
         onBlur: (e) => onBlur(e),

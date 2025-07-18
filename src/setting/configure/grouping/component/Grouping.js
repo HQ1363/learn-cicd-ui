@@ -15,7 +15,7 @@ import Profile from "../../../../common/component/profile/Profile";
 import Button from "../../../../common/component/button/Button";
 import GroupingModal from "./GroupingModal";
 import groupingStore from "../store/GroupingStore";
-import "../../../common/Common.scss";
+import "./Grouping.scss";
 
 const Grouping = props =>{
 
@@ -133,14 +133,14 @@ const Grouping = props =>{
     ]
 
     return(
-        <Row className="auth">
+        <Row className="grouping">
             <Col
                 xs={{ span: "24" }}
                 sm={{ span: "24" }}
                 md={{ span: "24" }}
                 lg={{ span: "24" }}
-                xl={{ span: "20", offset: "2" }}
-                xxl={{ span: "18", offset: "3" }}
+                xl={{ span: "18", offset: "3" }}
+                xxl={{ span: "16", offset: "4" }}
             >
                 <div className='arbess-home-limited'>
                     <BreadCrumb
@@ -160,8 +160,8 @@ const Grouping = props =>{
                         formValue={formValue}
                         findGrouping={findGrouping}
                     />
-                    <Spin spinning={spinning}>
-                        <div className="auth-content">
+                    <div className="grouping-content">
+                        <Spin spinning={spinning}>
                             <Table
                                 columns={columns}
                                 dataSource={groupList}
@@ -169,8 +169,8 @@ const Grouping = props =>{
                                 pagination={false}
                                 locale={{emptyText: <ListEmpty />}}
                             />
-                        </div>
-                    </Spin>
+                        </Spin>
+                    </div>
                 </div>
             </Col>
         </Row>

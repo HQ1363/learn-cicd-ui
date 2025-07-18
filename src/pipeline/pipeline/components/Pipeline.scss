@@ -23,5 +23,28 @@
         height: 22px;
         font-size: 12px;
     }
+    .count-number{
+        padding-left: 3px;
+        font-size: 12px;
+    }
+    .pipeline-senior-screen{
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 4px;
+        padding: 4px;
+        &:hover{
+            background: var(--arbess-hover-color);
+        }
+    }
 }
 
+.pipeline-senior-screen-drop{
+    box-shadow: 0 4px 8px -2px #091e4240, 0 0 1px #091e424f;
+    border-radius: 4px;
+    background: #ffffff;
+    padding: 15px;
+    width: 320px;
+    .screen-drop-button{
+        text-align: right;
+    }
+}

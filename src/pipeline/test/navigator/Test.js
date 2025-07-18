@@ -16,6 +16,10 @@ const Test = (props) => {
 
     const projectRouters = [
         {
+            id:`/pipeline/${pipelineId}/test/overview`,
+            title: '概况',
+        },
+        {
             id: 'scan',
             title: '代码扫描',
             children: [

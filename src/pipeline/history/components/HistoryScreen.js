@@ -137,8 +137,8 @@ const HistoryScreen = props =>{
                 style={{ width: 150 }}
             >
                 <Select.Option value={null}>全部</Select.Option>
-                <Select.Option value={"error"}>失败</Select.Option>
                 <Select.Option value={"success"}>成功</Select.Option>
+                <Select.Option value={"error"}>失败</Select.Option>
                 <Select.Option value={"halt"}>终止</Select.Option>
                 <Select.Option value={"run"}>运行中</Select.Option>
             </SearchSelect>

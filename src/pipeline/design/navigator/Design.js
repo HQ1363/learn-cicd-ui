@@ -6,7 +6,7 @@
  * @LastEditTime: 2025/3/11
  */
 import React,{useState,useEffect} from "react";
-import {Dropdown, Spin, Tooltip} from "antd";
+import {Spin, Tooltip} from "antd";
 import {inject,observer,Provider} from "mobx-react";
 import taskStore from "../processDesign/gui/store/TaskStore";
 import stageStore from "../processDesign/gui/store/StageStore";
@@ -19,7 +19,6 @@ import countStore from "../../../setting/home/store/CountStore";
 import Button from "../../../common/component/button/Button";
 import BreadCrumb from "../../../common/component/breadcrumb/BreadCrumb";
 import HistoryRunDetail from "../../history/components/HistoryRunDetail";
-import DesignAgent from "./DesignAgent";
 import PipelineDrawer from "../../../common/component/drawer/Drawer";
 import Gui from "../processDesign/gui/component/Gui";
 import Trigger from "../trigger/components/Trigger";
@@ -28,8 +27,6 @@ import Message from "../message/components/Message";
 import "./Design.scss";
 import {getUser} from "tiklab-core-ui";
 import {pipeline_task_run} from "../../../common/utils/Constant";
-import {ControlOutlined} from "@ant-design/icons";
-import pip_more from "../../../assets/images/svg/pie_more.svg";
 
 const Design = props =>{
 
@@ -62,14 +59,10 @@ const Design = props =>{
     const [isDetails,setIsDetails] = useState(false);
     //单个历史信息
     const [historyItem,setHistoryItem] = useState(null);
-    //默认agent
-    const [defaultAgent,setDefaultAgent] = useState(null);
     //选择类型
     const [active,setActive] = useState('config');
     //统计数
     const [pipelineCount,setPipelineCount] = useState({});
-    //配置agent弹出框
-    const [agentVisible,setAgentVisible] = useState(false);
 
     useEffect(()=>{
         //获取统计
@@ -99,6 +92,7 @@ const Design = props =>{
         validStagesMustField(pipelineId).then()
     }, [taskFresh,stageFresh,mustFieldFresh]);
 
+
     useEffect(()=>{
         //监听运行状态，获取流水线信息
         if(!isDetails){
@@ -111,10 +105,7 @@ const Design = props =>{
      */
     const run = () =>{
         setIsSpin(true)
-        execStart(defaultAgent? {
-            agentId:defaultAgent,
-            pipelineId:pipeline.id
-        }:{pipelineId:pipeline.id}).then(res=>{
+        execStart({pipelineId:pipeline.id}).then(res=>{
             if(res.code===0){
                 setHistoryItem(res.data && res.data)
                 setIsDetails(true)
@@ -153,12 +144,6 @@ const Design = props =>{
         setHistoryItem(null);
     }
 
-    /**
-     * 配置agent
-     */
-    const configAgent = () =>{
-        setAgentVisible(true)
-    }
 
     //按钮组件
     const runButtonHtml = () => {
@@ -194,53 +179,34 @@ const Design = props =>{
                 <Spin spinning={isSpin}>
                     <div className="design-up">
                         <div className="design-top">
-                            <BreadCrumb
-                                crumbs={[
-                                    {title:'设计'}
-                                ]}
-                            />
-                            <div className="design-tabs">
-                                {
-                                    typeLis.map(item=>{
-                                        return(
-                                            <div key={item.id} className={`design-tab ${active===item.id?"design-active":""}`}
-                                                 onClick={()=>setActive(item.id)}
-                                            >
-                                                <div className="design-tab-title">
-                                                    {item.title}
-                                                    {
-                                                        item?.long &&
-                                                        <span className="design-tab-long">{item.long}</span>
-                                                    }
+                            <div className='design-top-nav'>
+                                <BreadCrumb
+                                    crumbs={[
+                                        {title:'设计'}
+                                    ]}
+                                />
+                                <div className="design-tabs">
+                                    {
+                                        typeLis.map(item=>{
+                                            return(
+                                                <div key={item.id} className={`design-tab ${active===item.id?"design-active":""}`}
+                                                     onClick={()=>setActive(item.id)}
+                                                >
+                                                    <div className="design-tab-title">
+                                                        {item.title}
+                                                        {
+                                                            item?.long &&
+                                                            <span className="design-tab-long">{item.long}</span>
+                                                        }
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        )
-                                    })
-                                }
+                                            )
+                                        })
+                                    }
+                                </div>
                             </div>
                             <div className="changeView-btn">
                                 {runButtonHtml()}
-                                <Dropdown
-                                    overlay={
-                                        <div className='arbess-dropdown-more'>
-                                            <div className="dropdown-more-item" onClick={configAgent}>
-                                                <ControlOutlined /> 配置Agent
-                                            </div>
-                                        </div>
-                                    }
-                                    trigger={['click']}
-                                    placement={'bottomRight'}
-                                >
-                                    <div className='changeView-btn-more'>
-                                        <img src={pip_more} alt={''} width={20} height={19}/>
-                                    </div>
-                                </Dropdown>
-                                <DesignAgent
-                                    defaultAgent={defaultAgent}
-                                    setDefaultAgent={setDefaultAgent}
-                                    agentVisible={agentVisible}
-                                    setAgentVisible={setAgentVisible}
-                                />
                             </div>
                         </div>
                     </div>

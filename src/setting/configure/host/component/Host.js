@@ -18,7 +18,7 @@ import SearchSelect from "../../../../common/component/search/SearchSelect";
 import Page from "../../../../common/component/page/Page";
 import HostAddBtn from "./HostAddBtn";
 import {deleteSuccessReturnCurrenPage} from "../../../../common/utils/Client";
-import "../../../common/Common.scss";
+import "./Host.scss";
 
 const pageSize = 13;
 
@@ -195,7 +195,7 @@ const Host = props =>{
     ]
 
     return(
-        <Row className="auth">
+        <Row className="host">
             <Col
                 xs={{ span: "24" }}
                 sm={{ span: "24" }}
@@ -218,7 +218,7 @@ const Host = props =>{
                             findAuth={findAuth}
                         />
                     </BreadCrumb>
-                    <div className="auth-select">
+                    <div className="host-search">
                         <SearchInput
                             placeholder="搜索名称、IP地址"
                             style={{ width: 190 }}
@@ -235,8 +235,8 @@ const Host = props =>{
                             <Select.Option value={'tencent'}>腾讯云主机</Select.Option>
                         </SearchSelect>
                     </div>
-                    <Spin spinning={spinning}>
-                        <div className="auth-content">
+                    <div className="host-content">
+                        <Spin spinning={spinning}>
                             <Table
                                 columns={column}
                                 dataSource={host?.dataList || []}
@@ -249,8 +249,8 @@ const Host = props =>{
                                 changPage={changPage}
                                 page={host}
                             />
-                        </div>
-                    </Spin>
+                        </Spin>
+                    </div>
                 </div>
             </Col>
         </Row>

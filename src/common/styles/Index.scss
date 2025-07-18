@@ -190,10 +190,11 @@ ul li{
     --tiklab-blue: #0d66e4;   /* 主色调蓝 */
     --tiklab-gray-200: #ececec;  /* border 的边线 */
     --tiklab-gray-300: #edf0f5;  /* hover颜色 */
-    --tiklab-gray-400: #e3e8f0;  /* 左侧导航 选中颜色 */
+    --tiklab-gray-400: #e3e8f0;  /* 左侧导航选中颜色 */
     --tiklab-gray-500: #999999; /* 文字次级颜色灰色调 */
-    --tiklab-gray-600: #fafbfc; /* 内容区域色调 */
-    --tiklab-gray-700: #f0f3fa; /* 侧边栏色调 */
+    --tiklab-gray-600: #f7f7f7; /* 内容区域色调 */
+    --tiklab-gray-700: #f0f3fa; /* 侧边栏色调(一级) */
+    --tiklab-gray-800: #fafbfc; /* 侧边栏色调(二级) */
     --tiklab-gray: #efefef;  /* 主色调灰 */
 
 
@@ -221,6 +222,7 @@ ul li{
     --arbess-hover-color: var(--tiklab-gray-300);
     --arbess-select-color: var(--tiklab-gray-400);
     --arbess-aside-color: var(--tiklab-gray-700);
+    --arbess-aside-two-color: var(--tiklab-gray-800);
     --arbess-backdrop-color: var(--tiklab-gray-600);
     --arbess-head-height: 48px;
     --arbess-content-height: calc(100% - 48px)

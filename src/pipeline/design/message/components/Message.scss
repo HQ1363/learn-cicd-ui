@@ -1,4 +1,15 @@
 .post-pose{
+    display: flex;
+    flex-direction: column;
+    .post-pose-box{
+        flex: 1;
+    }
+    .post-pose-content{
+        padding: 10px;
+        background: #ffffff;
+        border-radius: 4px;
+        min-height: 300px;
+    }
     .post-pose-up{
         display: flex;
         align-items: center;
@@ -7,6 +18,11 @@
         .post-pose-up-num{
             flex: 1;
             margin-right: var(--tiklab-padding-item);
+        }
+    }
+    .trigger-tables-empty{
+        .ant-table{
+            border-bottom: 0;
         }
     }
 }

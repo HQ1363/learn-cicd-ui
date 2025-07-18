@@ -35,18 +35,6 @@ const PipelineSetAside = props =>{
         }
     }
 
-    /**
-     * 去首页
-     */
-    const goHome = () => {
-        if(route.path === '/pipeline/:id/test'){
-            props.history.push(`/pipeline/${domainId}/test/home`)
-        }
-        if(route.path === '/pipeline/:id/statistics'){
-            props.history.push(`/pipeline/${domainId}/statistics/home`)
-        }
-    }
-
     const menuHtml = (item,deep) => {
         return (
             <PrivilegeProjectButton key={item.id} code={item.purviewCode} domainId={domainId}>
@@ -100,7 +88,7 @@ const PipelineSetAside = props =>{
         >
             <div className='project-nav'>
                 <div className='project-nav-aside'>
-                    <div className='project-nav-aside-head' onClick={goHome}>
+                    <div className='project-nav-aside-head'>
                         {route.path === '/pipeline/:id/setting' && "设置"}
                         {route.path === '/pipeline/:id/test' && "测试报告"}
                         {route.path === '/pipeline/:id/statistics' && "统计"}

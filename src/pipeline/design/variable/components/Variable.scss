@@ -1,4 +1,15 @@
 .variable{
+    display: flex;
+    flex-direction: column;
+    .variable-box{
+        flex: 1;
+    }
+    .variable-content{
+        padding: 10px;
+        background: #ffffff;
+        border-radius: 4px;
+        min-height: 300px;
+    }
     .variable-up{
         display: flex;
         align-items: center;
@@ -7,6 +18,11 @@
         .variable-up-num{
             flex: 1;
             margin-right: var(--tiklab-padding-item);
+        }
+    }
+    .variable-tables-empty{
+        .ant-table{
+            border-bottom: 0;
         }
     }
 }

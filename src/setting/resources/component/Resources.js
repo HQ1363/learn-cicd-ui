@@ -159,14 +159,6 @@ const Resources = props => {
                                         <span className='resources-item-separat'>/</span>
                                         <span >{limitation(resourceList?.cacheNumber,'G')}</span>
                                     </div>
-                                    {/*<div className='resources-cache-detail'>*/}
-                                    {/*    <span className='resources-detail-item'>*/}
-                                    {/*        源码 - {resourcesDetails?.sourceCache}G*/}
-                                    {/*    </span>*/}
-                                    {/*    <span className='resources-detail-item'>*/}
-                                    {/*        日志 - {resourcesDetails?.artifactCache}G*/}
-                                    {/*    </span>*/}
-                                    {/*</div>*/}
                                 </div>
                             </div>
                             <div className='resources-info-item'>

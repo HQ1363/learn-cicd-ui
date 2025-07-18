@@ -15,7 +15,7 @@ import ListIcon from "../../../../common/component/list/ListIcon";
 import HostGroupAdd from "./HostGroupAdd";
 import Profile from "../../../../common/component/profile/Profile";
 import ListAction from "../../../../common/component/list/ListAction";
-import "../../../common/Common.scss";
+import "./HostGroup.scss";
 
 const HostGroup = (props) => {
 
@@ -137,7 +137,7 @@ const HostGroup = (props) => {
     ]
 
     return (
-        <Row className="auth">
+        <Row className="host-group">
             <Col
                 sm={{ span: "24" }}
                 md={{ span: "24" }}
@@ -163,8 +163,8 @@ const HostGroup = (props) => {
                         formValue={formValue}
                         findAuth={findAllHostGroup}
                     />
-                    <Spin spinning={spinning}>
-                        <div className="auth-content">
+                    <div className="host-group-content">
+                        <Spin spinning={spinning}>
                             <Table
                                 columns={columns}
                                 dataSource={hostGroupList}
@@ -172,8 +172,8 @@ const HostGroup = (props) => {
                                 pagination={false}
                                 locale={{emptyText: <ListEmpty />}}
                             />
-                        </div>
-                    </Spin>
+                        </Spin>
+                    </div>
                 </div>
             </Col>
         </Row>

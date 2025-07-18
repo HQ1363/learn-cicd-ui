@@ -13,6 +13,7 @@ import {pipeline_task_update} from "../../../../common/utils/Constant";
 import moment from "moment/moment";
 import {CopyOutlined} from "@ant-design/icons";
 import {copyText} from "../../../../common/utils/Client";
+import VersionInfo from "../../../../common/component/versionInfo/VersionInfo";
 
 const Trigger = props =>{
 
@@ -140,7 +141,7 @@ const Trigger = props =>{
                 xxl={{ span: "12", offset: "6" }}
                 className="trigger"
             >
-                <Spin spinning={spinning}>
+                <div className='trigger-box'>
                     <div className='trigger-up'>
                         <div className='trigger-tabs'>
                             <div
@@ -157,67 +158,72 @@ const Trigger = props =>{
                             </div>
                         </div>
                     </div>
-                    <div className="trigger-tables">
-                        <Form
-                            form={form}
-                            labelCol={{span: 4}}
-                            labelAlign={'left'}
-                            colon={false}
-                            onValuesChange={onValuesChange}
-                        >
-                            <Form.Item label="状态" name={"status"} valuePropName="checked">
-                                <Switch
-                                    disabled={!taskUpdate}
-                                    checkedChildren="开启"
-                                    unCheckedChildren="关闭"
-                                />
-                            </Form.Item>
-                            {
-                                triggerType==='webhook' ?
-                                    <Form.Item label="WebHook地址" name={"url"}>
-                                        <Input.Group compact>
-                                            <Input
-                                                style={{width: 'calc(100% - 32px)'}}
-                                                value={webHookData?.url}
-                                                disabled={!taskUpdate || webHookData?.status!==1}
-                                            />
-                                            <ButtonA
-                                                icon={<CopyOutlined />}
-                                                onClick={()=>copyText(webHookData.url)}
-                                            />
-                                        </Input.Group>
+                    <div className='trigger-content'>
+                        <Spin spinning={spinning}>
+                            <div className="trigger-tables">
+                                <Form
+                                    form={form}
+                                    labelCol={{span: 4}}
+                                    labelAlign={'left'}
+                                    colon={false}
+                                    onValuesChange={onValuesChange}
+                                >
+                                    <Form.Item label="状态" name={"status"} valuePropName="checked">
+                                        <Switch
+                                            disabled={!taskUpdate}
+                                            checkedChildren="开启"
+                                            unCheckedChildren="关闭"
+                                        />
                                     </Form.Item>
-                                    :
-                                    <>
-                                        <Form.Item label="触发方式" name={"execType"}>
-                                            <Radio.Group disabled={!taskUpdate || triggerData?.status!==1}>
-                                                <Radio value={1}>单次触发</Radio>
-                                                <Radio value={2}>周期触发</Radio>
-                                            </Radio.Group>
-                                        </Form.Item>
-                                        <Form.Item label="日期选择" name={"weekTime"}>
-                                            <Radio.Group disabled={!taskUpdate || triggerData?.status!==1}>
-                                                <Radio.Button value={1} >星期一</Radio.Button>
-                                                <Radio.Button value={2} >星期二</Radio.Button>
-                                                <Radio.Button value={3} >星期三</Radio.Button>
-                                                <Radio.Button value={4} >星期四</Radio.Button>
-                                                <Radio.Button value={5} >星期五</Radio.Button>
-                                                <Radio.Button value={6} >星期六</Radio.Button>
-                                                <Radio.Button value={7} >星期天</Radio.Button>
-                                            </Radio.Group>
-                                        </Form.Item>
-                                        <Form.Item label="触发时间" name={"data"}>
-                                            <TimePicker
-                                                placeholder="触发时间"
-                                                format={"HH:mm"}
-                                                disabled={!taskUpdate || triggerData?.status!==1}
-                                            />
-                                        </Form.Item>
-                                    </>
-                            }
-                        </Form>
+                                    {
+                                        triggerType==='webhook' ?
+                                            <Form.Item label="WebHook地址" name={"url"}>
+                                                <Input.Group compact>
+                                                    <Input
+                                                        style={{width: 'calc(100% - 32px)'}}
+                                                        value={webHookData?.url}
+                                                        disabled={!taskUpdate || webHookData?.status!==1}
+                                                    />
+                                                    <ButtonA
+                                                        icon={<CopyOutlined />}
+                                                        onClick={()=>copyText(webHookData.url)}
+                                                    />
+                                                </Input.Group>
+                                            </Form.Item>
+                                            :
+                                            <>
+                                                <Form.Item label="触发方式" name={"execType"}>
+                                                    <Radio.Group disabled={!taskUpdate || triggerData?.status!==1}>
+                                                        <Radio value={1}>单次触发</Radio>
+                                                        <Radio value={2}>周期触发</Radio>
+                                                    </Radio.Group>
+                                                </Form.Item>
+                                                <Form.Item label="日期选择" name={"weekTime"}>
+                                                    <Radio.Group disabled={!taskUpdate || triggerData?.status!==1}>
+                                                        <Radio.Button value={1} >星期一</Radio.Button>
+                                                        <Radio.Button value={2} >星期二</Radio.Button>
+                                                        <Radio.Button value={3} >星期三</Radio.Button>
+                                                        <Radio.Button value={4} >星期四</Radio.Button>
+                                                        <Radio.Button value={5} >星期五</Radio.Button>
+                                                        <Radio.Button value={6} >星期六</Radio.Button>
+                                                        <Radio.Button value={7} >星期天</Radio.Button>
+                                                    </Radio.Group>
+                                                </Form.Item>
+                                                <Form.Item label="触发时间" name={"data"}>
+                                                    <TimePicker
+                                                        placeholder="触发时间"
+                                                        format={"HH:mm"}
+                                                        disabled={!taskUpdate || triggerData?.status!==1}
+                                                    />
+                                                </Form.Item>
+                                            </>
+                                    }
+                                </Form>
+                            </div>
+                        </Spin>
                     </div>
-                </Spin>
+                </div>
+                <VersionInfo />
             </Col>
         </Row>
     )

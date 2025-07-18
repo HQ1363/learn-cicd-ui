@@ -10,16 +10,11 @@
         border: 1px solid #ff4d4f;
     }
     .gui-mirror-empty-focus{
-        min-height: 64px;
         border: 1px solid #ff4d4f;
         -webkit-box-shadow: inset 0 0 0 2px rgba(255,77,79,0.2);
         box-shadow: inset 0 0 0 2px rgba(255,77,79,0.2);
-        .CodeMirror{
-            min-height: 64px;
-        }
     }
     .gui-mirror-has{
-        min-height: 32px;
         border: 1px solid #efeded;
         &:hover .CodeMirror{
             background-color: #f2f2f2;
@@ -29,17 +24,13 @@
         background-color: #f2f2f2 !important;
     }
     .gui-mirror-has-focus{
-        min-height: 64px;
         border: 1px solid #40a9ff;
         -webkit-box-shadow:inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
         box-shadow:inset 0 1px 1px rgba(0,0,0,0.075), 0 0 8px rgba(102,175,233,0.6);
-        .CodeMirror{
-            min-height: 64px;
-        }
     }
     .CodeMirror{
         height: 100%;
-        padding: 2px 7px;
+        min-height: 64px;
         .CodeMirror-placeholder{
             color: #bfbfbf;
         }
@@ -48,7 +39,7 @@
         position: absolute;
         top: 0;
         right: 0;
-        margin: 11px 11px 0 0;
+        margin: 8px 8px 0 0;
         cursor: pointer;
         z-index: 20;
     }

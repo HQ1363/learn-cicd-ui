@@ -41,9 +41,6 @@ const FormsMirror = props =>{
             return;
         }
         setBordered(true)
-        if(e.state.placeholder){
-            e.state.placeholder.innerHTML=placeholder
-        }
     }
 
     /**
@@ -98,7 +95,7 @@ const FormsMirror = props =>{
     return  (
         <Form.Item label={label} name={name}>
             <Form.Item noStyle>
-                <div className={`gui-mirror `} id={name+"_mirror"}>
+                <div className={`gui-mirror`} id={name+"_mirror"}>
                     <TaskMirror
                         mirrorValue={dataItem?.task?.[name] || ""}
                         mirrorRef={narrowMirrorRef}
@@ -107,10 +104,12 @@ const FormsMirror = props =>{
                         options={{
                             mode: language,
                             theme:'default',
-                            placeholder: bordered ? placeholder : '未设置',
+                            lineNumbers: true,
+                            placeholder: placeholder,
                             styleActiveLine: bordered,
                             readOnly: !taskUpdate
                         }}
+                        autoSize={{ min: 3 }}
                     />
                     {
                         bordered &&

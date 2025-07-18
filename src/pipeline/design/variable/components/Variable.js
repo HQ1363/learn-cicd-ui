@@ -16,6 +16,7 @@ import "./Variable.scss";
 import {pipeline_task_update} from "../../../../common/utils/Constant";
 import Page from "../../../../common/component/page/Page";
 import {deleteSuccessReturnCurrenPage} from "../../../../common/utils/Client";
+import VersionInfo from "../../../../common/component/versionInfo/VersionInfo";
 
 const pageSize = 13;
 
@@ -160,9 +161,11 @@ const Variable = props =>{
                 xxl={{ span: "16", offset: "4" }}
                 className="variable"
             >
-                <Spin spinning={spinning}>
+                <div className='variable-box'>
                     <div className="variable-up">
-                        <div className="variable-up-num">共{variableData?.totalRecord||0}条</div>
+                        <div className="variable-up-num">
+                            共{variableData?.totalRecord||0}条
+                        </div>
                         { taskUpdate && <Button title={"添加"} onClick={addVariable}/> }
                         <VariableAddEdit
                             {...props}
@@ -176,22 +179,27 @@ const Variable = props =>{
                             pipelineId={pipelineId}
                         />
                     </div>
-                    <div className="variable-tables">
-                        <Table
-                            bordered={false}
-                            columns={columns}
-                            dataSource={variableData?.dataList || []}
-                            rowKey={record=>record.varId}
-                            pagination={false}
-                            locale={{emptyText: <ListEmpty />}}
-                        />
-                        <Page
-                            currentPage={variableData.currentPage}
-                            changPage={changPage}
-                            page={variableData}
-                        />
+                    <div className='variable-content'>
+                        <Spin spinning={spinning}>
+                            <div className={`variable-tables ${variableData?.totalRecord > 0 ? '' : 'variable-tables-empty'}`}>
+                                <Table
+                                    bordered={false}
+                                    columns={columns}
+                                    dataSource={variableData?.dataList || []}
+                                    rowKey={record=>record.varId}
+                                    pagination={false}
+                                    locale={{emptyText: <ListEmpty />}}
+                                />
+                                <Page
+                                    currentPage={variableData.currentPage}
+                                    changPage={changPage}
+                                    page={variableData}
+                                />
+                            </div>
+                        </Spin>
                     </div>
-                </Spin>
+                </div>
+                <VersionInfo />
            </Col>
        </Row>
     )

@@ -121,7 +121,7 @@ const Portal = props =>{
         if(path.startsWith('/setting')){
             return props.children
         }
-        if(path !=='/pipeline/' && path.startsWith('/pipeline/')){
+        if(path!=='/pipeline/' && path.startsWith('/pipeline/')){
             return (
                 <PipelineAside
                     {...props}

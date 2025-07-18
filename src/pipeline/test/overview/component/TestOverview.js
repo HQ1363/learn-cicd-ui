@@ -8,10 +8,10 @@
 import React, {useEffect, useRef, useState} from "react";
 import {Col, Row, Spin} from "antd";
 import testCountStore from "../store/TestCountStore";
-import "./TestHome.scss";
+import "./TestOverview.scss";
 import echarts from "../../../../common/component/echarts/Echarts";
 
-const TestHome = props => {
+const TestOverview = props => {
 
     const {match} = props;
 
@@ -263,4 +263,4 @@ const TestHome = props => {
     )
 };
 
-export default TestHome
+export default TestOverview

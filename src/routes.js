@@ -30,7 +30,7 @@ import {
     HistoryInstance,
 
     Test,
-    TestHome,
+    TestOverview,
     TestSpotbugs,
     TestSonarQube,
     TestSourceFare,
@@ -62,6 +62,7 @@ import {
     MessageNotice,
     MyLog,
     BackupRestore,
+    RequestError,
 
     User,
     UserGroup,
@@ -116,6 +117,11 @@ const routers=[
         path:"/500",
         exact:true,
         component:SysException,
+    },
+    {
+        path:"/requestError",
+        exact:true,
+        component:RequestError,
     },
     {
         path:"/openApi",
@@ -214,8 +220,8 @@ const routers=[
                         component: Test,
                         routes:[
                             {
-                                path:"/pipeline/:id/test/home",
-                                component: TestHome,
+                                path:"/pipeline/:id/test/overview",
+                                component: TestOverview,
                                 exact: true,
                             },
                             {

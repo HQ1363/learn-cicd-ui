@@ -1,0 +1,62 @@
+.k8s{
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  .k8s-content{
+    padding-top: var(--tiklab-padding-item);
+    .k8s-table{
+      &-node{
+        font-weight: var(--tiklab-font-weight-bold);
+        color: var(--tiklab-blue);
+      }
+      &-name{
+        cursor: pointer;
+        &:hover{
+          color: var(--tiklab-blue);
+        }
+      }
+    }
+  }
+  .ant-avatar{
+    width: 22px;
+    height: 22px;
+    font-size: 12px;
+  }
+}
+
+.k8s-detail{
+  .k8s-detail-content{
+    padding: 15px 20px;
+  }
+  .k8s-detail-top{
+    padding-bottom: 10px;
+  }
+  .k8s-detail-label{
+    font-size: 13px;
+    color: #777;
+    font-weight: 600;
+  }
+  .k8s-detail-item{
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 4px 0;
+    &>div:first-child{
+      width: 90px;
+    }
+    &>div:last-child{
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      -o-text-overflow: ellipsis;
+    }
+  }
+  .k8s-detail-node{
+    padding-top: 15px;
+    .node-title{
+      padding-bottom: 8px;
+    }
+  }
+}

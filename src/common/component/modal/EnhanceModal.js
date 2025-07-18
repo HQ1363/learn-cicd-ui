@@ -77,7 +77,6 @@ const EnhanceModal = (props) => {
             visible={visible}
             className="arbess-enhance-modal"
             onCancel={()=>setVisible(false)}
-            closable={false}
             footer={null}
         >
             <div className="enhance-free">

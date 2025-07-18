@@ -38,7 +38,7 @@ const Authorize=AsyncComponent(()=>import("./pipeline/authorize/Authorize"))
 const History=AsyncComponent(()=>import("./pipeline/history/components/History"))
 const HistoryInstance=AsyncComponent(()=>import("./pipeline/history/components/HistoryInstance"))
 const Test=AsyncComponent(()=>import("./pipeline/test/navigator/Test"))
-const TestHome=AsyncComponent(()=>import("./pipeline/test/home/component/TestHome"))
+const TestOverview=AsyncComponent(()=>import("./pipeline/test/overview/component/TestOverview"))
 const TestHubo=AsyncComponent(()=>import("./pipeline/test/testhubo/component/TestHubo"))
 const TestMaven=AsyncComponent(()=>import("./pipeline/test/maven/component/TestMaven"))
 const TestSpotbugs=AsyncComponent(()=>import("./pipeline/test/spotbugs/component/SpotbugsScan"))
@@ -71,6 +71,7 @@ const DomainMessageNotice=AsyncComponent(()=>import("./setting/message/DomainMes
 // security
 const MyLog=AsyncComponent(()=>import("./setting/security/MyLog"))
 const BackupRestore=AsyncComponent(()=>import("./setting/security/BackupRestore"))
+const RequestError=AsyncComponent(()=>import("./setting/security/RequestError"))
 
 // user
 const User=AsyncComponent(()=>import("./setting/user/User"))
@@ -151,7 +152,7 @@ export {
     HistoryInstance,
 
     Test,
-    TestHome,
+    TestOverview,
     TestSpotbugs,
     TestSonarQube,
     TestSourceFare,
@@ -183,6 +184,7 @@ export {
     MessageNotice,
     MyLog,
     BackupRestore,
+    RequestError,
 
     User,
     UserGroup,

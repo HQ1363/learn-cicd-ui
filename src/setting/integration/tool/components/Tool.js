@@ -12,7 +12,7 @@ import BreadCrumb from "../../../../common/component/breadcrumb/BreadCrumb";
 import ListEmpty from "../../../../common/component/list/ListEmpty";
 import ListAction from "../../../../common/component/list/ListAction";
 import ListIcon from "../../../../common/component/list/ListIcon";
-import "../../../common/Common.scss";
+import "./Tool.scss";
 import ToolAddBtn from "./ToolAddBtn";
 import {scmTitle, scmImage, scmList} from "./ToolCommon";
 import Page from "../../../../common/component/page/Page";
@@ -174,7 +174,7 @@ const Tool = props =>{
     ]
 
     return (
-        <Row className="auth">
+        <Row className="tool">
             <Col
                 xs={{ span: "24" }}
                 sm={{ span: "24" }}
@@ -197,7 +197,7 @@ const Tool = props =>{
                             findAllScm={findAllScm}
                         />
                     </BreadCrumb>
-                    <div className="auth-select">
+                    <div className="tool-search">
                         <SearchInput
                             placeholder="搜索名称"
                             style={{ width: 190 }}
@@ -215,8 +215,8 @@ const Tool = props =>{
                             }
                         </SearchSelect>
                     </div>
-                    <Spin spinning={spinning}>
-                        <div className="auth-content">
+                    <div className="tool-content">
+                        <Spin spinning={spinning}>
                             <Table
                                 columns={columns}
                                 dataSource={toolData?.dataList || []}
@@ -229,8 +229,8 @@ const Tool = props =>{
                                 changPage={changPage}
                                 page={toolData}
                             />
-                        </div>
-                    </Spin>
+                        </Spin>
+                    </div>
                 </div>
             </Col>
         </Row>

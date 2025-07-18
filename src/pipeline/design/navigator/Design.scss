@@ -17,6 +17,11 @@
         justify-content: space-between;
         white-space: nowrap;
         gap: 10px;
+        .design-top-nav{
+            display: flex;
+            align-items: center;
+            gap: 60px;
+        }
     }
     .changeView-type{
         display: flex;
@@ -36,13 +41,11 @@
     .design-tabs{
         display: flex;
         height: 55px;
+        gap: 30px;
         .design-tab{
             cursor: pointer;
             display: flex;
             align-items: center;
-            &:not(:last-child){
-                margin-right: 30px;
-            }
             .design-tab-icon{
                 padding-right: 2px;
             }
@@ -59,11 +62,14 @@
     }
     .design-content{
         height: calc(100% - 56px);
-        padding: 20px 30px;
+        padding: 20px 30px 10px;
         overflow: auto;
+        background: var(--arbess-backdrop-color);
     }
 
     .changeView-btn{
+        display: flex;
+        align-items: center;
         .changeView-btn-more{
             margin-left: 15px;
             display: inline-block;

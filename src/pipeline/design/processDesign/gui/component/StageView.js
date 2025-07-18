@@ -1,5 +1,5 @@
 /**
- * @Description: 多阶段查看视图
+ * @Description: 多阶段浏览视图
  * @Author: gaomengyuan
  * @Date: 2025/3/11
  * @LastEditors: gaomengyuan

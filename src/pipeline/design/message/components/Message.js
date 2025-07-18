@@ -17,6 +17,7 @@ import {pipeline_task_update} from "../../../../common/utils/Constant";
 import {sendTypeIcon} from "tiklab-message-ui/es/utils/Client";
 import Page from "../../../../common/component/page/Page";
 import {deleteSuccessReturnCurrenPage} from "../../../../common/utils/Client";
+import VersionInfo from "../../../../common/component/versionInfo/VersionInfo";
 
 const pageSize = 13;
 
@@ -198,9 +199,11 @@ const Message = props =>{
                 xxl={{ span: "16", offset: "4" }}
                 className="post-pose"
             >
-                <Spin spinning={spinning}>
+                <div className='post-pose-box'>
                     <div className="post-pose-up">
-                        <div className="post-pose-up-num">共{postprocessData?.totalRecord||0}条</div>
+                        <div className="post-pose-up-num">
+                            共{postprocessData?.totalRecord||0}条
+                        </div>
                         { taskUpdate && <Button title={"添加"} onClick={addPostprocess}/> }
                         <MessageAddEdit
                             {...props}
@@ -213,22 +216,27 @@ const Message = props =>{
                             setPostprocessVisible={setPostprocessVisible}
                         />
                     </div>
-                    <div className="trigger-tables">
-                        <Table
-                            bordered={false}
-                            columns={columns}
-                            dataSource={postprocessData?.dataList || []}
-                            rowKey={record=>record.id}
-                            pagination={false}
-                            locale={{emptyText: <ListEmpty />}}
-                        />
-                        <Page
-                            currentPage={postprocessData.currentPage}
-                            changPage={changPage}
-                            page={postprocessData}
-                        />
+                    <div className='post-pose-content'>
+                        <Spin spinning={spinning}>
+                            <div className={`trigger-tables ${postprocessData?.totalRecord > 0 ? '' : 'trigger-tables-empty'}`}>
+                                <Table
+                                    bordered={false}
+                                    columns={columns}
+                                    dataSource={postprocessData?.dataList || []}
+                                    rowKey={record=>record.id}
+                                    pagination={false}
+                                    locale={{emptyText: <ListEmpty />}}
+                                />
+                                <Page
+                                    currentPage={postprocessData.currentPage}
+                                    changPage={changPage}
+                                    page={postprocessData}
+                                />
+                            </div>
+                        </Spin>
                     </div>
-                </Spin>
+                </div>
+                <VersionInfo />
             </Col>
         </Row>
     )

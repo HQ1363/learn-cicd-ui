@@ -6,7 +6,7 @@
  * @LastEditTime: 2025/3/12
  */
 import React, {useEffect, useRef, useState} from "react";
-import {Row, Col, Spin, Select} from "antd";
+import {Row, Col, Spin, Select, Tag, message, Space} from "antd";
 import {RightOutlined} from "@ant-design/icons";
 import echarts from "../../../common/component/echarts/Echarts";
 import statisticsStore from "../store/StatisticsStore";
@@ -16,21 +16,38 @@ import DynamicList from "../../../common/component/list/DynamicList";
 import ListEmpty from "../../../common/component/list/ListEmpty";
 import {runStatusIcon} from "../../history/components/HistoryCommon";
 import "./Overview.scss";
-import GaugeChart from "../../../common/component/echarts/GaugeChart";
 import SearchSelect from "../../../common/component/search/SearchSelect";
+import {inject, observer} from "mobx-react";
+import ListIcon from "../../../common/component/list/ListIcon";
+import Profile from "../../../common/component/profile/Profile";
+import pip_xingxing_kong from "../../../assets/images/svg/pip_xingxing_kong.svg";
+import pip_xingxing from "../../../assets/images/svg/pip_xingxing.svg";
+import pip_setting from "../../../assets/images/svg/pip_setting.svg";
+import pip_date from "../../../assets/images/svg/pip_date.svg";
+import pip_group from "../../../assets/images/svg/pip_group.svg";
+import pip_env from "../../../assets/images/svg/pip_env.svg";
+import pip_status from "../../../assets/images/svg/pip_status.svg";
+import pip_success from "../../../assets/images/svg/pip_success.svg";
+import pip_error from "../../../assets/images/svg/pip_error.svg";
+import pip_halt from "../../../assets/images/svg/pip_halt.svg";
 
 const Overview = props =>{
 
-    const {match:{params}} = props
+    const {match,pipelineStore} = props
 
-    const {findRecentDaysFormatted,findRunResultSpan,findRunTimeSpan,findRunNumberSpan} = statisticsStore;
+    const {findRecentDaysFormatted,findRunTimeSpan,findRunNumberSpan,findPipelineInstanceCount} = statisticsStore;
     const {findLogPageByTime} = overviewStore;
     const {findPipelineInstance} = historyStore;
+    const {pipeline} = pipelineStore;
+
+    //流水线id
+    const pipelineId = match.params.id;
 
     const chartRefs = {
         releaseTrend: useRef(null),
         resultTrend: useRef(null),
         numberTrend: useRef(null),
+        instanceTrend: useRef(null),
     }
 
     //加载状态
@@ -40,6 +57,7 @@ const Overview = props =>{
         resultTrend:false,
         releaseTrend:false,
         numberTrend:false,
+        instanceTrend:false,
     })
     //流水线动态
     const [dynamicList,setDynamicList] = useState([]);
@@ -49,8 +67,11 @@ const Overview = props =>{
     const [date,setDate] = useState(null);
     //运行统计请求参数
     const [runParams,setRunParams] = useState(0);
+    //实例统计
+    const [instanceCount,setInstanceCount] = useState({})
 
     useEffect(() => {
+        //图表自适应浏览器
         const handleResize = () => {
             Object.keys(chartRefs).forEach((key) => {
                 const chartDom = chartRefs[key].current;
@@ -88,11 +109,19 @@ const Overview = props =>{
                 setDate(res.data);
             }
         })
+        //实例统计
+        setSpinning(pev=>({...pev, instanceTrend: true}));
+        findPipelineInstanceCount(pipelineId).then(res=>{
+            if(res.code===0){
+                setInstanceCount(res.data);
+                renderInstanceCountChart(res.data);
+            }
+        }).finally(()=>{
+            setSpinning(pev=>({...pev, instanceTrend: false}));
+        })
     },[])
 
     useEffect(() => {
-        //结果次数统计
-        // findRunResult('resultTrend');
         //时间段统计
         findRunTime('releaseTrend');
         //结果次数统计
@@ -104,7 +133,7 @@ const Overview = props =>{
      */
     const findLogPage = (chartKey) => {
         setSpinning(pev=>({...pev, [chartKey]: true}));
-        findLogPageByTime({data:{pipelineId:[params.id]},pageParam:{pageSize:10,currentPage:1}}).then(res=>{
+        findLogPageByTime({data:{pipelineId:[pipelineId]},pageParam:{pageSize:10,currentPage:1}}).then(res=>{
             if(res.code===0){
                 setDynamicList(res.data?.dataList || [])
             }
@@ -117,22 +146,9 @@ const Overview = props =>{
      */
     const findInstance = (chartKey) => {
         setSpinning(pev=>({...pev, [chartKey]: true}));
-        findPipelineInstance({pipelineId:params.id,pageParam:{pageSize:4,currentPage:1}}).then(res=>{
+        findPipelineInstance({pipelineId:pipelineId,pageParam:{pageSize:4,currentPage:1}}).then(res=>{
             if(res.code===0){
                 setInstanceList(res.data?.dataList || [])
-            }
-        }).finally(()=>setSpinning(pev=>({...pev, [chartKey]: false})))
-    }
-
-    /**
-     * 结果次数统计
-     * @param chartKey
-     */
-    const findRunResult = (chartKey) => {
-        setSpinning(pev=>({...pev, [chartKey]: true}));
-        findRunResultSpan({pipelineId:params.id,countDay:runParams}).then(res=> {
-            if(res.code===0){
-                renderRunResultSpanChart(res.data,chartKey)
             }
         }).finally(()=>setSpinning(pev=>({...pev, [chartKey]: false})))
     }
@@ -142,7 +158,7 @@ const Overview = props =>{
      */
     const findRunTime = (chartKey) => {
         setSpinning(pev=>({...pev, [chartKey]: true}));
-        findRunTimeSpan({pipelineId:params.id,countDay:runParams}).then(res=> {
+        findRunTimeSpan({pipelineId:pipelineId,countDay:runParams}).then(res=> {
             if(res.code===0){
                 renderRunTimeSpanChart(res.data,chartKey)
             }
@@ -155,47 +171,11 @@ const Overview = props =>{
      */
     const findRunNumber = (chartKey) => {
         setSpinning(pev=>({...pev, [chartKey]: true}));
-        findRunNumberSpan({pipelineId:params.id,countDay:runParams}).then(res=> {
+        findRunNumberSpan({pipelineId:pipelineId,countDay:runParams}).then(res=> {
             if(res.code===0){
                 renderRunNumberSpanChart(res.data,chartKey)
             }
         }).finally(()=>setSpinning(pev=>({...pev, [chartKey]: false})))
-    }
-
-    //图表--流水线结果统计
-    const renderRunResultSpanChart = (data, chartKey) => {
-        const chartDom = chartRefs[chartKey].current;
-        if(!chartDom){return;}
-        let chart = echarts.getInstanceByDom(chartDom) || echarts.init(chartDom);
-        // 限制最多只使用5条数据
-        const limitedData = data ? data.slice(0, 4) : [];
-
-        const option = {
-            title: {
-                text: '运行次数统计',
-                textStyle: {
-                    fontSize: 14,
-                    fontWeight: 'normal',
-                },
-            },
-            tooltip: {
-                trigger: 'axis'
-            },
-            xAxis: {
-                type: 'category',
-                data: limitedData?.map(item=>item.pipeline?.name),
-            },
-            yAxis: [
-                {type: 'value'}
-            ],
-            series:  [
-                {
-                    data: limitedData?.map(item=>item?.number || 0),
-                    type: 'bar'
-                }
-            ]
-        };
-        chart.setOption(option);
     }
 
     //图表--时间段统计
@@ -250,7 +230,7 @@ const Overview = props =>{
                 text: '结果次数统计',
                 textStyle: {
                     fontSize: 14,
-                    fontWeight: 'normal',
+                    fontWeight: 'bold',
                 },
             },
             tooltip: {
@@ -284,6 +264,61 @@ const Overview = props =>{
         chart.setOption(option);
     }
 
+    //图表--实例统计
+    const renderInstanceCountChart = (data) => {
+        const chartDom = chartRefs.instanceTrend.current;
+        if(!chartDom){return;}
+        let chart = echarts.getInstanceByDom(chartDom) || echarts.init(chartDom);
+
+        const option = {
+            title: {
+                text: '运行状态统计',
+                textStyle: {
+                    fontSize: 14,
+                    fontWeight: 'bold',
+                },
+            },
+            tooltip: {
+                trigger: 'item'
+            },
+            series: [
+                {
+                    name: 'Access From',
+                    type: 'pie',
+                    radius: ['40%', '70%'],
+                    avoidLabelOverlap: false,
+                    color:['#91CC75', '#f06f6f', '#FAC858'],
+                    data: [
+                        { value: data?.successNumber || 0, name: '成功' },
+                        { value: data?.errorNumber || 0, name: '失败' },
+                        { value: data?.haltNumber || 0, name: '终止' },
+                    ]
+                },
+                {
+                    type: 'pie',
+                    radius: ['0%', '30%'],
+                    silent: true,
+                    itemStyle: {
+                        color: 'transparent',
+                        borderWidth: 0
+                    },
+                    label: {
+                        show: true,
+                        position: 'center',
+                        formatter: '全部\n{c}',
+                        fontSize: 14,
+                        fontWeight: 'bold',
+                        color: '#333'
+                    },
+                    data: [
+                        { value: data?.allNumber || 0, name: '全部' }
+                    ]
+                }
+            ]
+        };
+        chart.setOption(option);
+    }
+
     return(
         <Row className="overview">
             <Col
@@ -295,6 +330,153 @@ const Overview = props =>{
                 xxl={{ span: "18", offset: "3" }}
             >
                 <div className="arbess-home-limited">
+                    <div className='overview-top'>
+                        <div className='overview-pipeline'>
+                            <div className='overview-pipeline-up'>
+                                <ListIcon
+                                    text={pipeline?.name}
+                                    colors={pipeline?.color}
+                                />
+                                <div className='overview-pipeline-up-info'>
+                                    <div className='overview-up-name'>
+                                        {pipeline?.name}
+                                    </div>
+                                    <div className='overview-up-info'>
+                                        <div className='overview-up-info-item'>
+                                            {pipeline?.power===1?'全局':'私有'}
+                                        </div>
+                                        <div className='overview-up-info-item'>
+                                            <img
+                                                src={pipeline?.collect === 0 ? pip_xingxing_kong : pip_xingxing}
+                                                alt={"收藏"}
+                                                width={15}
+                                                height={15}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div
+                                    className='overview-pipeline-up-setting'
+                                    onClick={()=>props.history.push(`/pipeline/${pipelineId}/setting/info`)}
+                                >
+                                    <img src={pip_setting} width={20} height={20}/>
+                                </div>
+                            </div>
+                            <div className='overview-pipeline-center'>
+                                <div className='overview-pipeline-item pipeline-space'>
+                                    <Profile userInfo={pipeline?.user}/>
+                                    <div className='overview-pipeline-item-value'>
+                                        <div>
+                                            {pipeline?.user?.nickname || '--'}
+                                        </div>
+                                        <div className='value-desc'>
+                                            负责人
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className='pipeline-space overview-pipeline-status'>
+                                    <div className='overview-pipeline-item'>
+                                        <div className='overview-pipeline-item-label'>
+                                            <img src={pip_status} width={21} height={21} alt={''}/>
+                                        </div>
+                                        <div className='overview-pipeline-item-value'>
+                                            <div className='value-value'>
+                                                {instanceCount?.allNumber || 0}
+                                            </div>
+                                            <div className='value-desc'>
+                                                全部
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className='overview-pipeline-item'>
+                                        <div className='overview-pipeline-item-label'>
+                                            <img src={pip_success} width={21} height={21} alt={''}/>
+                                        </div>
+                                        <div className='overview-pipeline-item-value'>
+                                            <div className='value-value'>
+                                                {instanceCount?.successNumber || 0}
+                                            </div>
+                                            <div className='value-desc'>
+                                                成功
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className='overview-pipeline-item'>
+                                        <div className='overview-pipeline-item-label'>
+                                            <img src={pip_error} width={21} height={21} alt={''}/>
+                                        </div>
+                                        <div className='overview-pipeline-item-value'>
+                                            <div className='value-value'>
+                                                {instanceCount?.errorNumber || 0}
+                                            </div>
+                                            <div className='value-desc'>
+                                                失败
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className='overview-pipeline-item'>
+                                        <div className='overview-pipeline-item-label'>
+                                            <img src={pip_halt} width={21} height={21} alt={''}/>
+                                        </div>
+                                        <div className='overview-pipeline-item-value'>
+                                            <div className='value-value'>
+                                                {instanceCount?.haltNumber || 0}
+                                            </div>
+                                            <div className='value-desc'>
+                                                终止
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className='overview-pipeline-item pipeline-space'>
+                                    <div className='overview-pipeline-item-label'>
+                                        <img src={pip_date} width={21} height={21} alt={''}/>
+                                    </div>
+                                    <div className='overview-pipeline-item-value'>
+                                        <div>
+                                            {pipeline?.createTime}
+                                        </div>
+                                        <div className='value-desc'>
+                                            创建时间
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className='overview-pipeline-flex'>
+                                    <div className='overview-pipeline-item'>
+                                        <div className='overview-pipeline-item-label'>
+                                            <img src={pip_group} width={21} height={21} alt={''}/>
+                                        </div>
+                                        <div className='overview-pipeline-item-value'>
+                                            <div>
+                                                {pipeline?.group?.groupName}
+                                            </div>
+                                            <div className='value-desc'>
+                                                应用
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className='overview-pipeline-item'>
+                                        <div className='overview-pipeline-item-label'>
+                                            <img src={pip_env} width={21} height={21} alt={''}/>
+                                        </div>
+                                        <div className='overview-pipeline-item-value'>
+                                            <div>
+                                                {pipeline?.env?.envName}
+                                            </div>
+                                            <div className='value-desc'>
+                                                环境
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className='overview-quick-entrance'>
+                            <Spin spinning={spinning.instanceTrend}>
+                                <div ref={chartRefs.instanceTrend} style={{ height: '100%' }} />
+                            </Spin>
+                        </div>
+                    </div>
                     <div className="overview-upper">
                         <div className='overview-guide-title'>
                             最近发布
@@ -305,12 +487,12 @@ const Overview = props =>{
                                     <div className='overview-upper-instance'>
                                         {
                                             instanceList.map(item=>{
-                                                const {instanceId,findNumber,runStatus,runTimeDate,user,user:{nickname,name}} = item;
+                                                const {instanceId,findNumber,runStatus,runTimeDate} = item;
                                                 return (
                                                     <div
                                                         key={instanceId}
                                                         className='instance-item'
-                                                        onClick={()=>props.history.push(`/pipeline/${params.id}/history/${instanceId}`)}
+                                                        onClick={()=>props.history.push(`/pipeline/${pipelineId}/history/${instanceId}`)}
                                                     >
                                                         <div className='instance-item-up'>
                                                             <div className='instance-item-findNumber'># {findNumber}</div>
@@ -372,7 +554,7 @@ const Overview = props =>{
                             </div>
                             <RightOutlined
                                 className='overview-bottom-right'
-                                onClick={()=>props.history.push(`/pipeline/${params.id}/dyna`)}
+                                onClick={()=>props.history.push(`/pipeline/${pipelineId}/dyna`)}
                             />
                         </div>
                         <div className='overview-bottom-box'>
@@ -387,4 +569,5 @@ const Overview = props =>{
     )
 }
 
-export default Overview
+export default inject("pipelineStore")(observer(Overview))
+

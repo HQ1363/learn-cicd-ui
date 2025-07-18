@@ -237,7 +237,10 @@ $aside-border-color: #e4e4e4;
           padding: 0 var(--tiklab-padding-item);
           height: 40px;
           line-height: 40px;
-          border-bottom: 1px solid var(--arbess-border-color);
+        }
+        &-search{
+          padding: 0 var(--tiklab-padding-item);
+          margin-bottom: 10px;
         }
         &-group{
           max-height: calc(100% - 120px);
@@ -246,13 +249,15 @@ $aside-border-color: #e4e4e4;
         }
         &-item{
           padding: 0 var(--tiklab-padding-item);
+          margin: 0 var(--tiklab-padding-item);
+          border-radius: 4px;
           height: 40px;
           line-height: 40px;
           cursor: pointer;
           text-overflow: ellipsis;
           white-space: nowrap;
           overflow: hidden;
-          max-width: 200px;
+          max-width: 100%;
           &:hover{
             background: var(--arbess-hover-color);
           }
@@ -267,7 +272,7 @@ $aside-border-color: #e4e4e4;
           border-radius: 4px;
         }
         &-active{
-          background:#edf0f5;
+          background: var(--arbess-hover-color);
         }
         &-more{
           cursor: pointer;

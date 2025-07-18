@@ -15,9 +15,9 @@ import ListAction from "../../../../common/component/list/ListAction";
 import Page from "../../../../common/component/page/Page";
 import {deleteSuccessReturnCurrenPage} from "../../../../common/utils/Client";
 import K8sAddBtn from "./K8sAddBtn";
-import "../../../common/Common.scss";
 import k8sStore from "../store/K8sStore";
 import K8sDetail from "./K8sDetail";
+import "./K8s.scss";
 
 const pageSize = 13;
 
@@ -126,7 +126,7 @@ const K8s = props => {
             title:"集群地址",
             dataIndex: ['k8sVersion','serverAddress'],
             key: "serverAddress",
-            width:"20%",
+            width:"19%",
             ellipsis:true,
             render: text=>text || '--'
         },
@@ -134,7 +134,7 @@ const K8s = props => {
             title:"集群状态",
             dataIndex: "connect",
             key: "connect",
-            width:"13%",
+            width:"12%",
             ellipsis:true,
             render: text=>text?<Tag color={'blue'}>正常</Tag>:<Tag color={'red'}>无法连接</Tag>
         },
@@ -142,7 +142,7 @@ const K8s = props => {
             title:"集群节点数量",
             dataIndex: "allNodes",
             key: "allNodes",
-            width:"10%",
+            width:"12%",
             ellipsis:true,
             render: text=> text?.length ? <span className='k8s-table-node'>{text.length}</span> : '--'
         },
@@ -186,26 +186,15 @@ const K8s = props => {
         }
     ]
 
-    // if(detailVisible){
-    //     return (
-    //         <K8sDetail
-    //             visible={detailVisible}
-    //             setVisible={setDetailVisible}
-    //             formValue={formValue}
-    //             setFormValue={setFormValue}
-    //         />
-    //     )
-    // }
-
     return (
-        <Row className="auth">
+        <Row className="k8s">
             <Col
                 xs={{ span: "24" }}
                 sm={{ span: "24" }}
                 md={{ span: "24" }}
                 lg={{span: "24"}}
                 xl={{ span: "22", offset: "1" }}
-                xxl={{ span: "18", offset: "3" }}
+                xxl={{ span: "20", offset: "2" }}
                 className='arbess-home-limited'
             >
                 <BreadCrumb
@@ -221,8 +210,8 @@ const K8s = props => {
                         findAuth={findAuth}
                     />
                 </BreadCrumb>
-                <Spin spinning={spinning}>
-                    <div className="auth-content">
+                <div className="k8s-content">
+                    <Spin spinning={spinning}>
                         <Table
                             columns={column}
                             dataSource={k8sData?.dataList || []}
@@ -235,8 +224,8 @@ const K8s = props => {
                             changPage={changPage}
                             page={k8sData}
                         />
-                    </div>
-                </Spin>
+                    </Spin>
+                </div>
                 <K8sDetail
                     visible={detailVisible}
                     setVisible={setDetailVisible}

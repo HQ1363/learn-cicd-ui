@@ -1,0 +1,19 @@
+.server{
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  .server-search{
+    padding-top: var(--tiklab-padding-item);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  .server-content{
+    padding-top: var(--tiklab-padding-item);
+    .ant-avatar{
+      width: 22px;
+      height: 22px;
+      font-size: 12px;
+    }
+  }
+}

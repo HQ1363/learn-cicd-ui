@@ -42,19 +42,22 @@ class AgentStore {
     }
 
     /**
-     * 设置默认agent
+     * 更新Agent
+     * @param values
+     * @returns {Promise<unknown>}
      */
     @action
-    updateDefaultAgent = async values =>{
-        const param = new FormData();
-        param.append('id',values)
-        const data =  await Axios.post("/agent/updateDefaultAgent",param);
-        if(data.code===0){
-            message.success("设置成功");
-        }else {
-            message.error(data.msg);
-        }
-        return data
+    updateAgent = async values =>{
+        return await Axios.post("/agent/updateAgent",values);
+    }
+
+    /**
+     * agent执行策略
+     * @returns {Promise<unknown>}
+     */
+    @action
+    findAgentRoleList = async () =>{
+        return await Axios.post('/agentRole/findAgentRoleList',{})
     }
 
 }

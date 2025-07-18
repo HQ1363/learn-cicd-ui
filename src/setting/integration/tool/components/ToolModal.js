@@ -13,6 +13,7 @@ import toolStore from "../store/ToolStore";
 import {scmList, scmPlaceholder, scmTitle} from "./ToolCommon";
 import {getUser} from "tiklab-core-ui";
 import Button from "../../../../common/component/button/Button";
+import {getAPIgateway} from "tiklab-core-ui";
 
 const ToolModal = props =>{
 
@@ -35,7 +36,9 @@ const ToolModal = props =>{
                 setScmType(formValue.scmType)
                 return
             }
-            form.setFieldsValue({scmType:externalScmType})
+            form.setFieldsValue({
+                scmType:externalScmType
+            })
             setScmType(externalScmType)
         }
     },[visible])
@@ -176,6 +179,7 @@ const ToolModal = props =>{
                                             headers={{
                                                 ticket: user.ticket,
                                                 tenant: user.tenant,
+                                                ...getAPIgateway(),
                                             }}
                                             // accept={'.gz'}
                                             maxCount={1}
@@ -189,9 +193,6 @@ const ToolModal = props =>{
                                                     })
                                                 }
                                             }}
-                                            // beforeUpload={(file) => {
-                                            //     return file.name.endsWith('.tar.gz');
-                                            // }}
                                         >
                                             {fileList.length < 1 && <Button>上传</Button>}
                                         </Upload>
