@@ -6,7 +6,7 @@
         flex-wrap: wrap;
         justify-content: space-between;
         align-items: center;
-        padding: 10px 0;
+        padding-bottom: 10px;
         gap: 10px 0;
     }
     &-length{
@@ -26,14 +26,74 @@
     .count-number{
         padding-left: 3px;
         font-size: 12px;
+        color: #666666;
     }
     .pipeline-senior-screen{
-        font-size: 16px;
         cursor: pointer;
         border-radius: 4px;
         padding: 4px;
         &:hover{
             background: var(--arbess-hover-color);
+        }
+    }
+
+    .home-recent{
+        border-radius: 4px;
+        margin: 15px 0;
+        .pipelineRecent-content{
+            display: flex;
+            justify-content: flex-start;
+            flex-wrap: wrap;
+            overflow: hidden;
+            height: 120px;
+            padding-top: 10px;
+            gap: 10px;
+        }
+        .pipelineRecent-item{
+            flex: 1;
+            height: 110px;
+            padding: 10px;
+            max-width: calc(100% / 4);
+            min-width: 210px;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: var(--arbess-backdrop-color);
+            border-bottom: 2px solid transparent;
+        }
+        .pipelineRecent-item:hover{
+            border-radius: 4px 4px 0 0;
+            border-bottom-color: var(--tiklab-blue);
+            transition: 1s;
+        }
+        .pipelineRecent-item-title{
+            padding-bottom: var(--tiklab-padding-item);
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            .pipelineRecent-name{
+                flex: 1;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                -o-text-overflow: ellipsis;
+                font-weight: var(--tiklab-font-weight-bold);
+            }
+        }
+        .pipelineRecent-item-details{
+            font-size: var(--tiklab-font-13);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            padding: 10px 0;
+            .details-desc{
+                color: #9b9b9b;
+                padding-right: 8px;
+            }
+        }
+        .pipelineRecent-item-detail{
+            &:first-child{
+                margin-right: 30px;
+            }
         }
     }
 }
@@ -46,5 +106,19 @@
     width: 320px;
     .screen-drop-button{
         text-align: right;
+    }
+    .ant-select{
+        background-color: var(--tiklab-gray);
+        border-radius: 4px;
+        cursor: pointer;
+        &:hover{
+            background-color: var(--arbess-select-color);
+        }
+    }
+    .ant-select-show-search.ant-select:not(.ant-select-customize-input) .ant-select-selector{
+        cursor: pointer;
+    }
+    .ant-select-show-search.ant-select:not(.ant-select-customize-input) .ant-select-selector input{
+        cursor: pointer;
     }
 }

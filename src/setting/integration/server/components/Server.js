@@ -31,6 +31,9 @@ import {
     serverHadess,
     serverSourceFare,
 } from "../../../../common/utils/Constant";
+import {maskString} from "../../../../common/utils/Client";
+import {getUser} from "tiklab-core-ui";
+import {PrivilegeButton} from "tiklab-privilege-ui";
 
 const pageSize = 13;
 
@@ -53,7 +56,9 @@ const Server = props =>{
         pageParam
     });
     //加载
-    const [spinning,setSpinning] = useState(false)
+    const [spinning,setSpinning] = useState(false);
+
+    const user = getUser();
 
     useEffect(()=>{
         // 初始化服务配置
@@ -131,7 +136,7 @@ const Server = props =>{
     }
 
     // 标题
-    const name = text => (
+    const nameHtml = text => (
         <span>
             <ListIcon text={text}/>
             <span>{text}</span>
@@ -139,7 +144,7 @@ const Server = props =>{
     )
 
     // 创建人
-    const user = (text,record) => (
+    const userHtml = (text,record) => (
         <Space>
             <Profile userInfo={record.user}/>
             {text || '--'}
@@ -153,17 +158,26 @@ const Server = props =>{
         serverSourceFare,
     ]
     // 操作
-    const action = record => {
+    const actionHtml = record => {
         const { type } = record;
-        const isRestricted = restrictedType.includes(type)&& version === 'cloud';
+        const isRestricted = restrictedType.includes(type) && version === 'cloud';
 
         return isRestricted ? (
-            <ListAction edit={() => editServer(record)} />
+            <ListAction
+                edit={() => editServer(record)}
+                code={{
+                    editCode: 'pip_set_tool_update',
+                }}
+            />
         ) : (
             <ListAction
                 edit={() => editServer(record)}
                 del={() => delServer(record)}
                 isMore={true}
+                code={{
+                    editCode: 'pip_set_server_update',
+                    delCode: 'pip_set_server_delete',
+                }}
             />
         );
     };
@@ -176,7 +190,7 @@ const Server = props =>{
             key:"name",
             width:"20%",
             ellipsis:true,
-            render:text => name(text)
+            render:text => nameHtml(text)
         },
         {
             title: "服务地址",
@@ -200,7 +214,7 @@ const Server = props =>{
             key:"user",
             width:"15%",
             ellipsis:true,
-            render:(text,record) => user(text,record)
+            render:(text,record) => userHtml(text,record)
         },
         {
             title:"创建时间",
@@ -215,26 +229,27 @@ const Server = props =>{
             key: "action",
             width:"8%",
             ellipsis:true,
-            render:(text,record) => action(record)
+            render:(text,record) => actionHtml(record)
         }
     ]
 
-    // 第三方授权认证 Gitee和Github
+    // 第三方授权认证 Gitee gitlab 和 Github
     const authorizeColumn = [
         {
             title:"名称",
             dataIndex:"name",
             key:"name",
-            width:"20%",
+            width:"25%",
             ellipsis:true,
-            render:text => name(text)
+            render:text => nameHtml(text)
         },
         {
             title:"授权信息",
             dataIndex:"accessToken",
             key:"accessToken",
-            width:"30%",
+            width:"25%",
             ellipsis:true,
+            render: text => maskString(text)
         },
         {
             title:"创建人",
@@ -242,8 +257,7 @@ const Server = props =>{
             key:["user","nickname"],
             width:"20%",
             ellipsis:true,
-            render:(text,record) => user(text,record)
-
+            render:(text,record) => userHtml(text,record)
         },
         {
             title:"创建时间",
@@ -258,7 +272,7 @@ const Server = props =>{
             key: "action",
             width:"8%",
             ellipsis:true,
-            render:(text,record) => action(record)
+            render:(text,record) => actionHtml(record)
         }
     ]
 
@@ -270,7 +284,7 @@ const Server = props =>{
             key:"name",
             width:"20%",
             ellipsis:true,
-            render:text => name(text)
+            render:text => nameHtml(text)
         },
         {
             title: "服务地址",
@@ -285,6 +299,7 @@ const Server = props =>{
             key:"accessToken",
             width:"19%",
             ellipsis:true,
+            render: text => maskString(text)
         },
         {
             title:"创建人",
@@ -292,8 +307,7 @@ const Server = props =>{
             key:["user","nickname"],
             width:"15%",
             ellipsis:true,
-            render:(text,record) => user(text,record)
-
+            render:(text,record) => userHtml(text,record)
         },
         {
             title:"创建时间",
@@ -308,11 +322,11 @@ const Server = props =>{
             key: "action",
             width:"8%",
             ellipsis:true,
-            render:(text,record) => action(record)
+            render:(_,record) => actionHtml(record)
         }
     ]
 
-    // sonar & nexus & testhubo & xcode
+    // sonar & nexus & testhubo & gitpuk
     const authColumn = [
         {
             title:"名称",
@@ -320,7 +334,7 @@ const Server = props =>{
             key:"name",
             width:"20%",
             ellipsis:true,
-            render:text => name(text)
+            render:text => nameHtml(text)
         },
         {
             title: "服务地址",
@@ -343,7 +357,7 @@ const Server = props =>{
             key:["user","nickname"],
             width:"15%",
             ellipsis:true,
-            render:(text,record) => user(text,record)
+            render:(text,record) => userHtml(text,record)
         },
         {
             title:"创建时间",
@@ -358,7 +372,7 @@ const Server = props =>{
             key: "action",
             width:"8%",
             ellipsis:true,
-            render:(_,record) => action(record)
+            render:(_,record) => actionHtml(record)
         }
     ]
 
@@ -399,14 +413,16 @@ const Server = props =>{
                             {title:'服务集成'}
                         ]}
                     >
-                        <ServerAddBtn
-                            type={'gitee'}
-                            visible={visible}
-                            setVisible={setVisible}
-                            formValue={formValue}
-                            setFormValue={setFormValue}
-                            findAuth={findAuth}
-                        />
+                        <PrivilegeButton code={'pip_set_server_create'}>
+                            <ServerAddBtn
+                                type={'gitee'}
+                                visible={visible}
+                                setVisible={setVisible}
+                                formValue={formValue}
+                                setFormValue={setFormValue}
+                                findAuth={findAuth}
+                            />
+                        </PrivilegeButton>
                     </BreadCrumb>
                     <div className="server-search">
                         <SearchInput

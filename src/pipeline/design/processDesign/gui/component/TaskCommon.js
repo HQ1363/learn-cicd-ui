@@ -21,6 +21,7 @@ import pip_go from "../../../../../assets/images/svg/pip_go.svg";
 import pip_python from "../../../../../assets/images/svg/pip_python.svg";
 import pip_php from "../../../../../assets/images/svg/pip_php.svg";
 import pip_net_core from "../../../../../assets/images/svg/pip_net_core.svg";
+import pip_checkpoint from "../../../../../assets/images/svg/pip_checkpoint.svg";
 import {productImg} from "tiklab-core-ui";
 import {
     git,
@@ -52,7 +53,9 @@ import {
     download_hadess,
     download_ssh,
     download_nexus,
-    sourcefare, build_net_core,
+    sourcefare,
+    build_net_core,
+    checkpoint,
 } from '../../../../../common/utils/Constant';
 
 /**
@@ -91,6 +94,7 @@ export const taskTitle = type =>{
         case download_hadess: return "Hadess下载"
         case download_ssh: return "SSH下载"
         case download_nexus: return "Nexus下载"
+        case checkpoint: return "人工卡点"
         case script: return "执行脚本"
         case message: return "消息通知"
         case post: return "后置处理"
@@ -135,6 +139,7 @@ export const TaskIcon = props =>{
             case download_hadess: return productImg.hadess
             case download_ssh: return pip_ssh
             case download_nexus: return pip_nexus
+            case checkpoint: return pip_checkpoint
             case script: return pip_shell
             case message: return pip_message
             case post: return pip_post
@@ -188,6 +193,7 @@ export const HeadlineTitle = type =>{
         case download_hadess:
         case download_ssh:
         case download_nexus:
+        case checkpoint:
             return '工具'
         default :
             return "阶段名称"
@@ -195,7 +201,7 @@ export const HeadlineTitle = type =>{
 }
 
 /**
- * 新旧值更新
+ * 新旧值对比
  */
 export const WhetherChange = (newValue,lastValue) => {
     if (newValue == null){

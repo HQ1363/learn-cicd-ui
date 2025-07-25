@@ -68,7 +68,7 @@ const Overview = props =>{
     //运行统计请求参数
     const [runParams,setRunParams] = useState(0);
     //实例统计
-    const [instanceCount,setInstanceCount] = useState({})
+    const [instanceCount,setInstanceCount] = useState({});
 
     useEffect(() => {
         //图表自适应浏览器
@@ -269,7 +269,6 @@ const Overview = props =>{
         const chartDom = chartRefs.instanceTrend.current;
         if(!chartDom){return;}
         let chart = echarts.getInstanceByDom(chartDom) || echarts.init(chartDom);
-
         const option = {
             title: {
                 text: '运行状态统计',

@@ -129,11 +129,11 @@ const Design = props =>{
             title:"变量",
             long: pipelineCount?.variableNumber || '0'
         },
-        {
-            id:`message`,
-            title:"消息通知",
-            long: pipelineCount?.massageNumber || '0'
-        }
+        // {
+        //     id:`message`,
+        //     title:"消息通知",
+        //     long: pipelineCount?.massageNumber || '0'
+        // }
     ]
 
     /**

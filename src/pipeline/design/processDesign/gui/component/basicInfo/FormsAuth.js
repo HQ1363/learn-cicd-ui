@@ -36,6 +36,7 @@ import {
     sourcefare,
 } from "../../../../../../common/utils/Constant";
 import {taskTitle} from "../TaskCommon";
+import {maskString} from "../../../../../../common/utils/Client";
 
 const FormsAuth = props =>{
 
@@ -65,11 +66,11 @@ const FormsAuth = props =>{
     const findAuth = () =>{
         switch (taskType) {
             case liunx:
-            case docker:
                 findAllHost()
                 break
             case upload_ssh:
             case download_ssh:
+            case docker:
                 findHost()
                 break
             case k8s:
@@ -272,7 +273,7 @@ const FormsAuth = props =>{
             case gitlab:
             case pri_gitlab:
             case github:
-                return `${item.name}(${item.accessToken})`;
+                return `${item.name}(${maskString(item.accessToken)})`;
             case upload_ssh:
             case download_ssh:
                 return `${item.name}(${item.ip})`
@@ -280,7 +281,7 @@ const FormsAuth = props =>{
             case docker:
                 return item.groupName ? `${item.groupName}(主机组)` : `${item.name}(${item.ip})`;
             case k8s:
-                return `${item.name}(${item.k8sVersion?.serverAddress})`
+                return `${item.name}(${item.k8sVersion?.serverAddress || '-'})`
             default:
                 return '';
         }

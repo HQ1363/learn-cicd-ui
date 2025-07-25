@@ -45,6 +45,7 @@ const DeployLinux = props =>{
                             placeholder={"部署文件"}
                             label={"部署文件"}
                             isRequire={true}
+                            tipText={true}
                         />
                         <FormsInput
                             name={"rule"}
@@ -57,6 +58,7 @@ const DeployLinux = props =>{
                             label={"部署位置"}
                             addonBefore={"/"}
                             isRequire={true}
+                            tipText={true}
                         />
                         <FormsMirror
                             name={"deployOrder"}

@@ -51,6 +51,7 @@ const DeployK8s = props =>{
                             placeholder={"配置文件位置"}
                             label={"配置文件位置"}
                             isRequire={true}
+                            tipText={true}
                         />
                         <FormsInput
                             name={"rule"}

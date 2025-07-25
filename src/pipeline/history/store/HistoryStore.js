@@ -12,7 +12,7 @@ class HistoryStore {
     @observable
     page = {
         currentPage: 1,
-        totalRecord: 1,
+        totalRecord: 0,
         totalPage: 1,
     }
 
@@ -81,9 +81,11 @@ class HistoryStore {
      */
     @action
     keepOn = async value =>{
-        const param = new FormData()
-        param.append("pipelineId",value)
-        return await Axios.post("/exec/keepOn", param)
+        const data = await Axios.post("/exec/keepOn", value);
+        if(data.code!==0){
+            message.error(data.msg);
+        }
+        return data;
     }
 
     /**
@@ -170,7 +172,7 @@ class HistoryStore {
             this.page = {
                 currentPage:1,
                 totalPage:1,
-                totalRecord:1,
+                totalRecord:0,
             }
         }
     }
@@ -181,10 +183,20 @@ class HistoryStore {
      * @returns
      */
     @action
-    findOneInstance = value =>{
+    findOneInstance = async value =>{
         const param = new FormData()
         param.append('instanceId',value)
-        return Axios.post('/instance/findOneInstance', param)
+        return await Axios.post('/instance/findOneInstance', param)
+    }
+
+    /**
+     * 历史统计
+     * @param {*} value
+     * @returns
+     */
+    @action
+    findPipelineInstanceCount = async value =>{
+        return await Axios.post('/instance/findPipelineInstanceCount', value)
     }
 
     /**
@@ -193,10 +205,10 @@ class HistoryStore {
      * @returns
      */
      @action
-     findAllInstanceLogs = value =>{
+     findAllInstanceLogs = async value =>{
          const param = new FormData()
          param.append('instanceId',value)
-         return Axios.post('/taskInstance/findAllInstanceLogs', param)
+         return await Axios.post('/taskInstance/findAllInstanceLogs', param)
      }
 
     /**
@@ -205,10 +217,10 @@ class HistoryStore {
      * @returns
      */
     @action
-    findAllStageInstanceLogs = value =>{
+    findAllStageInstanceLogs = async value =>{
         const param = new FormData()
         param.append('instanceId',value)
-        return Axios.post('/stageInstance/findAllStageInstanceLogs', param)
+        return await Axios.post('/stageInstance/findAllStageInstanceLogs', param)
     }
 
 }

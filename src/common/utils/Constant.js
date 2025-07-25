@@ -37,6 +37,7 @@ export const upload_nexus= 'upload_nexus'; //nexus上传
 export const download_hadess = 'download_hadess'; //hadess下载
 export const download_ssh = 'download_ssh'; //ssh下载
 export const download_nexus = 'download_nexus'; //nexus下载
+export const checkpoint = 'checkpoint'; //人工卡点
 export const script = 'script'; //执行脚本
 export const message = 'message'; //消息通知
 export const post = 'post'; //后置处理

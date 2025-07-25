@@ -62,7 +62,10 @@ const TaskDetails = props =>{
         >
             <div className="task-details-up">
                 <div className="wrapper-head-title">{HeadlineTitle(dataItem?.taskType)}</div>
-                <Button onClick={onClose} title={<CloseOutlined />} type="text"/>
+                <CloseOutlined
+                    onClick={onClose}
+                    className='wrapper-head-action'
+                />
             </div>
             <div className="task-details-bottom">
                 <div className="body-taskForm">

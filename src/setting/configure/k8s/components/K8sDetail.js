@@ -90,9 +90,7 @@ const K8sDetail = (props) => {
                <div className='k8s-detail-top'>
                    <BreadCrumb
                        crumbs={[
-                           {
-                               title: formValue?.name || '详情',
-                           }
+                           {title: formValue?.name || '详情'},
                        ]}
                    >
                        <CloseOutlined style={{fontSize:16}} onClick={goBack}/>

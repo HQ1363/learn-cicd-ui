@@ -27,6 +27,7 @@ const DeployDocker = props =>{
                 label={"部署位置"}
                 addonBefore={"/"}
                 isRequire={true}
+                tipText={true}
             />
             <FormsMirror
                 name={"deployOrder"}

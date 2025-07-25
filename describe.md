@@ -131,18 +131,19 @@
 # 6、setting
 系统设置模块
 
-| 文件          | 说明    |
-|-------------|-------|
-| base        | 基础数据  |
-| configure   | 流水线配置 |
-| home        | 设置首页  |
-| licence     | 应用    |
-| message     | 消息    |
-| privilege   | 权限    |
-| resources   | 资源监控  |
-| security    | 安全    |
-| server      | 服务集成  |
-| user        | 用户    |
+| 文件           | 说明    |
+|--------------|-------|
+| base         | 基础数据  |
+| configure    | 流水线配置 |
+| home         | 设置首页  |
+| integration  | 集成开发  |
+| licence      | 应用    |
+| message      | 消息    |
+| privilege    | 权限    |
+| resources    | 资源监控  |
+| security     | 安全    |
+| server       | 服务集成  |
+| user         | 用户    |
 
 ## 6.1、base
 | 文件          | 说明    |
@@ -159,22 +160,14 @@
 |----------|--------------|
 | agent    | Agent        |
 | auth     | 认证配置         |
-| env      | 流水线应用        |
-| grouping | 流水线环境        |
+| env      | 流水线环境        |
+| grouping | 流水线应用        |
 | host     | 主机配置         |
 | k8s      | Kubernetes集群 |
 | tool     | 工具配置         |
-| server   | 服务配置         |
+| variable | 变量           |
 
-## 6.2、configure
-资源配置
-
-| 文件       | 说明           |
-|----------|--------------|
-| host     | 主机配置         |
-| k8s      | Kubernetes集群 |
-
-## 6.2、integration
+## 6.3、integration
 集成与开发
 
 | 文件       | 说明      |

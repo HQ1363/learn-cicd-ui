@@ -28,7 +28,7 @@ const HistoryDetail = props =>{
 
     useEffect(() => {
         if(logData){
-            changeAnchor(logData,true)
+            changeAnchor(logData,false)
         }
     }, [logData]);
 
@@ -157,20 +157,36 @@ const HistoryDetail = props =>{
                     </BreadCrumb>
                     <div className="bread-center">
                         <div className="bread-center-item">
-                            <span className='bread-center-name'>开始时间</span>
-                            <span className='bread-center-desc'>{historyItem?.createTime }</span>
+                            <span className='bread-center-name'>
+                                开始时间
+                            </span>
+                            <span className='bread-center-desc'>
+                                {historyItem?.createTime }
+                            </span>
                         </div>
                         <div className="bread-center-item">
-                            <span className='bread-center-name'>运行方式</span>
-                            <span className='bread-center-desc'>{runWay()}</span>
+                            <span className='bread-center-name'>
+                                运行方式
+                            </span>
+                            <span className='bread-center-desc'>
+                                {runWay()}
+                            </span>
                         </div>
                         <div className="bread-center-item">
-                            <span className='bread-center-name'>运行状态</span>
-                            <span className={`bread-center-desc bread-center-${historyItem?.runStatus}`}>{runStatusText(historyItem?.runStatus)}</span>
+                            <span className='bread-center-name'>
+                                运行状态
+                            </span>
+                            <span className={`bread-center-desc bread-center-${historyItem?.runStatus}`}>
+                                {runStatusText(historyItem?.runStatus)}
+                            </span>
                         </div>
                         <div className="bread-center-item">
-                            <span className='bread-center-name'>运行时长</span>
-                            <span className='bread-center-desc'>{getTime(setTime)}</span>
+                            <span className='bread-center-name'>
+                                运行时长
+                            </span>
+                            <span className='bread-center-desc'>
+                                {getTime(setTime)}
+                            </span>
                         </div>
                     </div>
                 </div>

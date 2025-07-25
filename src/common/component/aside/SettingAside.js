@@ -228,7 +228,7 @@ const SettingAside = props =>  {
                             设置
                         </span>
                     </li>
-                    <li className="system-aside-back" onClick={()=>props.history.push('/index')}>
+                    <li className="system-aside-back" onClick={()=>props.history.push('/pipeline')}>
                         <div className='aside-back-box'>
                            <span className="aside-back-box-icon">
                                 <HomeOutlined />

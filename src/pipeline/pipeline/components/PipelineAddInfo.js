@@ -43,17 +43,17 @@ const PipelineAddInfo = forwardRef((props, ref) =>{
     const [yUserList,setYUserList] = useState(baseInfo?.userList || []);
     //环境管理列表
     const [envList,setEnvList] = useState([]);
-    //应用管理列表id: "a2b9ea4e802
+    //应用管理列表
     const [groupList,setGroupList] = useState([]);
 
     useEffect(()=>{
         // 获取环境和应用管理
         findEnvAndGroup();
+        // 获取所有流水线
+        findUserPipeline().then();
         if(!set){
             // 初始化权限
             setPowerType(baseInfo?.power || 1)
-            // 获取所有流水线
-            findUserPipeline().then()
         }
     },[]);
 
@@ -125,8 +125,9 @@ const PipelineAddInfo = forwardRef((props, ref) =>{
                                 ...pipeline,
                                 ...params,
                             })
-                            props.history.push(`/pipeline/${pipeline.id}/overview`)
+                            props.history.push(`/pipeline/${pipeline.id}/history`)
                         }
+                        findUserPipeline().then()
                     }
                 })
                 return
@@ -141,6 +142,9 @@ const PipelineAddInfo = forwardRef((props, ref) =>{
         })
     }
 
+    /**
+     * 重置表单
+     */
     const onRest = () =>{
         form.resetFields();
     }
@@ -223,7 +227,6 @@ const PipelineAddInfo = forwardRef((props, ref) =>{
             render: (_,record)=>(
                 <Select
                     bordered={false}
-                    showarrow={"false"}
                     style={{width:120}}
                     defaultValue={record.roleType}
                     disabled={record.id===user.userId}
@@ -269,7 +272,7 @@ const PipelineAddInfo = forwardRef((props, ref) =>{
         },
         {
             pattern: /^[\u4e00-\u9fa5a-zA-Z0-9_-]{0,50}$/,
-            message: "流水线名称最长50位且不能包含非法字符，如&,%，&，#……等",
+            message: "流水线名称最长50位且不能包含非法字符，如&，%，&，#……等",
         },
         ({ getFieldValue }) => ({
             validator(rule,value) {
@@ -287,6 +290,7 @@ const PipelineAddInfo = forwardRef((props, ref) =>{
         }),
     ]
 
+    //流水线名称长度
     const [nameLength,setNameLength] = useState(0);
 
     useEffect(() => {

@@ -12,7 +12,7 @@ import {
     HomeOutlined,
     LeftCircleOutlined,
     ProjectOutlined,
-    QuestionCircleOutlined,
+    QuestionCircleOutlined, RadarChartOutlined,
     RightCircleOutlined,
     SettingOutlined
 } from "@ant-design/icons";
@@ -28,12 +28,12 @@ import menuWhite from '../../assets/images/menu-white.png';
 import './Portal.scss';
 
 const firstRouters=[
-    {
-        key:"/index",
-        to:"/index",
-        title: "首页",
-        icon:<HomeOutlined />
-    },
+    // {
+    //     key:"/index",
+    //     to:"/index",
+    //     title: "首页",
+    //     icon:<HomeOutlined />
+    // },
     {
         key:"/pipeline",
         to:"/pipeline",
@@ -52,6 +52,19 @@ const firstRouters=[
         title:"发布",
         icon: <CarryOutOutlined />,
         isEnhance: true,
+    },
+    {
+        key:"/statistics",
+        to: "/statistics/overview",
+        title:"统计",
+        icon: <RadarChartOutlined />,
+        isEnhance: true,
+    },
+    {
+        key:"/setting",
+        to:"/setting/home",
+        title:"设置",
+        icon: <SettingOutlined />,
     },
 ]
 
@@ -74,6 +87,8 @@ const Portal = props =>{
     const [themeType,setThemeType] = useState('default');
     //特性弹出框
     const [featureModal,setFeatureModal] = useState(false);
+    //特性类型
+    const [featureType,setFeatureType] = useState('release');
 
     useEffect(()=>{
         getSystemPermissions(getUser().userId);
@@ -101,6 +116,7 @@ const Portal = props =>{
         const {isEnhance,to} = item;
         if(disable && isEnhance){
             setFeatureModal(true);
+            setFeatureType(to==='/release'?'release':'statistics')
             return;
         }
         history.push(to);
@@ -134,7 +150,7 @@ const Portal = props =>{
         const logoData = logoHtml();
         return (
             <div className={`arbess-aside ${isExpand ? 'arbess-aside-expand': 'arbess-aside-normal'} arbess-aside-${themeType}`}>
-                <div className='aside-logo' onClick={()=>history.push('/index')}>
+                <div className='aside-logo' onClick={()=>history.push('/pipeline')}>
                     {
                         isExpand ?
                             <>
@@ -158,7 +174,7 @@ const Portal = props =>{
                         ))
                     }
                     <EnhanceModal
-                        type={'release'}
+                        type={featureType}
                         visible={featureModal}
                         setVisible={setFeatureModal}
                     />
@@ -167,16 +183,14 @@ const Portal = props =>{
                     {
                         isExpand ?
                            <>
-                               <div
-                                   className={`aside-item`}
-                                   onClick={()=>history.push(`/setting/home`)}
-                               >
-                                   <div className="aside-item-icon"><SettingOutlined/></div>
-                                   <div className="aside-item-title">设置</div>
-                               </div>
-                               <div
-                                   className={`aside-item`}
-                                   onClick={()=>setNotificationVisibility(!notificationVisibility)}
+                               {/*<div className={`aside-item`} */}
+                               {/*     onClick={()=>history.push(`/setting/home`)}*/}
+                               {/*>*/}
+                               {/*    <div className="aside-item-icon"><SettingOutlined/></div>*/}
+                               {/*    <div className="aside-item-title">设置</div>*/}
+                               {/*</div>*/}
+                               <div className={`aside-item`}
+                                    onClick={()=>setNotificationVisibility(!notificationVisibility)}
                                >
                                    <div className="aside-item-icon"><BellOutlined/></div>
                                    <div className="aside-item-title">消息</div>
@@ -184,11 +198,11 @@ const Portal = props =>{
                            </>
                             :
                             <>
-                                <div className="aside-bottom-text text-icon" data-title-right={'设置'}
-                                     onClick={()=>history.push(`/setting/home`)}
-                                >
-                                    <SettingOutlined className='aside-bottom-text-icon'/>
-                                </div>
+                                {/*<div className="aside-bottom-text text-icon" data-title-right={'设置'}*/}
+                                {/*     onClick={()=>history.push(`/setting/home`)}*/}
+                                {/*>*/}
+                                {/*    <SettingOutlined className='aside-bottom-text-icon'/>*/}
+                                {/*</div>*/}
                                 <div className="aside-bottom-text text-icon" data-title-right={'消息'}
                                      onClick={()=>setNotificationVisibility(!notificationVisibility)}
                                 >

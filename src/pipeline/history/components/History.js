@@ -28,8 +28,9 @@ import pipelineStore from "../../pipeline/store/PipelineStore";
 import pip_trigger from "../../../assets/images/svg/pip_trigger.svg";
 import "./History.scss";
 import {runRun, runWait} from "../../../common/utils/Constant";
+import {getUser} from "tiklab-core-ui";
 
-const pageSize = 13;
+const pageSize = 12;
 
 const History = props =>{
 
@@ -37,9 +38,13 @@ const History = props =>{
 
     const {findOnePipeline} = pipelineStore;
 
-    const {findUserInstance,findPipelineInstance,deleteInstance,execStart,execStop,rollBackStart,setHistoryList,page,historyList} = historyStore;
+    const {
+        findUserInstance,findPipelineInstance,deleteInstance,execStart,execStop,rollBackStart,setHistoryList,
+        findPipelineInstanceCount,page,historyList
+    } = historyStore;
 
     const intervalRef = useRef(null);
+    const user = getUser();
 
     //历史信息
     const [historyItem,setHistoryItem] = useState(null);
@@ -47,29 +52,16 @@ const History = props =>{
     const [isLoading,setIsLoading] = useState(false);
     //历史运行阶段详情状态
     const [runVisible,setRunVisible] = useState(false);
-
     const pageParam = {
         pageSize: pageSize,
         currentPage: 1,
     }
-
-    // 获取历史列表请求数据
-    const [params,setParams] = useState(
-        route.path==='/history' ?
-            {
-                pageParam,
-                pipelineId:null,
-                state:null,
-                type:0
-            }
-            :
-            {
-                pageParam,
-                userId:null,
-                state:null,
-                type:0
-            }
-    )
+    //请求数据
+    const [requestParam,setRequestParam] = useState({pageParam});
+    //历史统计
+    const [historyCount,setHistoryCount] = useState({});
+    //标签选中状态
+    const [activeTab,setActiveTab] = useState('all');
 
     useEffect(() => {
         return ()=>{
@@ -78,18 +70,41 @@ const History = props =>{
         }
     }, []);
 
+    /**
+     * 历史统计
+     */
+    const findCount = () => {
+        findPipelineInstanceCount({
+            pipelineId: match.params.id,
+            userId: user.userId,
+            ...requestParam,
+        }).then(res=>{
+            if(res.code===0){
+                setHistoryCount(res.data)
+            }
+        })
+    }
+
     useEffect(()=>{
         setIsLoading(true);
         findInstance();
-    },[params,match.params.id])
+        findCount();
+    },[requestParam,match.params.id])
 
     /**
      * 获取历史列表
      */
     const findInstance = () => {
+        let param = {...requestParam};
+        if(activeTab==='userId'){
+            param.execUserId = requestParam?.execUserId || user.userId
+        }
+        if(activeTab==='state'){
+            param.state = requestParam?.state || 'run'
+        }
         const apiCall = route.path==='/history'
-            ? findUserInstance(params)
-            : findPipelineInstance({ ...params, pipelineId: match.params.id });
+            ? findUserInstance(param)
+            : findPipelineInstance({ ...param, pipelineId: match.params.id });
         apiCall.then(Res=>{
             if(Res.code===0){
                 if(!Res.data || Res.data.dataList.length<1 ){
@@ -109,9 +124,16 @@ const History = props =>{
     const findInter = () => {
         clearInterval(intervalRef.current);
         intervalRef.current = setInterval(()=>{
+            let param = {...requestParam};
+            if(activeTab==='userId'){
+                param.execUserId = requestParam?.execUserId || user.userId
+            }
+            if(activeTab==='state'){
+                param.state = requestParam?.state || 'run'
+            }
             const apiCall = route.path==='/history'
-                ? findUserInstance(params)
-                : findPipelineInstance({ ...params, pipelineId: match.params.id });
+                ? findUserInstance(param)
+                : findPipelineInstance({ ...param, pipelineId: match.params.id });
             apiCall.then(Res=>{
                 if(!Res.data || Res.data.dataList.length<1 ){
                     clearInterval(intervalRef.current)
@@ -135,30 +157,16 @@ const History = props =>{
     }
 
     /**
-     * 筛选
-     * @param value
-     */
-    const screen = value =>{
-        setParams({
-            ...params,
-            ...value,
-        })
-    }
-
-    /**
      * 换页
      */
     const changPage = pages =>{
-        if(pages==='reset'){
-            setParams({pageParam})
-        } else {
-            screen({
-                pageParam:{
-                    pageSize: pageSize,
-                    currentPage: pages,
-                }
-            })
-        }
+        setRequestParam(prev => ({
+            ...prev,
+            pageParam:{
+                pageSize: pageSize,
+                currentPage: pages,
+            }
+        }));
     }
 
     /**
@@ -168,8 +176,8 @@ const History = props =>{
     const delHistory = record =>{
         deleteInstance(record.instanceId).then(res=>{
             if(res.code===0){
-                const current = deleteSuccessReturnCurrenPage(page.totalRecord,pageSize,params.pageParam.currentPage)
-                changPage(current)
+                const current = deleteSuccessReturnCurrenPage(page.totalRecord,pageSize,page.currentPage)
+                changPage(current);
             }
         })
     }
@@ -200,7 +208,7 @@ const History = props =>{
                         pipelineId:pipeline.id
                     }).then(res=>{
                         if(res.code===0) {
-                            details(res.data)
+                            details(res.data);
                         }
                     }).finally(()=>setIsLoading(false))
                 }
@@ -224,7 +232,7 @@ const History = props =>{
                         instanceId:instanceId
                     }).then(res=>{
                         if(res.code===0) {
-                            details(res.data)
+                            details(res.data);
                         }
                     }).finally(()=>setIsLoading(false))
                 }
@@ -400,7 +408,15 @@ const History = props =>{
                             {title:'历史'}
                         ]}
                     />
-                    <HistoryScreen {...props} screen={screen}/>
+                    <HistoryScreen
+                        {...props}
+                        pageParam={pageParam}
+                        requestParam={requestParam}
+                        setRequestParam={setRequestParam}
+                        historyCount={historyCount}
+                        activeTab={activeTab}
+                        setActiveTab={setActiveTab}
+                    />
                     <Spin spinning={isLoading}>
                         <div className="history-table">
                             <Table

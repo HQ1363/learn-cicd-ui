@@ -49,7 +49,7 @@ export const autoHeight = () =>{
 export const Validation = name =>{
     return {
         pattern:/^(?=.*\S).+$/,
-        message:`${name}不能为纯空格`
+        message:`请输入有效内容`
     }
 }
 
@@ -138,4 +138,18 @@ export const copyText = (text) => {
     message.success('复制成功');
     //复制之后再删除元素，否则无法成功赋值
     copyInput.remove();//删除动态创建的节点
+}
+
+/**
+ * 掩码处理字符串
+ */
+export function maskString(str) {
+    if (!str || str.length <= 3) {
+        return str;
+    }
+    const firstTwo = str.slice(0, 2);
+    const lastOne = str.slice(-1);
+
+    return `${firstTwo}******${lastOne}`;
+
 }

@@ -90,6 +90,10 @@ const applicationRouters =  [
                 title:"环境",
             },
             {
+                id:"/setting/variable",
+                title:"变量",
+            },
+            {
                 id:"/setting/agent",
                 title:"Agent",
             },
@@ -112,7 +116,6 @@ const applicationRouters =  [
             {
                 id:"/setting/k8s",
                 title:"Kubernetes集群",
-                purviewCode:"resources_server",
             },
         ]
     },
@@ -124,12 +127,12 @@ const applicationRouters =  [
             {
                 id:"/setting/tool",
                 title:"工具集成",
-                purviewCode:"pipeline_env",
+                purviewCode:"pip_set_tool",
             },
             {
                 id:"/setting/server",
                 title:"服务集成",
-                purviewCode:"resources_server",
+                purviewCode:"pip_set_server",
             },
             {
                 id:"/setting/openApi",

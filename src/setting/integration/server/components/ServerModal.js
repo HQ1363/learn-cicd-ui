@@ -93,7 +93,7 @@ const ServerModal = props =>{
                         onCancel()
                     }
                 })
-            }else {
+            } else {
                 createAuthServer(values).then(r=>{
                     if(r.code===0){
                         findAuth()
@@ -135,7 +135,7 @@ const ServerModal = props =>{
                             {required:true,message:"AccessTocken不能空"},
                         ]}
                     >
-                        <Input placeholder={'AccessTocken'}/>
+                        <Input.Password placeholder={'AccessTocken'}/>
                     </Form.Item>
                 )
             case serverPriGitlab:

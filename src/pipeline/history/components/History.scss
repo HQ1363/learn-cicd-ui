@@ -3,7 +3,6 @@
     width: 100%;
     overflow: auto;
     .history-table{
-        padding-top: 10px;
         .history-table-name:hover{
             cursor: pointer;
             color: var(--tiklab-blue);
@@ -21,9 +20,25 @@
         }
     }
     .history-screens{
-        padding-top: var(--tiklab-padding-item);
+        display: flex;
         flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
         gap: 10px 0;
+        .history-senior-screen{
+            cursor: pointer;
+            border-radius: 4px;
+            padding: 4px;
+            &:hover{
+                background: var(--arbess-hover-color);
+            }
+        }
+        .count-number{
+            padding-left: 3px;
+            font-size: 12px;
+            color: #666666;
+        }
     }
     .ant-avatar{
         width: 22px;
@@ -40,3 +55,27 @@
     }
 }
 
+.history-senior-screen-drop{
+    box-shadow: 0 4px 8px -2px #091e4240, 0 0 1px #091e424f;
+    border-radius: 4px;
+    background: #ffffff;
+    padding: 15px;
+    width: 320px;
+    .screen-drop-button{
+        text-align: right;
+    }
+    .ant-select{
+        background-color: var(--tiklab-gray);
+        border-radius: 4px;
+        cursor: pointer;
+        &:hover{
+            background-color: var(--arbess-select-color);
+        }
+    }
+    .ant-select-show-search.ant-select:not(.ant-select-customize-input) .ant-select-selector{
+        cursor: pointer;
+    }
+    .ant-select-show-search.ant-select:not(.ant-select-customize-input) .ant-select-selector input{
+        cursor: pointer;
+    }
+}

@@ -9,7 +9,6 @@ import React,{useState,useRef} from "react";
 import {Col, Row} from "antd";
 import {CloseOutlined} from "@ant-design/icons";
 import {inject,observer} from "mobx-react";
-import Button from "../../../../../common/component/button/Button";
 import PipelineDrawer from "../../../../../common/component/drawer/Drawer";
 import {taskTitle, TaskIcon} from "./TaskCommon";
 import {
@@ -21,9 +20,7 @@ import {
     gitpuk,
     pri_gitlab,
     sonar,
-    spotbugs,
     testhubo,
-    maventest,
     mvn,
     nodejs,
     build_docker,
@@ -34,7 +31,13 @@ import {
     upload_hadess,
     upload_ssh,
     download_hadess,
-    download_ssh, build_go, sourcefare, build_python, build_php, build_net_core,
+    download_ssh,
+    build_go,
+    sourcefare,
+    build_python,
+    build_php,
+    build_net_core,
+    checkpoint,
 } from '../../../../../common/utils/Constant';
 import "./TaskAdd.scss";
 
@@ -105,6 +108,7 @@ const TaskAdd = props =>{
             id:"tool",
             title: "工具",
             desc: [
+                {type: checkpoint},
                 {type: script},
                 {type: upload_hadess},
                 {type: upload_ssh},
@@ -218,7 +222,8 @@ const TaskAdd = props =>{
                         <div className="drawerLeft">
                             {
                                 lis && lis.map(item=>(
-                                    <div key={item.id} className={`item ${taskType===item.id? "item-select":""}`}
+                                    <div key={item.id}
+                                         className={`item ${taskType===item.id? "item-select":""}`}
                                          onClick={()=>changeAnchor(item.id)}
                                     >
                                         <div className="item-title">{item.title}</div>
@@ -236,7 +241,7 @@ const TaskAdd = props =>{
                                         <div className="group-content">
                                             {
                                                 group.desc && group.desc.map((item,index)=>{
-                                                    return(
+                                                    return (
                                                         <div
                                                             key={index}
                                                             className={`group-desc ${taskBanList.includes(item.type) ? 'group-desc-ban' : ''}`}

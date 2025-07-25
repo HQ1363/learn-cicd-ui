@@ -3,6 +3,7 @@ import App from "./app";
 import Portal from "./common/layout/Portal";
 import SettingAside from "./common/component/aside/SettingAside";
 import PipelineSetAside from "./common/component/aside/PipelineSetAside";
+import PipelineTwoAside from "./common/component/aside/PipelineTwoAside";
 import AsyncComponent from "./common/lazy/SyncComponent";
 
 const Index=AsyncComponent(()=>import("./common/layout/Layout"))
@@ -62,6 +63,7 @@ const Env=AsyncComponent(()=>import("./setting/configure/env/component/Env"))
 const Agent=AsyncComponent(()=>import('./setting/configure/agent/component/Agent'))
 const Server=AsyncComponent(()=>import("./setting/integration/server/components/Server"))
 const K8s=AsyncComponent(()=>import('./setting/configure/k8s/components/K8s'))
+const Variable=AsyncComponent(()=>import('./setting/configure/variable/component/Variable'))
 
 // message
 const MessageSendType=AsyncComponent(()=>import("./setting/message/MessageSendType"))
@@ -123,6 +125,7 @@ export {
     Portal,
     SettingAside,
     PipelineSetAside,
+    PipelineTwoAside,
 
     Index,
     Login,
@@ -179,6 +182,7 @@ export {
     Agent,
     Server,
     K8s,
+    Variable,
 
     MessageSendType,
     MessageNotice,

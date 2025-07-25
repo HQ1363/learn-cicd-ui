@@ -57,6 +57,7 @@ import {
     Agent,
     Server,
     K8s,
+    Variable,
 
     MessageSendType,
     MessageNotice,
@@ -369,6 +370,11 @@ const routers=[
                         exact: true,
                     },
                     {
+                        path: "/setting/variable",
+                        component: Variable,
+                        exact: true,
+                    },
+                    {
                         path:"/setting/backups",
                         component: BackupRestore,
                         exact: true,
@@ -483,7 +489,7 @@ const routers=[
             },
             {
                 path:"/",
-                render:()=><Redirect to="/index"/>,
+                render:()=><Redirect to="/pipeline"/>,
             },
         ]
     },

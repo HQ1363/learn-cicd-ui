@@ -4,7 +4,7 @@ $run-color: #43a890;
 $wait-color: rgba(0, 0, 0, 0.18);
 $halt-color:  #444444;
 $error-color:  #ff0000;
-$suspend-color:  #ff0000;
+$suspend-color:  #ffbc00;
 $timeout-color:  #ff9b00;
 
 .str-run-detail{
@@ -14,7 +14,7 @@ $timeout-color:  #ff9b00;
   display: flex;
   flex-direction: column;
   .str-run-detail-bread{
-    padding: 20px 30px 15px;
+    padding: 15px 20px;
     border-bottom: 1px solid $line-color;
     .bread-center-box{
       display: flex;
@@ -54,7 +54,7 @@ $timeout-color:  #ff9b00;
       .str-run-item{
         display: inline-block;
         height: 100%;
-        padding: 20px 30px 15px;
+        padding: 20px;
         &:not(:last-child){
           border-right:1px solid $line-color;
         }
@@ -69,66 +69,85 @@ $timeout-color:  #ff9b00;
             &:not(:first-child){
               margin-top: 15px;
             }
-            .str-run-stage-card{
-              width: 230px;
-              min-width: 230px;
-              height: 130px;
-              padding: 10px;
+            .str-run-stage-card {
+              width: 260px;
+              min-width: 260px;
+              padding-top: 10px;
               display: flex;
               flex-direction: column;
               justify-content: space-between;
               background: #ffffff;
               border-radius: 4px;
-              border-top: 3px solid rgba(0, 0, 0, 0.18);
-              &-halt{
-                border-top: 3px solid $halt-color !important;
-              }
-              &-error{
-                border-top: 3px solid $error-color !important;
-              }
-              &-success{
-                border-top: 3px solid $success-color !important;
-              }
-              &-run{
-                border-top: 3px solid $run-color !important;
-              }
-              &-wait{
-                border-top: 3px solid $wait-color !important;
-              }
-              &-timeout{
-                border-top: 3px solid $timeout-color !important;
-              }
-              &:not(:last-child){
+              &-halt { border-top: 3px solid $halt-color; }
+              &-error { border-top: 3px solid $error-color; }
+              &-success { border-top: 3px solid $success-color; }
+              &-run { border-top: 3px solid $run-color; }
+              &-wait { border-top: 3px solid $wait-color; }
+              &-timeout { border-top: 3px solid $timeout-color; }
+              &-suspend { border-top: 3px solid $suspend-color; }
+
+              &:not(:last-child) {
                 margin-right: 15px;
               }
-              .card-top {
+
+              .card-header {
                 display: flex;
-                justify-content: space-between;
-                .card-top-state{
+                align-items: center;
+                padding: 0 10px;
+                .card-state-icon {
                   margin-right: 8px;
                 }
-                .card-top-btn{
-                  .btn-continue{
-                    background: var(--tiklab-blue);
-                    border-radius: 4px;
-                    color: #ffffff;
-                    font-size: 13px;
-                    font-weight: bold;
-                    padding: 2px 4px;
-                    cursor: pointer;
+                .card-title {
+                  white-space: nowrap;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                }
+              }
+              .card-body {
+                text-align: center;
+                font-size: 13px;
+                margin: 20px 0;
+                flex-grow: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              }
+              .card-footer {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0 10px 10px;
+                font-size: 13px;
+                gap: 5px;
+                .card-time {
+                  flex: 1;
+                  white-space: nowrap;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                }
+                .card-log{
+                  cursor: pointer;
+                  &:hover{
+                    color: var(--tiklab-blue);
                   }
                 }
               }
-              .card-ct{
-                text-align: center;
-                font-size: var(--tiklab-font-13);
-              }
-              .card-bt{
-                font-size: var(--tiklab-font-13);
+              .card-actions {
                 display: flex;
-                justify-content: space-between;
-                .card-bt-log{
+                align-items: center;
+                justify-content: flex-end;
+                gap: 10px;
+                padding: 8px 10px;
+                border-top: 1px solid var(--arbess-border-color);
+                .card-action {
                   cursor: pointer;
+                  font-size: 13px;
+                  &-continue{
+                    color: var(--tiklab-blue);
+                  }
+                  &-stop {
+                    color: #ff4d4f;
+                  }
                 }
               }
             }
@@ -139,24 +158,13 @@ $timeout-color:  #ff9b00;
   }
 
   .run-status{
-    &-halt{
-      color: $halt-color;
-    }
-    &-error{
-      color: $error-color;
-    }
-    &-success{
-      color: $success-color;
-    }
-    &-run{
-      color: $run-color;
-    }
-    &-wait{
-      color: $wait-color;
-    }
-    &-timeout{
-      color: $timeout-color;
-    }
+    &-halt{ color: $halt-color; }
+    &-error{ color: $error-color; }
+    &-success{ color: $success-color; }
+    &-run{ color: $run-color; }
+    &-wait{ color: $wait-color; }
+    &-timeout{ color: $timeout-color; }
+    &-suspend{ color: $suspend-color; }
   }
 
 }

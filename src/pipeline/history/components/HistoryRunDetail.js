@@ -6,7 +6,7 @@
  * @LastEditTime: 2025/3/12
  */
 import React, {useState, useEffect, useRef} from "react";
-import {Skeleton, Spin} from "antd";
+import {Divider, Spin} from "antd";
 import {CloseOutlined} from "@ant-design/icons";
 import Button from "../../../common/component/button/Button";
 import PipelineDrawer from "../../../common/component/drawer/Drawer";
@@ -16,6 +16,7 @@ import HistoryDetail from "./HistoryDetail";
 import historyStore from "../store/HistoryStore";
 import "./HistoryRunDetail.scss";
 import {runError, runHalt, runRun, runSuccess, runTimeout} from "../../../common/utils/Constant";
+import {getUser} from "tiklab-core-ui";
 
 const HistoryRunDetail = (props) => {
 
@@ -105,11 +106,16 @@ const HistoryRunDetail = (props) => {
     }
 
     /**
-     * 继续执行
+     * 继续执行或停止执行
      */
-    const execKeep = () => {
+    const execKeep = (task,status) => {
         setExecLoading(true)
-        keepOn(pipeline.id).then(res=>{
+        keepOn({
+            pipelineId: pipeline.id,
+            taskInstanceId: task.id,
+            status: status,
+            userId: getUser().userId
+        }).finally(()=>{
             setTimeout(()=>{
                 setExecLoading(false)
             },1500)
@@ -186,20 +192,36 @@ const HistoryRunDetail = (props) => {
                 <div className='bread-center-box'>
                     <div className="bread-center">
                         <div className="bread-center-item">
-                            <span className='bread-center-name'>开始时间</span>
-                            <span className='bread-center-desc'>{historyItem?.createTime }</span>
+                            <span className='bread-center-name'>
+                                开始时间
+                            </span>
+                            <span className='bread-center-desc'>
+                                {historyItem?.createTime }
+                            </span>
                         </div>
                         <div className="bread-center-item">
-                            <span className='bread-center-name'>运行方式</span>
-                            <span className='bread-center-desc'>{runWay()}</span>
+                            <span className='bread-center-name'>
+                                运行方式
+                            </span>
+                            <span className='bread-center-desc'>
+                                {runWay()}
+                            </span>
                         </div>
                         <div className="bread-center-item">
-                            <span className='bread-center-name'>运行状态</span>
-                            <span className={`bread-center-desc run-status-${historyItem?.runStatus}`}>{runStatusText(historyItem?.runStatus)}</span>
+                            <span className='bread-center-name'>
+                                运行状态
+                            </span>
+                            <span className={`bread-center-desc run-status-${historyItem?.runStatus}`}>
+                                {runStatusText(historyItem?.runStatus)}
+                            </span>
                         </div>
                         <div className="bread-center-item">
-                            <span className='bread-center-name'>运行时长</span>
-                            <span className='bread-center-desc'>{getTime(setTime)}</span>
+                            <span className='bread-center-name'>
+                                运行时长
+                            </span>
+                            <span className='bread-center-desc'>
+                                {getTime(setTime)}
+                            </span>
                         </div>
                     </div>
                     {historyItem?.runStatus === "run" && <Button onClick={execCease}>终止</Button>}
@@ -218,44 +240,52 @@ const HistoryRunDetail = (props) => {
                                         </div>
                                         <div className='str-run-item-stage'>
                                             {
-                                                stageInstanceList && stageInstanceList.map((list,listIndex)=>{
-                                                    const {taskInstanceList} = list;
+                                                stageInstanceList && stageInstanceList.map((stage,stageIndex)=>{
+                                                    const {taskInstanceList} = stage;
                                                     return (
-                                                        <div key={list.id} className='str-run-stage'>
+                                                        <div key={stage.id} className='str-run-stage'>
                                                             {
                                                                 taskInstanceList && taskInstanceList.map((task,taskIndex)=>{
                                                                     const {taskName,runTime,runState} = task;
                                                                     return (
                                                                         <div className={`str-run-stage-card str-run-stage-card-${runState}`} key={task.id}>
-                                                                            <div className="card-top">
-                                                                                <div>
-                                                                                    <span className="card-top-state">
-                                                                                        {runStatusIcon(runState)}
-                                                                                    </span>
-                                                                                    <span className="card-top-title">
-                                                                                        {taskName}
-                                                                                    </span>
+                                                                            <div className="card-header">
+                                                                                <div className="card-state-icon">
+                                                                                    {runStatusIcon(runState)}
                                                                                 </div>
-                                                                                {
-                                                                                    runState==='suspend' &&
-                                                                                    <div className='card-top-btn'>
-                                                                                        <div className='btn-continue' onClick={execKeep}>
-                                                                                            继续执行
-                                                                                        </div>
-                                                                                    </div>
-                                                                                }
+                                                                                <div className="card-title">
+                                                                                    {taskName}
+                                                                                </div>
                                                                             </div>
-                                                                            <div className={`card-ct run-status-${runState}`}>
+                                                                            <div className={`card-body run-status-${runState}`}>
                                                                                 {runStatusText(runState)}
                                                                             </div>
-                                                                            <div className="card-bt">
-                                                                                <span className="card-bt-log" onClick={()=>setTaskLog(task)}>
-                                                                                    日志
-                                                                                </span>
-                                                                                <span className="card-bt-time">
+                                                                            <div className="card-footer">
+                                                                                <div className="card-time">
                                                                                     {getTime(runTime)}
-                                                                                </span>
+                                                                                </div>
+                                                                                <div className="card-log" onClick={()=>setTaskLog(task)}>
+                                                                                    日志
+                                                                                </div>
                                                                             </div>
+                                                                            {
+                                                                                runState === 'suspend' &&
+                                                                                <div className='card-actions'>
+                                                                                    <div
+                                                                                        className="card-action card-action-continue"
+                                                                                        onClick={()=>execKeep(task,1)}
+                                                                                    >
+                                                                                        继续执行
+                                                                                    </div>
+                                                                                    <Divider type="vertical" />
+                                                                                    <div
+                                                                                        className="card-action card-action-stop"
+                                                                                        onClick={()=>execKeep(task,2)}
+                                                                                    >
+                                                                                        终止执行
+                                                                                    </div>
+                                                                                </div>
+                                                                            }
                                                                         </div>
                                                                     )
                                                                 })

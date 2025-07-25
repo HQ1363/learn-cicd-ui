@@ -76,6 +76,7 @@ const ScanSourceFare = props =>{
                 placeholder={"扫描代码地址"}
                 label={"扫描代码地址"}
                 isRequire={true}
+                tipText={true}
             />
         </>
     )

@@ -20,14 +20,18 @@ import groupingStore from "../../../setting/configure/grouping/store/GroupingSto
 import PipelineAdd from "./PipelineAdd";
 import "./Pipeline.scss";
 import pipScreen from "../../../assets/images/svg/pip_screen.svg";
+import ListIcon from "../../../common/component/list/ListIcon";
+import ListEmpty from "../../../common/component/list/ListEmpty";
+import homePageStore from "../../../home/store/HomePageStore";
 
-const pageSize = 15;
+const pageSize = 10;
 
 const Pipeline = props =>{
 
     const {findUserPipelinePage,findPipelineCount,findUserPage} = pipelineStore;
     const {findEnvList} = envStore;
     const {findGroupList} = groupingStore;
+    const {findAllOpen} = homePageStore;
 
     const pageParam = {
         pageSize:pageSize,
@@ -56,10 +60,22 @@ const Pipeline = props =>{
     const [pipCount,setPipCount] = useState({});
     //高级筛选下拉框
     const [screenVisible,setScreenVisible] = useState(false);
+    //常用流水线
+    const [newlyOpen,setNewlyOpen] = useState([]);
+    //常用流水线加载
+    const [openSpinning,setOpenSpinning] = useState(true);
 
     useEffect(()=>{
         // 获取环境和应用管理
         getEnvOrGroup()
+        // 获取常用流水线
+        findAllOpen(4).then(res=>{
+            if(res.code===0){
+                setNewlyOpen(res.data || [])
+            }
+        }).finally(()=>{
+            setOpenSpinning(false)
+        })
     },[])
 
     /**
@@ -103,7 +119,7 @@ const Pipeline = props =>{
         setIsLoading(true)
         let param = {...pipelineParam};
         if(listType==='create'){
-            param.createUserId = getUser().userId;
+            param.createUserId = pipelineParam?.createUserId || getUser().userId;
         }
         if(listType==='follow'){
             param.pipelineFollow = 1;
@@ -199,7 +215,6 @@ const Pipeline = props =>{
         })
     }
 
-
     /**
      * 下拉滚动加载用户
      * @param e
@@ -232,12 +247,13 @@ const Pipeline = props =>{
      */
     const onReset = () =>{
         form.resetFields();
-        setPipelineParam({
-            pageParam
-        })
+        setPipelineParam(prev => ({
+            pageParam,
+            pipelineName: prev.pipelineName,
+        }));
     }
 
-    return(
+    return (
         <Row className="pipeline">
             <Col
                 xs={{ span: "24" }}
@@ -260,12 +276,63 @@ const Pipeline = props =>{
                         visible={visible}
                         setVisible={setVisible}
                     />
+                    <div className="home-recent">
+                        <div className="home-recent-title">
+                            常用
+                        </div>
+                        <Spin spinning={openSpinning}>
+                            {
+                                newlyOpen && newlyOpen.length > 0 ?
+                                    <div className="pipelineRecent-content">
+                                        {
+                                            newlyOpen.map(item=> {
+                                                const {pipeline,pipelineExecState} = item
+                                                return (
+                                                    <div className="pipelineRecent-item" key={pipeline?.id}
+                                                         onClick={()=> props.history.push(`/pipeline/${pipeline?.id}/history`)}
+                                                    >
+                                                        {
+                                                            pipeline &&
+                                                            <div className="pipelineRecent-item-title">
+                                                                <ListIcon
+                                                                    text={pipeline?.name || "T"}
+                                                                    colors={pipeline?.color}
+                                                                />
+                                                                <div className="pipelineRecent-name">
+                                                                    {pipeline?.name}
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                        <div className="pipelineRecent-item-details">
+                                                            <div className="pipelineRecent-item-detail">
+                                                                <span className="details-desc">成功</span>
+                                                                <span>{pipelineExecState?.successNumber || 0}</span>
+                                                            </div>
+                                                            <div className="pipelineRecent-item-detail">
+                                                                <span className="details-desc">失败</span>
+                                                                <span>{pipelineExecState?.errorNumber || 0}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                )
+                                            })
+                                        }
+                                    </div>
+                                    :
+                                    <ListEmpty />
+                            }
+                        </Spin>
+                    </div>
                     <div className="pipeline-flex">
-                        <Tabs type={listType} tabLis={[
-                            {id:'all', title:<>所有<span className="count-number">{pipCount?.pipelineNumber || 0}</span></>},
-                            {id:'create', title:<>我创建的<span className="count-number">{pipCount?.userPipelineNumber || 0}</span></>},
-                            {id:'follow', title:<>我收藏的<span className="count-number">{pipCount?.userFollowNumber || 0}</span></>},
-                        ]} onClick={clickType}/>
+                        <Tabs
+                            type={listType}
+                            tabLis={[
+                                {id:'all', title:<>所有<span className="count-number">{pipCount?.pipelineNumber || 0}</span></>},
+                                {id:'create', title:<>我创建的<span className="count-number">{pipCount?.userPipelineNumber || 0}</span></>},
+                                {id:'follow', title:<>我收藏的<span className="count-number">{pipCount?.userFollowNumber || 0}</span></>},
+                            ]}
+                            onClick={clickType}
+                        />
                         <Space>
                             <SearchInput
                                 placeholder="搜索名称"
@@ -281,7 +348,11 @@ const Pipeline = props =>{
                                             onValuesChange={onValuesChange}
                                         >
                                             <Form.Item label={'创建人'} name={'createUserId'}>
-                                                <Select placeholder={"创建人"} onPopupScroll={scrollEnd}>
+                                                <Select
+                                                    placeholder={"创建人"}
+                                                    onPopupScroll={scrollEnd}
+                                                    bordered={false}
+                                                >
                                                     <Select.Option value={'all'} key={'all'}>全部</Select.Option>
                                                     {
                                                         userList && userList.map(item=>(
@@ -291,7 +362,7 @@ const Pipeline = props =>{
                                                 </Select>
                                             </Form.Item>
                                             <Form.Item label={'应用'} name={'groupId'}>
-                                                <Select placeholder={"应用"}>
+                                                <Select placeholder={"应用"} bordered={false}>
                                                     <Select.Option value={'all'} key={'all'}>全部</Select.Option>
                                                     {
                                                         groupList && groupList.map(item=>(
@@ -301,7 +372,7 @@ const Pipeline = props =>{
                                                 </Select>
                                             </Form.Item>
                                             <Form.Item label={'环境'} name={'envId'}>
-                                                <Select placeholder={"环境"}>
+                                                <Select placeholder={"环境"} bordered={false}>
                                                     <Select.Option value={'all'} key={'all'}>全部</Select.Option>
                                                     {
                                                         envList && envList.map(item=>(
@@ -311,7 +382,7 @@ const Pipeline = props =>{
                                                 </Select>
                                             </Form.Item>
                                             <Form.Item label={'权限'} name={'pipelinePower'}>
-                                                <Select placeholder={"权限"}>
+                                                <Select placeholder={"权限"} bordered={false}>
                                                     <Select.Option value={'all'} key={'all'}>全部</Select.Option>
                                                     <Select.Option value={1} key={1}>全局</Select.Option>
                                                     <Select.Option value={2} key={2}>私有</Select.Option>
@@ -319,11 +390,11 @@ const Pipeline = props =>{
                                             </Form.Item>
                                         </Form>
                                         <div className='screen-drop-button'>
-                                            <Button isMar={true} onClick={onReset}>
-                                                重置
-                                            </Button>
                                             <Button isMar={true} onClick={()=>setScreenVisible(false)}>
                                                 取消
+                                            </Button>
+                                            <Button isMar={true} onClick={onReset}>
+                                                重置
                                             </Button>
                                             <Button type={'primary'} onClick={()=>setScreenVisible(false)}>
                                                 确定

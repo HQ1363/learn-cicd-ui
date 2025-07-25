@@ -19,6 +19,7 @@ import Page from "../../../../common/component/page/Page";
 import {deleteSuccessReturnCurrenPage} from "../../../../common/utils/Client";
 import SearchInput from "../../../../common/component/search/SearchInput";
 import SearchSelect from "../../../../common/component/search/SearchSelect";
+import {PrivilegeButton} from "tiklab-privilege-ui";
 
 const pageSize = 13;
 
@@ -167,6 +168,10 @@ const Tool = props =>{
                         edit={()=>editTool(record)}
                         del={()=>delTool(record)}
                         isMore={true}
+                        code={{
+                            editCode: 'pip_set_tool_update',
+                            delCode: 'pip_set_tool_delete',
+                        }}
                     />
                 )
             }
@@ -189,13 +194,15 @@ const Tool = props =>{
                             {title:'工具集成'}
                         ]}
                     >
-                        <ToolAddBtn
-                            visible={visible}
-                            setVisible={setVisible}
-                            formValue={formValue}
-                            setFormValue={setFormValue}
-                            findAllScm={findAllScm}
-                        />
+                        <PrivilegeButton code={'pip_set_tool_create'}>
+                            <ToolAddBtn
+                                visible={visible}
+                                setVisible={setVisible}
+                                formValue={formValue}
+                                setFormValue={setFormValue}
+                                findAllScm={findAllScm}
+                            />
+                        </PrivilegeButton>
                     </BreadCrumb>
                     <div className="tool-search">
                         <SearchInput

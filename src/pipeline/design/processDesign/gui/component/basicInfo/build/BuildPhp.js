@@ -19,6 +19,7 @@ const BuildPhp = props =>{
                 placeholder={`"\/\" 代表当前源的根目录`}
                 label={"项目地址"}
                 addonBefore={"/"}
+                tipText={true}
             />
             <FormsMirror
                 name={"buildOrder"}

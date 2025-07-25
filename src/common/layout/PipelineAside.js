@@ -8,7 +8,7 @@ import {
     ClockCircleOutlined,
     CreditCardOutlined,
     ExperimentOutlined,
-    RadarChartOutlined,
+    RadarChartOutlined, SettingOutlined,
 } from "@ant-design/icons";
 import pipelineStore from "../../pipeline/pipeline/store/PipelineStore";
 import Aside from "../component/aside/PipelineAside";
@@ -38,12 +38,12 @@ const PipelineAside = (props) => {
     const [dropdownVisible,setDropdownVisible] = useState(false);
 
     const firstRouters=[
-        {
-            id:`/pipeline/${id}/overview`,
-            to:`/pipeline/${id}/overview`,
-            title:"概况",
-            icon:<ApartmentOutlined />,
-        },
+        // {
+        //     id:`/pipeline/${id}/overview`,
+        //     to:`/pipeline/${id}/overview`,
+        //     title:"概况",
+        //     icon:<ApartmentOutlined />,
+        // },
         {
             id:`/pipeline/${id}/config`,
             to:`/pipeline/${id}/config`,
@@ -68,6 +68,12 @@ const PipelineAside = (props) => {
             title: "统计",
             icon: <RadarChartOutlined />,
             isEnhance: true,
+        },
+        {
+            id:`/pipeline/${id}/setting`,
+            to:`/pipeline/${id}/setting`,
+            title: "设置",
+            icon: <SettingOutlined />,
         },
     ]
 
@@ -128,7 +134,7 @@ const PipelineAside = (props) => {
         <Aside
             {...props}
             id={id}
-            backUrl={'/home'}
+            backUrl={'/pipeline'}
             setUrl={`/pipeline/${id}/setting`}
             initRouters={firstRouters}
             ChangeComponent={

@@ -6,11 +6,12 @@
  * @LastEditTime: 2025/3/11
  */
 import React,{useState,useRef,useEffect} from "react";
-import {Form,Input} from "antd";
+import {Form, Input, Tooltip} from "antd";
 import {inject,observer} from "mobx-react";
 import {WhetherChange} from "../TaskCommon";
 import {Validation} from "../../../../../../common/utils/Client";
 import {pipeline_task_update} from "../../../../../../common/utils/Constant";
+import {QuestionCircleOutlined} from "@ant-design/icons";
 
 const FormsInput = props =>{
 
@@ -139,10 +140,22 @@ const FormsInput = props =>{
         return <InputComponent  {...commonInputProps}/>
     }
 
+    const labelHtml = (
+        <>
+            {label}
+            {
+                props.tipText &&
+                <Tooltip title="DEFAULT_CODE_ADDRESS代表当前流水线默认运行路径，可通过占位符获取">
+                    <QuestionCircleOutlined style={{paddingLeft:3,cursor:"pointer"}}/>
+                </Tooltip>
+            }
+        </>
+    )
+
     return (
         <Form.Item
             name={name}
-            label={label}
+            label={labelHtml}
             rules={rules()}
             validateTrigger="onChange"
         >

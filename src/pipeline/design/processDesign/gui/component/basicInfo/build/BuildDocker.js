@@ -19,6 +19,7 @@ const BuildDocker = props => {
                 label={"DockerFile文件地址"}
                 addonBefore={"/"}
                 isRequire={true}
+                tipText={true}
             />
             <FormsMirror
                 name={"dockerOrder"}

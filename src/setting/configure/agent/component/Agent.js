@@ -272,7 +272,7 @@ const Agent = (props) => {
                         <Button
                             type={'primary'}
                             onClick={addAgent}
-                        >添加</Button>
+                        >添加Agent</Button>
                     </BreadCrumb>
                     {
                         AgentAddComponent &&

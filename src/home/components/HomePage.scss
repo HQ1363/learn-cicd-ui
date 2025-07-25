@@ -61,13 +61,13 @@ $block-spacing: 30px;
                 display: flex;
                 flex-wrap: wrap;
                 align-items: center;
+                padding: 10px 0;
                 .details-desc{
                     color: #9b9b9b;
                     padding-right: 8px;
                 }
             }
             .pipelineRecent-item-detail{
-                padding: 10px 0;
                 &:first-child{
                     margin-right: 30px;
                 }
