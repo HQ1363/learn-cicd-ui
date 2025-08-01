@@ -22,6 +22,8 @@ import pip_python from "../../../../../assets/images/svg/pip_python.svg";
 import pip_php from "../../../../../assets/images/svg/pip_php.svg";
 import pip_net_core from "../../../../../assets/images/svg/pip_net_core.svg";
 import pip_checkpoint from "../../../../../assets/images/svg/pip_checkpoint.svg";
+import pip_host_order from "../../../../../assets/images/svg/pip_host_order.svg";
+import pip_host_strategy from "../../../../../assets/images/svg/pip_host_strategy.svg";
 import {productImg} from "tiklab-core-ui";
 import {
     git,
@@ -56,6 +58,11 @@ import {
     sourcefare,
     build_net_core,
     checkpoint,
+    host_blue_green,
+    host_order,
+    host_strategy,
+    docker_blue_green,
+    k8s_blue_green,
 } from '../../../../../common/utils/Constant';
 
 /**
@@ -98,6 +105,11 @@ export const taskTitle = type =>{
         case script: return "执行脚本"
         case message: return "消息通知"
         case post: return "后置处理"
+        case host_blue_green: return "主机蓝绿部署"
+        case host_order: return "主机命令"
+        case host_strategy : return "主机策略"
+        case docker_blue_green: return "Docker蓝绿部署"
+        case k8s_blue_green: return "Kubernetes蓝绿部署"
     }
 }
 
@@ -143,6 +155,11 @@ export const TaskIcon = props =>{
             case script: return pip_shell
             case message: return pip_message
             case post: return pip_post
+            case host_blue_green: return pip_liunx
+            case host_order: return pip_host_order
+            case host_strategy: return pip_host_strategy
+            case docker_blue_green: return pip_docker
+            case k8s_blue_green: return pip_k8s
         }
     }
 
@@ -186,6 +203,12 @@ export const HeadlineTitle = type =>{
         case liunx:
         case docker:
             return '部署'
+        case host_blue_green:
+        case host_order:
+        case host_strategy:
+        case docker_blue_green:
+        case k8s_blue_green:
+            return '部署策略'
         case script:
         case upload_hadess:
         case upload_ssh:

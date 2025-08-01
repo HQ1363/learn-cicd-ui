@@ -51,7 +51,10 @@ import {
     sourcefare,
     build_python,
     build_php,
-    build_net_core, checkpoint,
+    build_net_core,
+    checkpoint,
+    host_order,
+    host_strategy,
 } from "../../../../../../common/utils/Constant";
 import ToolScript from "./tool/ToolScript";
 import UploadHadess from "./upload/UploadHadess";
@@ -63,6 +66,8 @@ import ScanSourceFare from "./scan/ScanSourceFare";
 import BuildPhp from "./build/BuildPhp";
 import BuildNetCore from "./build/BuildNetCore";
 import ToolCheckpoint from "./tool/ToolCheckpoint";
+import HostOrder from "./deployStrategy/HostOrder";
+import HostStrategy from "./deployStrategy/HostStrategy";
 
 const BasicInfo = props => {
 
@@ -156,6 +161,10 @@ const BasicInfo = props => {
                 return <BuildNetCore {...props} />
             case checkpoint:
                 return <ToolCheckpoint {...props}/>
+            case host_order:
+                return <HostOrder {...props}/>
+            case host_strategy:
+                return <HostStrategy {...props}/>
         }
     }
 

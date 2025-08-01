@@ -166,7 +166,7 @@ const Server = props =>{
             <ListAction
                 edit={() => editServer(record)}
                 code={{
-                    editCode: 'pip_set_tool_update',
+                    editCode: 'pip_set_server_update',
                 }}
             />
         ) : (

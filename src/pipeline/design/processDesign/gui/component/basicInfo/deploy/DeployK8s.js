@@ -29,12 +29,12 @@ const DeployK8s = props =>{
     return(
         <>
             <FormsAuth />
-            <FormsInput
-                name={"k8sNamespace"}
-                placeholder={"命名空间"}
-                label={"命名空间"}
-                isRequire={true}
-            />
+            {/*<FormsInput*/}
+            {/*    name={"k8sNamespace"}*/}
+            {/*    placeholder={"命名空间"}*/}
+            {/*    label={"命名空间"}*/}
+            {/*    isRequire={true}*/}
+            {/*/>*/}
             <FormsSelect
                 name={"kubeConfType"}
                 label="配置文件类型"

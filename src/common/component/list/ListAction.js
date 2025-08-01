@@ -36,19 +36,22 @@ const ListAction = props =>{
                             {props.children}
                             {
                                 typeof del === 'function' &&
-                                <div className="dropdown-more-item" onClick={()=>{
-                                    Modal.confirm({
-                                        title: '确定删除吗？',
-                                        content: <span style={{color:"#f81111"}}>删除后无法恢复！</span>,
-                                        okText: '确认',
-                                        cancelText: '取消',
-                                        onOk() {
-                                            del()
-                                        },
-                                        onCancel() {
-                                        },
-                                    })
-                                }}>删除</div>
+                                <div
+                                    className="dropdown-more-item"
+                                    onClick={()=>{
+                                        Modal.confirm({
+                                            title: '确定删除吗？',
+                                            content: <span style={{color:"#f81111"}}>删除后无法恢复！</span>,
+                                            okText: '确认',
+                                            cancelText: '取消',
+                                            onOk() {
+                                                del()
+                                            },
+                                            onCancel() {
+                                            },
+                                        })
+                                    }}
+                                >删除</div>
                             }
                         </div>
                     }

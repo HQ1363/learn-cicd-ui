@@ -12,7 +12,8 @@ import "codemirror/lib/codemirror.css";
 // 设置代码语言模式
 import "codemirror/mode/shell/shell.js";
 import "codemirror/mode/ruby/ruby.js";
-import "codemirror/mode/yaml/yaml.js"
+import "codemirror/mode/yaml/yaml.js";
+import "codemirror/mode/powershell/powershell.js";
 //代码提示
 import "codemirror/addon/hint/show-hint.css";
 import "codemirror/addon/hint/show-hint";

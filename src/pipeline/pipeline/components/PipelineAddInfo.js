@@ -125,7 +125,6 @@ const PipelineAddInfo = forwardRef((props, ref) =>{
                                 ...pipeline,
                                 ...params,
                             })
-                            props.history.push(`/pipeline/${pipeline.id}/history`)
                         }
                         findUserPipeline().then()
                     }
@@ -318,7 +317,7 @@ const PipelineAddInfo = forwardRef((props, ref) =>{
                         />
                     </Form.Item>
                     <Form.Item label={"流水线应用"} name={['group','id']}>
-                        <Select placeholder={'流水线应用'}>
+                        <Select placeholder={'流水线应用'} getPopupContainer={e => e.parentElement}>
                             {
                                 groupList && groupList.map(item=>(
                                     <Select.Option value={item.id} key={item.id}>{item.groupName}</Select.Option>
@@ -327,7 +326,7 @@ const PipelineAddInfo = forwardRef((props, ref) =>{
                         </Select>
                     </Form.Item>
                     <Form.Item label={"流水线环境"} name={['env','id']}>
-                        <Select placeholder={'流水线环境'}>
+                        <Select placeholder={'流水线环境'} getPopupContainer={e => e.parentElement}>
                             {
                                 envList && envList.map(item=>(
                                     <Select.Option value={item.id} key={item.id}>{item.envName}</Select.Option>
@@ -350,7 +349,7 @@ const PipelineAddInfo = forwardRef((props, ref) =>{
         )
     }
 
-    return(
+    return (
         <Form
             form={form}
             autoComplete="off"
@@ -371,7 +370,7 @@ const PipelineAddInfo = forwardRef((props, ref) =>{
                 />
             </Form.Item>
             <Form.Item label={"流水线应用"} name={['group','id']}>
-                <Select placeholder={'流水线应用'}>
+                <Select placeholder={'流水线应用'} >
                     {
                         groupList && groupList.map(item=>(
                             <Select.Option value={item.id} key={item.id}>{item.groupName}</Select.Option>
@@ -380,7 +379,7 @@ const PipelineAddInfo = forwardRef((props, ref) =>{
                 </Select>
             </Form.Item>
             <Form.Item label={"流水线环境"} name={['env','id']}>
-                <Select placeholder={'流水线环境'}>
+                <Select placeholder={'流水线环境'} >
                     {
                         envList && envList.map(item=>(
                             <Select.Option value={item.id} key={item.id}>{item.envName}</Select.Option>

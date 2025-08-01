@@ -34,6 +34,7 @@ import {
     download_ssh,
     download_nexus,
     sourcefare,
+    host_order,
 } from "../../../../../../common/utils/Constant";
 import {taskTitle} from "../TaskCommon";
 import {maskString} from "../../../../../../common/utils/Client";
@@ -66,6 +67,7 @@ const FormsAuth = props =>{
     const findAuth = () =>{
         switch (taskType) {
             case liunx:
+            case host_order:
                 findAllHost()
                 break
             case upload_ssh:
@@ -170,6 +172,7 @@ const FormsAuth = props =>{
                 return 'TestHubo服务'
             case liunx:
             case docker:
+            case host_order:
                 return "主机地址"
             case k8s:
                 return "集群地址"
@@ -206,10 +209,11 @@ const FormsAuth = props =>{
             case download_nexus:
                 return item.serverId
             case liunx:
-            case docker:
+            case host_order:
                 return item?.groupId ? item.groupId : item.hostId
             case upload_ssh:
             case download_ssh:
+            case docker:
                 return item.hostId
             case k8s:
                 return item.id
@@ -231,6 +235,7 @@ const FormsAuth = props =>{
             case docker:
             case upload_ssh:
             case download_ssh:
+            case host_order:
                 return <HostAddBtn {...commonProps}/>
             case k8s:
                 return <K8sAddBtn {...commonProps}/>
@@ -276,9 +281,10 @@ const FormsAuth = props =>{
                 return `${item.name}(${maskString(item.accessToken)})`;
             case upload_ssh:
             case download_ssh:
+            case docker:
                 return `${item.name}(${item.ip})`
             case liunx:
-            case docker:
+            case host_order:
                 return item.groupName ? `${item.groupName}(主机组)` : `${item.name}(${item.ip})`;
             case k8s:
                 return `${item.name}(${item.k8sVersion?.serverAddress || '-'})`
@@ -311,6 +317,7 @@ const FormsAuth = props =>{
             case pri_gitlab:
             case gitpuk:
             case sourcefare:
+            case host_order:
                 rule = [{required:true,message:`${label()}不能为空`}];
                 break;
             default:

@@ -352,6 +352,7 @@ const Pipeline = props =>{
                                                     placeholder={"创建人"}
                                                     onPopupScroll={scrollEnd}
                                                     bordered={false}
+                                                    getPopupContainer={e=>e.parentElement}
                                                 >
                                                     <Select.Option value={'all'} key={'all'}>全部</Select.Option>
                                                     {
@@ -362,7 +363,7 @@ const Pipeline = props =>{
                                                 </Select>
                                             </Form.Item>
                                             <Form.Item label={'应用'} name={'groupId'}>
-                                                <Select placeholder={"应用"} bordered={false}>
+                                                <Select placeholder={"应用"} bordered={false} getPopupContainer={e=>e.parentElement}>
                                                     <Select.Option value={'all'} key={'all'}>全部</Select.Option>
                                                     {
                                                         groupList && groupList.map(item=>(
@@ -372,7 +373,7 @@ const Pipeline = props =>{
                                                 </Select>
                                             </Form.Item>
                                             <Form.Item label={'环境'} name={'envId'}>
-                                                <Select placeholder={"环境"} bordered={false}>
+                                                <Select placeholder={"环境"} bordered={false} getPopupContainer={e=>e.parentElement}>
                                                     <Select.Option value={'all'} key={'all'}>全部</Select.Option>
                                                     {
                                                         envList && envList.map(item=>(
@@ -382,7 +383,7 @@ const Pipeline = props =>{
                                                 </Select>
                                             </Form.Item>
                                             <Form.Item label={'权限'} name={'pipelinePower'}>
-                                                <Select placeholder={"权限"} bordered={false}>
+                                                <Select placeholder={"权限"} bordered={false} getPopupContainer={e=>e.parentElement}>
                                                     <Select.Option value={'all'} key={'all'}>全部</Select.Option>
                                                     <Select.Option value={1} key={1}>全局</Select.Option>
                                                     <Select.Option value={2} key={2}>私有</Select.Option>
@@ -406,6 +407,7 @@ const Pipeline = props =>{
                                 visible={screenVisible}
                                 onVisibleChange={visible=>setScreenVisible(visible)}
                                 getPopupContainer={e=>e.parentElement}
+                                placement={'bottomRight'}
                             >
                                 <div className='pipeline-senior-screen'>
                                     <img src={pipScreen} width={22} height={22}/>

@@ -41,6 +41,12 @@ export const checkpoint = 'checkpoint'; //人工卡点
 export const script = 'script'; //执行脚本
 export const message = 'message'; //消息通知
 export const post = 'post'; //后置处理
+export const host_order = 'host_order'; //主机命令
+export const host_strategy = 'host_strategy'; //主机策略
+// 任务自定义常量
+export const host_blue_green = 'host_blue_green'; //主机蓝绿部署
+export const docker_blue_green = 'docker_blue_green'; //Docker蓝绿部署
+export const k8s_blue_green = 'k8s_blue_green'; //Kubernetes蓝绿部署
 
 /**
  * 服务常量

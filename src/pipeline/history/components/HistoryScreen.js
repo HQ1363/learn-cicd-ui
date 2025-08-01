@@ -13,7 +13,7 @@ import Tabs from "../../../common/component/tabs/Tabs";
 import pipelineStore from "../../pipeline/store/PipelineStore";
 import Button from "../../../common/component/button/Button";
 import pipScreen from "../../../assets/images/svg/pip_screen.svg";
-import {debounce} from "../../../common/utils/Client";
+import {debounce, formatNumber} from "../../../common/utils/Client";
 import {getUser} from "tiklab-core-ui";
 
 const HistoryScreen = props =>{
@@ -211,9 +211,36 @@ const HistoryScreen = props =>{
             <Tabs
                 type={activeTab}
                 tabLis={[
-                    {id:'all', title:<>所有<span className="count-number">{historyCount?.allNumber || 0}</span></>},
-                    {id:'userId', title:<>我运行的<span className="count-number">{historyCount?.execNumber || 0}</span></>},
-                    {id:'state', title:<>运行中的<span className="count-number">{historyCount?.runNumber || 0}</span></>},
+                    {
+                        id:'all',
+                        title: (
+                            <>所有
+                                <span className="count-number">
+                                    {formatNumber(historyCount?.allNumber || 0)}
+                                </span>
+                            </>
+                        )
+                    },
+                    {
+                        id:'userId',
+                        title: (
+                            <>我运行的
+                                <span className="count-number">
+                                    {formatNumber(historyCount?.execNumber || 0)}
+                                </span>
+                            </>
+                        )
+                    },
+                    {
+                        id:'state',
+                        title: (
+                            <>运行中的
+                                <span className="count-number">
+                                    {formatNumber(historyCount?.runNumber || 0)}
+                                </span>
+                            </>
+                        )
+                    },
                 ]}
                 onClick={changActiveTab}
             />
@@ -239,6 +266,7 @@ const HistoryScreen = props =>{
                                                 placeholder={"流水线"}
                                                 onPopupScroll={scrollEnd}
                                                 bordered={false}
+                                                getPopupContainer={e=>e.parentElement}
                                             >
                                                 <Select.Option value={'all'} key={'all'}>全部</Select.Option>
                                                 {
@@ -253,6 +281,7 @@ const HistoryScreen = props =>{
                                                 placeholder={"执行人"}
                                                 onPopupScroll={scrollUserEnd}
                                                 bordered={false}
+                                                getPopupContainer={e=>e.parentElement}
                                             >
                                                 <Select.Option value={'all'} key={'all'}>全部</Select.Option>
                                                 {
@@ -269,6 +298,7 @@ const HistoryScreen = props =>{
                                             placeholder={"执行人"}
                                             onPopupScroll={scrollUserEnd}
                                             bordered={false}
+                                            getPopupContainer={e=>e.parentElement}
                                         >
                                             <Select.Option value={'all'} key={'all'}>全部</Select.Option>
                                             {
@@ -280,7 +310,7 @@ const HistoryScreen = props =>{
                                     </Form.Item>
                                 }
                                 <Form.Item label={'状态'} name={'state'}>
-                                    <Select placeholder={"状态"} bordered={false}>
+                                    <Select placeholder={"状态"} bordered={false} getPopupContainer={e=>e.parentElement}>
                                         <Select.Option value={'all'} key={'all'}>全部</Select.Option>
                                         <Select.Option value={"success"}>成功</Select.Option>
                                         <Select.Option value={"error"}>失败</Select.Option>
@@ -289,7 +319,7 @@ const HistoryScreen = props =>{
                                     </Select>
                                 </Form.Item>
                                 <Form.Item label={'执行方式'} name={'type'}>
-                                    <Select placeholder={"执行方式"} bordered={false}>
+                                    <Select placeholder={"执行方式"} bordered={false} getPopupContainer={e=>e.parentElement}>
                                         <Select.Option value={'all'} key={'all'}>全部</Select.Option>
                                         <Select.Option value={1}>手动</Select.Option>
                                         <Select.Option value={2}>定时</Select.Option>
@@ -315,6 +345,7 @@ const HistoryScreen = props =>{
                     visible={screenVisible}
                     onVisibleChange={visible=>setScreenVisible(visible)}
                     getPopupContainer={e=>e.parentElement}
+                    placement={'bottomRight'}
                 >
                     <div className='history-senior-screen'>
                         <img src={pipScreen} width={22} height={22}/>

@@ -38,6 +38,10 @@ import {
     build_php,
     build_net_core,
     checkpoint,
+    host_blue_green,
+    host_strategy,
+    docker_blue_green,
+    k8s_blue_green,
 } from '../../../../../common/utils/Constant';
 import "./TaskAdd.scss";
 
@@ -46,9 +50,9 @@ const TaskAdd = props =>{
     const {pipeline,setTaskFormDrawer,setNewStageDrawer,newStageDrawer,createValue,taskStore,stageStore} = props
 
     const {createTask,setDataItem} = taskStore
-    const {createStage} = stageStore
+    const {createStage,createStagesGroupOrTask} = stageStore
 
-    const scrollRef = useRef();
+    const scrollRef = useRef(null);
 
     const [taskType,setTaskType] = useState("code");
 
@@ -105,6 +109,15 @@ const TaskAdd = props =>{
             ]
         },
         {
+            id: "strategy",
+            title: "部署策略",
+            desc: [
+                {type: host_blue_green},
+                {type: docker_blue_green},
+                {type: k8s_blue_green},
+            ]
+        },
+        {
             id:"tool",
             title: "工具",
             desc: [
@@ -118,30 +131,43 @@ const TaskAdd = props =>{
         }
     ]
 
+    //部署策略
+    const stageTypeTaskMap = {
+        [host_blue_green]: [liunx, host_strategy, host_strategy],
+        [docker_blue_green]: [docker, host_strategy, host_strategy],
+        [k8s_blue_green]: [k8s, host_strategy, host_strategy],
+    };
+
     /**
      * 添加task
      * @param item
      */
-    const addTask = item =>{
-        if(pipeline.type===1){
-            createTask({
-                taskType:item.type,
-                pipelineId:pipeline.id,
-                ...createValue
-            }).then(res=>{
-                setTaskFormValue(res,item.type)
-            })
-        } else {
-            createStage({
-                taskType:item.type,
-                pipelineId:pipeline.id,
-                ...createValue
-            }).then(res=>{
-                setTaskFormValue(res,item.type)
-            })
+    const addTask = (item) => {
+        const { type: itemType } = item;
+        const { id: pipelineId, type: pipelineType } = pipeline;
+        // 判断是否是蓝绿部署类型
+        if (stageTypeTaskMap[itemType]) {
+            createStagesGroupOrTask({
+                pipelineId,
+                ...createValue,
+                taskTypeList: stageTypeTaskMap[itemType],
+                stageType: itemType
+            }).then(() => {
+                setNewStageDrawer(false);
+            });
+            return;
         }
-        setNewStageDrawer(false)
-    }
+        const createFn = pipelineType === 1 ? createTask : createStage;
+        createFn({
+            taskType: itemType,
+            pipelineId,
+            ...createValue
+        }).then(res => {
+            setTaskFormValue(res, itemType);
+            setNewStageDrawer(false);
+        });
+    };
+
 
     /**
      * 添加后初始化task基本信息
@@ -198,8 +224,7 @@ const TaskAdd = props =>{
         setTaskType(ids.id)
     }
 
-    const taskBanList = [];
-    // const taskBanList = [upload_hadess,upload_ssh,download_hadess,download_ssh];
+    const taskBanList = [k8s_blue_green];
 
     return (
         <PipelineDrawer

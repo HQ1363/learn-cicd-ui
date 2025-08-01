@@ -38,7 +38,7 @@ const ToolScript = (props) => {
                 name={"scriptOrder"}
                 label={"脚本命令"}
                 placeholder={"脚本命令"}
-                language={dataItem.task?.type==='bash' ? 'shell' : 'bat'}
+                language={dataItem.task?.type==='bash' ? 'shell' : 'powershell'}
             />
         </>
     )

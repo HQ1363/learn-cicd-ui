@@ -194,11 +194,10 @@ export class PipelineStore {
     @action
     findRecentlyPipeline =async value =>{
         const params = new FormData();
-        params.append("number",4);
-        params.append("pipelineId",value);
+        params.append("number",value.number);
+        params.append("pipelineId",value.pipelineId);
         return await Axios.post("/pipeline/findRecentlyPipeline",params)
     }
-
 
     /**
      * 获取流水线用户

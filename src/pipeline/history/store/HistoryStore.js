@@ -89,6 +89,22 @@ class HistoryStore {
     }
 
     /**
+     * 清理流水线缓存
+     */
+    @action
+    clean = async value =>{
+        const pipelineId = new FormData();
+        pipelineId.append('pipelineId',value);
+        const data = await Axios.post("/exec/clean",pipelineId);
+        if(data.code===0){
+            message.success('清理成功');
+        } else {
+            message.error(data.msg);
+        }
+        return data;
+    }
+
+    /**
      * 获取多任务历史日志详情
      * @param value
      * @returns {Promise<*>}

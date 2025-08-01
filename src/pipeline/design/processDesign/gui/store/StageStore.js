@@ -29,6 +29,22 @@ class StageStore {
     }
 
     /**
+     * 添加部署策略
+     * @param value
+     * @returns {Promise<*>}
+     */
+    @action
+    createStagesGroupOrTask = async value =>{
+        const data = await Axios.post("/stage/createStagesGroupOrTask",value)
+        if(data.code===0){
+            this.stageFresh=!this.stageFresh
+        } else {
+            message.error(data.msg)
+        }
+        return data
+    }
+
+    /**
      * 获取多阶段
      * @param value
      * @returns {Promise<*>}

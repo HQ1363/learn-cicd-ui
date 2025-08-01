@@ -153,3 +153,17 @@ export function maskString(str) {
     return `${firstTwo}******${lastOne}`;
 
 }
+
+/**
+ * 数据处理
+ */
+export function formatNumber(num) {
+    // 小于1000直接显示
+    if (num < 1000) return num.toString();
+    if (num < 10000) {
+        const kValue = Math.floor(num / 1000);
+        return `${kValue}k+`;
+    }
+    const wValue = Math.floor(num / 10000);
+    return `${wValue}w+`;
+}

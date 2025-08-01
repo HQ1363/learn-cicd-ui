@@ -79,7 +79,10 @@ const PipelineAside = (props) => {
 
     useEffect(() => {
         if(id){
-            findRecentlyPipeline(id).then(res=>{
+            findRecentlyPipeline({
+                pipelineId:id,
+                number:4,
+            }).then(res=>{
                 if(res.code===0){
                     setRecentlyPipeline(res.data)
                 }
@@ -140,7 +143,6 @@ const PipelineAside = (props) => {
             ChangeComponent={
                 <Dropdown
                     getPopupContainer={e => e.parentElement}
-                    overlayStyle={{width:300,top:48,left:80}}
                     trigger={['click']}
                     visible={dropdownVisible}
                     onVisibleChange={visible =>{

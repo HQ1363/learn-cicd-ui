@@ -65,18 +65,18 @@ const DeployLinux = props =>{
                             label={"部署命令"}
                             placeholder={"部署命令"}
                         />
-                        {
-                            dataItem?.task?.auth?.groupId && (
-                                <FormsSelect
-                                    name={"strategyType"}
-                                    label="部署策略"
-                                    onChange={value=>changDeployType(value,'strategyType')}
-                                >
-                                    <Select.Option value={'one'}>顺序发布</Select.Option>
-                                    <Select.Option value={'all'}>蓝绿发布</Select.Option>
-                                </FormsSelect>
-                            )
-                        }
+                        {/*{*/}
+                        {/*    dataItem?.task?.auth?.groupId && (*/}
+                        {/*        <FormsSelect*/}
+                        {/*            name={"strategyType"}*/}
+                        {/*            label="部署策略"*/}
+                        {/*            onChange={value=>changDeployType(value,'strategyType')}*/}
+                        {/*        >*/}
+                        {/*            <Select.Option value={'one'}>顺序发布</Select.Option>*/}
+                        {/*            <Select.Option value={'all'}>蓝绿发布</Select.Option>*/}
+                        {/*        </FormsSelect>*/}
+                        {/*    )*/}
+                        {/*}*/}
                     </>
                     :
                     <FormsMirror
