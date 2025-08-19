@@ -35,6 +35,7 @@ import PipelineDelete from "./PipelineDelete";
 import PipelineAddInfo from "./PipelineAddInfo";
 import {getUser} from "tiklab-core-ui";
 import {PrivilegeProjectButton} from "tiklab-privilege-ui";
+import moment from "moment";
 
 const PipelineTable = props =>{
 
@@ -259,7 +260,7 @@ const PipelineTable = props =>{
      * 去概况页面
      */
     const goPipelineTask = (text,record) => {
-        props.history.push(`/pipeline/${record.id}/history`)
+        props.history.push(`/pipeline/${record.id}/config`)
     }
 
     const columns = [
@@ -267,7 +268,7 @@ const PipelineTable = props =>{
             title: "流水线名称",
             dataIndex: "name",
             key: "name",
-            width:"33%",
+            width:"25%",
             ellipsis:true,
             render:(text,record)=>{
                 return  <span className='pipelineTable-name' onClick={()=>goPipelineTask(text,record)}>
@@ -280,7 +281,7 @@ const PipelineTable = props =>{
             title: "最近构建信息",
             dataIndex: "lastBuildTime",
             key: "lastBuildTime",
-            width:"33%",
+            width:"25%",
             ellipsis:true,
             render:(text,record) =>{
                 const {buildStatus,number} = record
@@ -300,7 +301,7 @@ const PipelineTable = props =>{
             title: "负责人",
             dataIndex: ["user","nickname"],
             key: "user",
-            width:"20%",
+            width:"18%",
             ellipsis: true,
             render:(text,record) => {
                 return (
@@ -310,6 +311,14 @@ const PipelineTable = props =>{
                     </Space>
                 )
             }
+        },
+        {
+            title: "创建时间",
+            dataIndex: "createTime",
+            key: "createTime",
+            width: "18%",
+            ellipsis: true,
+            render: text => moment(text).format('YYYY-MM-DD')
         },
         {
             title: "操作",

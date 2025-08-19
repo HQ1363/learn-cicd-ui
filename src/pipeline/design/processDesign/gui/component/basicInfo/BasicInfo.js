@@ -55,6 +55,8 @@ import {
     checkpoint,
     host_order,
     host_strategy,
+    build_gradle,
+    build_c_add,
 } from "../../../../../../common/utils/Constant";
 import ToolScript from "./tool/ToolScript";
 import UploadHadess from "./upload/UploadHadess";
@@ -68,6 +70,8 @@ import BuildNetCore from "./build/BuildNetCore";
 import ToolCheckpoint from "./tool/ToolCheckpoint";
 import HostOrder from "./deployStrategy/HostOrder";
 import HostStrategy from "./deployStrategy/HostStrategy";
+import BuildGradle from "./build/BuildGradle";
+import BuildCAdd from "./build/BuildCAdd";
 
 const BasicInfo = props => {
 
@@ -165,6 +169,10 @@ const BasicInfo = props => {
                 return <HostOrder {...props}/>
             case host_strategy:
                 return <HostStrategy {...props}/>
+            case build_gradle:
+                return <BuildGradle {...props}/>
+            case build_c_add:
+                return <BuildCAdd {...props}/>
         }
     }
 

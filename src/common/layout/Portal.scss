@@ -87,12 +87,12 @@ $aside-border-color: #e4e4e4;
       }
       .aside-bottom {
         margin-top: 20px;
-        margin-bottom: 10px;
+        margin-bottom: 5px;
         .aside-bottom-text {
           display: flex;
           justify-content: center;
           align-items: center;
-          height: 32px;
+          height: 34px;
           font-size: 18px;
           transition: background 0.3s ease;
           cursor: pointer;
@@ -173,9 +173,9 @@ $aside-border-color: #e4e4e4;
       }
       .aside-bottom {
         margin-top: 20px;
-        margin-bottom: 10px;
+        margin-bottom: 5px;
         .aside-item {
-          height: 32px;
+          height: 34px;
           display: flex;
           width: 100%;
           align-items: center;

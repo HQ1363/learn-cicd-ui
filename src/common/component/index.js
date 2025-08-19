@@ -22,6 +22,7 @@ import SearchPicker from "./search/SearchPicker";
 import Tabs from "./tabs/Tabs";
 import EnhanceModal from "./modal/EnhanceModal";
 import VersionInfo from "./versionInfo/VersionInfo";
+import EnhanceEntranceModal from "./modal/EnhanceEntranceModal";
 
 export {
     BreadCrumb,
@@ -41,4 +42,5 @@ export {
     Tabs,
     EnhanceModal,
     VersionInfo,
+    EnhanceEntranceModal,
 }

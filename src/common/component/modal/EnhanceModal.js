@@ -15,6 +15,7 @@ import pipOperate from "../../../assets/images/pip-feature-operate.png";
 import pipResult from "../../../assets/images/pip-feature-result.png";
 import pipRelease from "../../../assets/images/pip-feature-release.png";
 import pipAgent from "../../../assets/images/pip-feature-agent.png";
+import pipStrategy from "../../../assets/images/pip-feature-strategy.png";
 
 //数据
 const ENHANCE_DATA = {
@@ -44,9 +45,16 @@ const ENHANCE_DATA = {
         title: '配置',
         desc: 'Agent自定义',
         data: [
-            {id: 'agent',icon: pipAgent, title: "Agent"},
+            {id: 'agent', icon: pipAgent, title: "Agent"},
         ]
     },
+    task: {
+        title: '任务',
+        desc: '主机蓝绿部署、Docker蓝绿部署、Kubernetes蓝绿部署',
+        data: [
+            {id:'strategy', icon:pipStrategy, title: "部署策略"},
+        ]
+    }
 }
 
 const EnhanceModal = (props) => {

@@ -9,9 +9,9 @@ import React, {useEffect, useState} from "react";
 import {message, Row, Col, Radio, Space, Spin} from 'antd';
 import {disableFunction,applySubscription} from "tiklab-core-ui";
 import BreadCrumb from "../../../common/component/breadcrumb/BreadCrumb";
+import EnhanceEntranceModal from "../../../common/component/modal/EnhanceEntranceModal";
 import resourceStore from "../store/ResourceStore";
 import "./Resources.scss";
-import EnhanceModal from "../../../common/component/modal/EnhanceModal";
 
 const Resources = props => {
 
@@ -81,7 +81,8 @@ const Resources = props => {
      */
     const changeCathe = (e,type) => {
         if(disable){
-            return setFeatureModal(true)
+            setFeatureModal(true)
+            return
         }
         updateCathe({
             id:saveDur.id,
@@ -112,6 +113,15 @@ const Resources = props => {
 
     return (
         <Row className='resources'>
+            <EnhanceEntranceModal
+                config={{
+                    title:'资源监控',
+                    desc:'监控日志和构建制品，平衡存储成本'
+                }}
+                visible={featureModal}
+                setVisible={setFeatureModal}
+                mode={'dialog'}
+            />
             <Col
                 sm={{ span: 24 }}
                 xs={{ span: 24 }}
@@ -162,11 +172,6 @@ const Resources = props => {
                                 </div>
                             </div>
                             <div className='resources-info-item'>
-                                <EnhanceModal
-                                    type={'resources'}
-                                    visible={featureModal}
-                                    setVisible={setFeatureModal}
-                                />
                                 <div className='resources-item-title'>日志保存时长</div>
                                 <Radio.Group value={saveDur?.logCache} onChange={e => changeCathe(e,'logCache')}>
                                     <Radio value={7}>7天</Radio>

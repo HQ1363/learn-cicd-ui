@@ -1,3 +1,4 @@
+import React from "react";
 import {action} from "mobx";
 import {message} from "antd";
 import {Axios} from "tiklab-core-ui";
@@ -58,7 +59,16 @@ class ToolStore {
         if(data.code === 0){
             message.success(`${values.scmId?'修改':'添加'}成功`)
         } else if(data.code===40000){
-            message.error(data.msg);
+            message.error({
+                content: (
+                    <>
+                        {data.msg}具体可查看
+                        <a href="https://doc.tiklab.net/document/322b16350ed8/dbc36f6f763a" target="_blank">
+                            https://doc.tiklab.net
+                        </a>
+                    </>
+                )
+            })
         } else {
             message.error(`${values.scmId?'修改':'添加'}失败`)
         }

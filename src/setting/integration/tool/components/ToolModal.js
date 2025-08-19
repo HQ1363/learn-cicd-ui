@@ -163,11 +163,12 @@ const ToolModal = props =>{
                                                     if (files?.some(f => f.status === 'error')) {
                                                         return Promise.reject('存在上传失败的文件');
                                                     }
-                                                    // // 检查文件格式
-                                                    // const invalidFiles = files?.filter(file => !file.name?.endsWith('.tar.gz'));
-                                                    // if (invalidFiles?.length > 0) {
-                                                    //     return Promise.reject('只能上传 .tar.gz 格式的文件');
-                                                    // }
+                                                    if(files.length > 0 && files[0]?.status === 'done'){
+                                                        const response = files[0].response;
+                                                        if(response.code!==0){
+                                                            return Promise.reject(response.msg);
+                                                        }
+                                                    }
                                                     return Promise.resolve();
                                                 }
                                             }
@@ -181,16 +182,18 @@ const ToolModal = props =>{
                                                 tenant: user.tenant,
                                                 ...getAPIgateway(),
                                             }}
-                                            // accept={'.gz'}
+                                            accept={'.gz,.zip,.tgz'}
                                             maxCount={1}
                                             fileList={fileList}
                                             onChange={({ fileList }) => {
                                                 setFileList(fileList);
                                                 if(fileList.length > 0 && fileList[0]?.status === 'done'){
-                                                    const response = fileList[0].response
-                                                    form.setFieldsValue({
-                                                        scmAddress: response?.data
-                                                    })
+                                                    const response = fileList[0].response;
+                                                    if(response.code===0){
+                                                        form.setFieldsValue({
+                                                            scmAddress: response?.data
+                                                        })
+                                                    }
                                                 }
                                             }}
                                         >

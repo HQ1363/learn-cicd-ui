@@ -176,7 +176,7 @@ const PipelineAddInfo = forwardRef((props, ref) =>{
                     powerLis.map(item=>{
                         return <div
                             key={item.id}
-                            className={`pipeline-power-item ${set?"pipeline-power-set":"pipeline-power-noSet"} ${powerType===item.id?"pipeline-power-select":""}`}
+                            className={`pipeline-power-item ${set ? "pipeline-power-set":"pipeline-power-noSet"} ${powerType===item.id?"pipeline-power-select":""}`}
                             onClick={()=>setPowerType(item.id)}
                         >
                             <div className="power-item">
@@ -271,7 +271,7 @@ const PipelineAddInfo = forwardRef((props, ref) =>{
         },
         {
             pattern: /^[\u4e00-\u9fa5a-zA-Z0-9_-]{0,50}$/,
-            message: "流水线名称最长50位且不能包含非法字符，如&，%，&，#……等",
+            message: "流水线名称最长50位且不能包含非法字符，如&，%，&，#，……等",
         },
         ({ getFieldValue }) => ({
             validator(rule,value) {
@@ -390,7 +390,7 @@ const PipelineAddInfo = forwardRef((props, ref) =>{
             { renderPowerType }
             {
                 powerType === 2 &&
-                <Form.Item className="pipeline-user">
+                <div className="pipeline-user">
                     <div className="pipeline-user-title ant-form-item-label">
                         <label>通知对象</label>
                         <Dropdown
@@ -425,7 +425,7 @@ const PipelineAddInfo = forwardRef((props, ref) =>{
                             locale={{emptyText: <ListEmpty/>}}
                         />
                     </div>
-                </Form.Item>
+                </div>
             }
         </Form>
     )

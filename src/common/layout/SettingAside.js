@@ -5,7 +5,7 @@
  * @LastEditors: gaomengyuan
  * @LastEditTime: 2025/3/12
  */
-import React, {useState} from "react";
+import React from "react";
 import {
     DeploymentUnitOutlined,
     LayoutOutlined,
@@ -16,10 +16,6 @@ import {
     ScheduleOutlined, CreditCardOutlined,
 } from "@ant-design/icons";
 import Aside from "../component/aside/SettingAside";
-import {SecurityEnhance} from "tiklab-security-ui";
-import {LicenceEnhance} from "tiklab-licence-ui";
-import ipRoster from "../../assets/images/pip-feature-ipRoster.png";
-import customLogo from "../../assets/images/pip-feature-customLogo.png";
 
 const applicationRouters =  [
     {
@@ -153,12 +149,6 @@ const applicationRouters =  [
             {
                 id:"/setting/myLog",
                 title:"操作日志",
-                // purviewCode:"pipeline_log",
-            },
-            {
-                id:"/setting/ipRoster",
-                title: "IP黑白名单",
-                isEnhance: true,
             },
         ]
     },
@@ -176,11 +166,6 @@ const applicationRouters =  [
                 title: '系统访问权限',
             },
             {
-                id:'/setting/customLogo',
-                title: '自定义Logo',
-                isEnhance:true,
-            },
-            {
                 id:"/setting/resources",
                 title:"资源监控",
                 purviewCode:"pipeline_resources",
@@ -191,49 +176,12 @@ const applicationRouters =  [
 
 const Setting = props =>  {
 
-    //licence增强功能弹出框
-    const [licenceVisible,setLicenceVisible] = useState(false);
-    //security增强功能弹出框
-    const [securityVisible,setSecurityVisible] = useState(false);
-
-    /**
-     * 引导订阅
-     * @param data
-     */
-    const enhance = data => {
-        const {id} = data;
-        if(id==='/setting/customLogo'){
-            setLicenceVisible(true)
-        }
-        if(id==='/setting/ipRoster'){
-            setSecurityVisible(true)
-        }
-    }
-
-
     return (
         <Aside
             {...props}
-            enhance={enhance}
             outerPath={'/setting'}
             applicationRouters={applicationRouters}
         >
-            <SecurityEnhance
-                visible={securityVisible}
-                setVisible={setSecurityVisible}
-                bgroup={'arbess'}
-                list={[
-                    {id:'ipRoster',title:'IP黑白名单',icon:ipRoster}
-                ]}
-            />
-            <LicenceEnhance
-                visible={licenceVisible}
-                setVisible={setLicenceVisible}
-                bgroup={'arbess'}
-                list={[
-                    {id:'logo',title:'自定义Logo',icon:customLogo}
-                ]}
-            />
         </Aside>
     )
 

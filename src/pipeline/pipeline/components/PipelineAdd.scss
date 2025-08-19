@@ -1,4 +1,7 @@
 .pipeline-add{
+    .ant-modal-body{
+        padding: 0 0 15px 0 !important;
+    }
     .pipeline-add-type{
         margin-bottom: 25px;
         .pipeline-type-title{
@@ -22,88 +25,17 @@
         }
     }
     .pipeline-template{
-        .template-base{
-            display: inline-block;
-            &:not(:last-child){
-                margin-right: 15px;
-            }
-        }
-        .pipeline-template-title{
-            height: 50px;
-            line-height: 50px;
-        }
-        .pipeline-template-content{
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .pipeline-template-li{
-            border-radius: 4px;
-            background: #e7f6ff;
-            border: 1px solid #d9d9d9;
-            cursor: pointer;
-            display: flex;
-            padding: 8px var(--tiklab-padding);
-            justify-content: space-between;
-            align-items: center;
-            &-header{
-                display: flex;
-                align-items: center;
-                padding-bottom: 5px;
-                .li-header-name,.li-header-title{
-                    font-weight: var(--tiklab-font-weight-bold);
-                    padding:0 5px ;
-                }
-            }
-            &-content{
-                display: flex;
-                justify-content: left;
-                align-items: center;
-                .li-step {
-                    height: 40px;
-                    line-height: 40px;
-                    border-radius: 34px;
-                    background: #ffffff;
-                    width: 100px;
-                    text-align: center;
-                    margin-top: 5px;
-                    position: relative;
-                    .icon {
-                        width: 20px;
-                        height: 20px;
-                    }
-                    &:not(:first-child){
-                        margin-left: 30px;
-                    }
-                    &:not(:last-child){
-                        &:after{
-                            content: "";
-                            width: 30px;
-                            border-top: 1px solid #626262;
-                            position: absolute;
-                            top: 20px;
-                            left: 100px;
-                        }
-                    }
-                }
-            }
-            &:not(:last-child){
-                margin-bottom: var(--tiklab-padding-item);
-            }
-            .li-self{
-                font-size: 16px;
-                padding: 10px 0;
-            }
-        }
-        .pipeline-template-select{
-            border-color: var(--tiklab-blue);
-        }
+        height: calc(100% - 59px);
     }
     .steps-top{
-        padding: var(--tiklab-padding) 0;
+        padding: 7px 15px var(--tiklab-padding);
     }
-    .steps-content {
-        min-height: 100px;
+    .steps-content{
+        .ant-form{
+            padding: 0 15px !important;
+            width: 80%;
+            margin: 0 auto;
+        }
     }
     .steps-bottom{
         padding-top: var(--tiklab-padding-item)

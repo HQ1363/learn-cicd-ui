@@ -62,6 +62,7 @@ const EnvModal = props =>{
             onCancel={()=>setVisible(false)}
             onOk={onOk}
             title={formValue?"修改":"添加"}
+            getContainer={false}
         >
             <div className="resources-modal">
                 <Form

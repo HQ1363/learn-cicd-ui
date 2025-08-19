@@ -6,7 +6,7 @@
  * @LastEditTime: 2025/3/11
  */
 import React,{useState,useRef} from "react";
-import {Col, Row} from "antd";
+import {Col, Row, Modal} from "antd";
 import {CloseOutlined} from "@ant-design/icons";
 import {inject,observer} from "mobx-react";
 import PipelineDrawer from "../../../../../common/component/drawer/Drawer";
@@ -37,6 +37,8 @@ import {
     build_python,
     build_php,
     build_net_core,
+    build_gradle,
+    build_c_add,
     checkpoint,
     host_blue_green,
     host_strategy,
@@ -44,6 +46,8 @@ import {
     k8s_blue_green,
 } from '../../../../../common/utils/Constant';
 import "./TaskAdd.scss";
+import {disableFunction} from "tiklab-core-ui";
+import {EnhanceModalContent} from "../../../../../common/component/modal/EnhanceEntranceModal";
 
 const TaskAdd = props =>{
 
@@ -53,8 +57,12 @@ const TaskAdd = props =>{
     const {createStage,createStagesGroupOrTask} = stageStore
 
     const scrollRef = useRef(null);
+    const disable = disableFunction();
 
+    //任务组
     const [taskType,setTaskType] = useState("code");
+    //特性弹出框
+    const [featureModal,setFeatureModal] = useState(false);
 
     // task类型
     const lis=[
@@ -97,6 +105,8 @@ const TaskAdd = props =>{
                 {type: build_python},
                 {type: build_php},
                 {type: build_net_core},
+                {type: build_gradle},
+                {type: build_c_add},
             ]
         },
         {
@@ -147,6 +157,10 @@ const TaskAdd = props =>{
         const { id: pipelineId, type: pipelineType } = pipeline;
         // 判断是否是蓝绿部署类型
         if (stageTypeTaskMap[itemType]) {
+            if(disable){
+                setFeatureModal(true)
+                return;
+            }
             createStagesGroupOrTask({
                 pipelineId,
                 ...createValue,
@@ -241,6 +255,21 @@ const TaskAdd = props =>{
                     className='task-add-up-action'
                 />
             </div>
+            <Modal
+                closable={false}
+                footer={null}
+                className='task-add-enhance-modal'
+                width={450}
+                visible={featureModal}
+                onCancel={()=>setFeatureModal(false)}
+            >
+                <EnhanceModalContent
+                    config={{
+                        title:'部署策略',
+                        desc:'通过不同的策略，稳定、高效的发布应用'
+                    }}
+                />
+            </Modal>
             <div className="task-add-bottom">
                 <Row className="gui-drawer-content">
                     <Col span={4} className="gui-drawer-content-left">

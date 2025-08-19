@@ -18,6 +18,7 @@ import Button from "../../../../common/component/button/Button";
 import {disableFunction} from "tiklab-core-ui";
 import EnhanceModal from "../../../../common/component/modal/EnhanceModal";
 import {DownOutlined, PlaySquareOutlined, RightOutlined} from "@ant-design/icons";
+import EnhanceEntranceModal from "../../../../common/component/modal/EnhanceEntranceModal";
 import "./Agent.scss";
 
 const pageSize = 13;
@@ -255,6 +256,14 @@ const Agent = (props) => {
 
     return (
         <Row className="agent">
+            <EnhanceEntranceModal
+                visible={featureModal}
+                setVisible={setFeatureModal}
+                config={{
+                    title:'自定义Agent',
+                    desc:'支持分布式部署'
+                }}
+            />
             <Col
                 xs={{ span: "24" }}
                 sm={{ span: "24" }}
@@ -283,11 +292,6 @@ const Agent = (props) => {
                             findAgentPage={findAgentPage}
                         />
                     }
-                    <EnhanceModal
-                        type={'configure'}
-                        visible={featureModal}
-                        setVisible={setFeatureModal}
-                    />
                     <div className="agent-content">
                         <Spin spinning={spinning}>
                             <Table

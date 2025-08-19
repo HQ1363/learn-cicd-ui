@@ -8,7 +8,6 @@
 import React from "react";
 import "./ListIcon.scss";
 
-
 const ListIcon = ({text,colors,isMar=true}) => {
 
     /**

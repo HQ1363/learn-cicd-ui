@@ -89,12 +89,11 @@ const templateRouter = [
 
 const SettingAside = props =>  {
 
-    const {enhance,outerPath,applicationRouters,systemRoleStore} = props;
+    const {outerPath,applicationRouters,systemRoleStore} = props;
 
     const {systemPermissions} = systemRoleStore;
 
     let path = props.location.pathname;
-    const disable = disableFunction();
     const authConfig = JSON.parse(localStorage.getItem("authConfig"));
 
     //树的展开与闭合
@@ -119,15 +118,9 @@ const SettingAside = props =>  {
      * @returns {*}
      */
     const select = data => {
-        const {isUnify,isEnhance,id} = data
+        const {isUnify,id} = data
         if(!!isUnify && !authConfig?.authType){
             return applyJump(`${authConfig?.authServiceUrl}/#${isUnify}`)
-        }
-        if(isEnhance && disable){
-            if (typeof enhance === 'function') {
-                enhance(data);
-            }
-            return
         }
         props.history.push(id)
     }

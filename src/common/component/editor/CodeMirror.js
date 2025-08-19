@@ -14,6 +14,7 @@ import "codemirror/mode/shell/shell.js";
 import "codemirror/mode/ruby/ruby.js";
 import "codemirror/mode/yaml/yaml.js";
 import "codemirror/mode/powershell/powershell.js";
+import 'codemirror/mode/clike/clike.js';
 //代码提示
 import "codemirror/addon/hint/show-hint.css";
 import "codemirror/addon/hint/show-hint";
@@ -37,6 +38,7 @@ import "codemirror/addon/fold/comment-fold.js";
 const TaskMirror = props =>{
 
     const {mirrorRef,mirrorValue,...res} = props;
+
 
     return(
         <CodeMirror

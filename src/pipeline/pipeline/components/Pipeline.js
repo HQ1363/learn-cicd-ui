@@ -117,7 +117,10 @@ const Pipeline = props =>{
      */
     const findPipeline = () =>{
         setIsLoading(true)
-        let param = {...pipelineParam};
+        let param = {
+            ...pipelineParam,
+            orderParams: [{name: "createTime", orderType: "desc"}],
+        };
         if(listType==='create'){
             param.createUserId = pipelineParam?.createUserId || getUser().userId;
         }
@@ -129,7 +132,6 @@ const Pipeline = props =>{
                 setPipelineData(res.data)
             }
         }).finally(()=>setIsLoading(false))
-
     }
 
     /**
@@ -289,7 +291,7 @@ const Pipeline = props =>{
                                                 const {pipeline,pipelineExecState} = item
                                                 return (
                                                     <div className="pipelineRecent-item" key={pipeline?.id}
-                                                         onClick={()=> props.history.push(`/pipeline/${pipeline?.id}/history`)}
+                                                         onClick={()=> props.history.push(`/pipeline/${pipeline?.id}/config`)}
                                                     >
                                                         {
                                                             pipeline &&

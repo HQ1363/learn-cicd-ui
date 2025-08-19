@@ -20,6 +20,7 @@ const AuthType = props =>{
             </Form.Item>
             <Form.Item shouldUpdate={(prevValues, currentValues) =>
                     prevValues.authType !== currentValues.authType}
+                   noStyle
             >
                 {({getFieldValue}) =>
                     getFieldValue("authType")===1 ?

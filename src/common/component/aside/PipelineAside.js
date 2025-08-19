@@ -8,27 +8,19 @@
 import React, {useState, useEffect} from 'react';
 import {
     HomeOutlined,
-    SettingOutlined,
-    LeftCircleOutlined,
-    RightCircleOutlined,
+    MenuFoldOutlined,
+    MenuUnfoldOutlined,
 } from "@ant-design/icons";
 import {observer} from "mobx-react";
-import {disableFunction} from "tiklab-core-ui";
-import EnhanceModal from "../modal/EnhanceModal";
 
 const PipelineAside = (props) => {
 
-    const {isExpand,setIsExpand,themeType,initRouters,backUrl,setUrl,ChangeComponent,id} = props;
+    const {isExpand,setIsExpand,themeType,initRouters,backUrl,ChangeComponent,id} = props;
 
     const path = props.location.pathname;
-    const disable = disableFunction();
 
     //路由
     const [pipelineRouters,setPipelineRouters] = useState(initRouters);
-    //特性弹出框
-    const [featureModal,setFeatureModal] = useState(false);
-    //特性类型
-    const [featureType,setFeatureType] = useState('statistics');
     //更多路由
     const [moreMenu, setMoreMenu] = useState([]);
 
@@ -37,15 +29,18 @@ const PipelineAside = (props) => {
     }, [id]);
 
     /**
+     * 折叠
+     */
+    const changeExpand = () =>{
+        setIsExpand(!isExpand)
+        localStorage.setItem('menuExpand',String(!isExpand))
+    }
+
+    /**
      * 跳转
      */
     const onSelect = (item) => {
-        const {to,isEnhance} = item;
-        if(disable && isEnhance) {
-            setFeatureModal(true);
-            return;
-        }
-        props.history.push(to)
+        props.history.push(item.to)
     }
 
     /**
@@ -53,13 +48,6 @@ const PipelineAside = (props) => {
      */
     const goBack = () => {
         props.history.push(backUrl)
-    }
-
-    /**
-     * 设置
-     */
-    const goSetting = () => {
-        props.history.push(setUrl)
     }
 
     return (
@@ -73,12 +61,12 @@ const PipelineAside = (props) => {
                                 <div className="aside-item-icon">
                                     <HomeOutlined />
                                 </div>
-                                <div className="aside-item-title">返回流水线</div>
+                                <div className="aside-item-title">返回首页</div>
                             </div>
                         </div>
                         :
                         <div className="aside-item-back">
-                            <div className='aside-item-back-home' data-title-right='返回流水线' onClick={goBack}>
+                            <div className='aside-item-back-home' data-title-right='返回首页' onClick={goBack}>
                                 <div className="aside-item-home-icon">
                                     <HomeOutlined />
                                 </div>
@@ -96,28 +84,19 @@ const PipelineAside = (props) => {
                         </div>
                     ))
                 }
-                <EnhanceModal
-                    type={featureType}
-                    visible={featureModal}
-                    setVisible={setFeatureModal}
-                />
             </div>
-            {/*<div className="aside-bottom">*/}
-            {/*    {*/}
-            {/*        isExpand ?*/}
-            {/*            <div className='aside-item' onClick={goSetting}>*/}
-            {/*                <div className="aside-item-icon"><SettingOutlined /></div>*/}
-            {/*                <div className="aside-item-title">设置</div>*/}
-            {/*            </div>*/}
-            {/*            :*/}
-            {/*            <div className="aside-bottom-text" data-title-right='设置' onClick={goSetting}>*/}
-            {/*                <SettingOutlined className='aside-bottom-text-icon'/>*/}
-            {/*            </div>*/}
-            {/*    }*/}
-            {/*</div>*/}
-            <div className="aside-hover-expand"/>
-            <div className="aside-expand" onClick={()=>setIsExpand(!isExpand)}>
-                {isExpand ? <LeftCircleOutlined />:<RightCircleOutlined />}
+            <div className="aside-bottom">
+                {
+                    isExpand ?
+                        <div className='aside-item' onClick={changeExpand}>
+                            <div className="aside-item-icon"><MenuFoldOutlined /></div>
+                            <div className="aside-item-title">折叠</div>
+                        </div>
+                        :
+                        <div className="aside-bottom-text" data-title-right='展开' onClick={changeExpand}>
+                            <MenuUnfoldOutlined className='aside-bottom-text-icon'/>
+                        </div>
+                }
             </div>
         </div>
     )

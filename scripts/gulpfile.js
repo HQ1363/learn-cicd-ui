@@ -9,6 +9,7 @@ const sourcemaps = require("gulp-sourcemaps");
 const size = require("gulp-filesize");
 const postcssPresetEnv = require("postcss-preset-env");
 const postcss = require("gulp-postcss");
+const sass = require('gulp-sass')(require('sass'));
 
 const { name } = require("../package.json");
 
@@ -50,6 +51,7 @@ gulp.task("compile-postcss", () => {
         gulp
             .src(scssDir)
             .pipe(sourcemaps.init())
+            .pipe(sass().on('error', sass.logError))
             .pipe(
                 postcss([
                     // 编译.pcss 文件
@@ -82,6 +84,7 @@ gulp.task("dist-css", () => {
         gulp
             .src(scssDir)
             .pipe(sourcemaps.init())
+            .pipe(sass().on('error', sass.logError))
             .pipe(
                 postcss([
                     postcssPresetEnv({

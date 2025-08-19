@@ -1,30 +1,24 @@
+/**
+ * @Description: 流水线侧边栏
+ * @Author: gaomengyuan
+ * @Date:
+ * @LastEditors: gaomengyuan
+ * @LastEditTime: 2025/3/12
+ */
 import React, {useEffect, useState} from 'react';
 import {useRouteMatch} from "react-router-dom";
 import {Dropdown, Spin} from "antd";
 import ListIcon from "../component/list/ListIcon";
-import {
-    ApartmentOutlined,
-    CaretDownOutlined,
-    ClockCircleOutlined,
-    CreditCardOutlined,
-    ExperimentOutlined,
-    RadarChartOutlined, SettingOutlined,
-} from "@ant-design/icons";
+import {DownOutlined} from "@ant-design/icons";
 import pipelineStore from "../../pipeline/pipeline/store/PipelineStore";
 import Aside from "../component/aside/PipelineAside";
 import {observer} from "mobx-react";
 import SearchInput from "../component/search/SearchInput";
 import ListEmpty from "../component/list/ListEmpty";
 
-/**
- * 流水线侧边栏
- * @param props
- * @returns {Element}
- * @constructor
- */
 const PipelineAside = (props) => {
 
-    const {isExpand} = props;
+    const {isExpand,pipelineRouters} = props;
 
     const {findUserPipelinePage,findRecentlyPipeline,pipeline} = pipelineStore;
 
@@ -36,46 +30,6 @@ const PipelineAside = (props) => {
     const [recentlyPipeline,setRecentlyPipeline] = useState([]);
     //最近打开的流水线下拉框
     const [dropdownVisible,setDropdownVisible] = useState(false);
-
-    const firstRouters=[
-        // {
-        //     id:`/pipeline/${id}/overview`,
-        //     to:`/pipeline/${id}/overview`,
-        //     title:"概况",
-        //     icon:<ApartmentOutlined />,
-        // },
-        {
-            id:`/pipeline/${id}/config`,
-            to:`/pipeline/${id}/config`,
-            title: "设计",
-            icon: <CreditCardOutlined />,
-        },
-        {
-            id:`/pipeline/${id}/history`,
-            to:`/pipeline/${id}/history`,
-            title: "历史",
-            icon: <ClockCircleOutlined />,
-        },
-        {
-            id:`/pipeline/${id}/test`,
-            to:`/pipeline/${id}/test/overview`,
-            title: "测试报告",
-            icon: <ExperimentOutlined />,
-        },
-        {
-            id:`/pipeline/${id}/statistics`,
-            to:`/pipeline/${id}/statistics/overview`,
-            title: "统计",
-            icon: <RadarChartOutlined />,
-            isEnhance: true,
-        },
-        {
-            id:`/pipeline/${id}/setting`,
-            to:`/pipeline/${id}/setting`,
-            title: "设置",
-            icon: <SettingOutlined />,
-        },
-    ]
 
     useEffect(() => {
         if(id){
@@ -138,8 +92,7 @@ const PipelineAside = (props) => {
             {...props}
             id={id}
             backUrl={'/pipeline'}
-            setUrl={`/pipeline/${id}/setting`}
-            initRouters={firstRouters}
+            initRouters={pipelineRouters}
             ChangeComponent={
                 <Dropdown
                     getPopupContainer={e => e.parentElement}
@@ -234,8 +187,8 @@ const PipelineAside = (props) => {
                         />
                         {isExpand &&
                             <>
-                                <div className='aside-opt-name'>{pipeline?.name}</div>
-                                <div style={{opacity:0.8}}><CaretDownOutlined/></div>
+                                <div className='aside-opt-name' title={pipeline?.name}>{pipeline?.name}</div>
+                                <div style={{opacity:0.8,fontSize:12}}><DownOutlined /></div>
                             </>
                         }
                     </div>

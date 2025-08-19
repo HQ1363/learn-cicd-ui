@@ -6,7 +6,7 @@
  * @LastEditTime: 2025/3/12
  */
 import React, {useRef, useState} from "react";
-import {Spin, Steps, Row, Col} from "antd";
+import {Spin, Steps} from "antd";
 import {getUser} from "tiklab-core-ui";
 import Button from "../../../common/component/button/Button";
 import PipelineAddMould from "./PipelineAddMould";
@@ -26,9 +26,9 @@ const PipelineAdd = props =>{
     //添加状态
     const [isLoading,setIsLoading] = useState(false)
     //当前步骤
-    const [current,setCurrent] = useState(0)
+    const [current,setCurrent] = useState(0);
     //流水线模板 -- 下标
-    const [templateType,setTemplateType] = useState(1)
+    const [templateType,setTemplateType] = useState([]);
     //基本信息
     const [baseInfo,setBaseInfo] = useState({
         power:1,type:2,group:{id:'default'},env:{id:'default'},
@@ -46,7 +46,7 @@ const PipelineAdd = props =>{
         const {userList,...rest} = baseInfo
         const params = {
             ...rest,
-            template:templateType,
+            templateList: templateType,
             userList: userList && userList.map(item=>({userId:item.id,roleType:item.roleType})),
         }
         setIsLoading(true)
@@ -75,24 +75,14 @@ const PipelineAdd = props =>{
         }
         setVisible(false);
         setCurrent(0);
+        setTemplateType([]);
     }
 
     // 渲染模板
     const renderTemplate = (
-           <div className="pipeline-template">
-               <div className="template-base">
-                   <span>流水线名称：</span>
-                   <span>{baseInfo.name}</span>
-               </div>
-               <div className="template-base">
-                   <span>流水线权限：</span>
-                   <span>{baseInfo.power===1?"全局":"私有"}</span>
-               </div>
-               <PipelineAddMould
-                   templateType={templateType}
-                   setTemplateType={setTemplateType}
-               />
-           </div>
+        <PipelineAddMould
+            setTemplateType={setTemplateType}
+        />
     )
 
     // 完善信息
@@ -123,7 +113,7 @@ const PipelineAdd = props =>{
             className="pipeline-add"
             title={'添加流水线'}
             visible={visible}
-            width={600}
+            width={850}
             onCancel={onCancel}
             destroyOnClose
             footer={

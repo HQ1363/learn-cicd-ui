@@ -110,6 +110,7 @@ const FormsMirror = props =>{
                             readOnly: !taskUpdate
                         }}
                         autoSize={{ min: 3 }}
+                        defineMode={props.defineMode}
                     />
                     {
                         bordered &&
@@ -145,6 +146,7 @@ const FormsMirror = props =>{
                                 autofocus: taskUpdate,
                                 readOnly: !taskUpdate
                             }}
+                            defineMode={props.defineMode}
                         />
                     </div>
                 </Modals>

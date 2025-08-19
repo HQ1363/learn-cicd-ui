@@ -148,7 +148,7 @@ const Variable = (props) => {
     ]
 
     return (
-        <Row className='variable'>
+        <Row className='variable-setting'>
             <Col
                 xs={{ span: "24" }}
                 sm={{ span: "24" }}

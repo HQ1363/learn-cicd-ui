@@ -101,6 +101,7 @@ const PipelineSetAside = props =>{
                 <div className='project-nav-content'>
                     { renderRoutes(route.routes) }
                 </div>
+                {props.children}
             </div>
         </ProjectNav>
     )

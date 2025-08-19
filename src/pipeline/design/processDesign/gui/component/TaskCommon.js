@@ -24,6 +24,8 @@ import pip_net_core from "../../../../../assets/images/svg/pip_net_core.svg";
 import pip_checkpoint from "../../../../../assets/images/svg/pip_checkpoint.svg";
 import pip_host_order from "../../../../../assets/images/svg/pip_host_order.svg";
 import pip_host_strategy from "../../../../../assets/images/svg/pip_host_strategy.svg";
+import pip_gradle from "../../../../../assets/images/svg/pip_gradle.svg";
+import pip_c_add from "../../../../../assets/images/svg/pip_c_add.svg";
 import {productImg} from "tiklab-core-ui";
 import {
     git,
@@ -63,6 +65,8 @@ import {
     host_strategy,
     docker_blue_green,
     k8s_blue_green,
+    build_gradle,
+    build_c_add,
 } from '../../../../../common/utils/Constant';
 
 /**
@@ -89,6 +93,8 @@ export const taskTitle = type =>{
         case build_go: return "Go构建"
         case build_php: return "PHP构建"
         case build_net_core: return ".Net Core构建"
+        case build_gradle: return "Gradle构建"
+        case build_c_add: return "C++构建"
         case liunx: return "主机部署"
         case docker: return "Docker部署"
         case k8s: return "Kubernetes部署"
@@ -160,6 +166,8 @@ export const TaskIcon = props =>{
             case host_strategy: return pip_host_strategy
             case docker_blue_green: return pip_docker
             case k8s_blue_green: return pip_k8s
+            case build_gradle: return pip_gradle
+            case build_c_add: return pip_c_add
         }
     }
 
@@ -199,6 +207,8 @@ export const HeadlineTitle = type =>{
         case build_python:
         case build_php:
         case build_net_core:
+        case build_gradle:
+        case build_c_add:
             return '构建'
         case liunx:
         case docker:
