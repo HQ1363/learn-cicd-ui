@@ -10,24 +10,26 @@ import {Dropdown, Modal, Tooltip} from "antd";
 import {EditOutlined} from "@ant-design/icons";
 import pip_more from "../../../assets/images/svg/pie_more.svg";
 import "./ListAction.scss";
-import {PrivilegeButton} from "tiklab-privilege-ui";
+import {PrivilegeButton,PrivilegeProjectButton} from "tiklab-privilege-ui";
 
 const ListAction = props =>{
 
-    const {edit,del,isMore = false,code} = props;
+    const {edit,del,isMore = false,code,type = "system",domainId} = props;
+
+    const PrivilegeWrapper =
+        type === "system" ? PrivilegeButton : PrivilegeProjectButton;
 
     return (
         <span className="arbess-listAction">
-            {
-                typeof edit === 'function' &&
-                <PrivilegeButton code={code?.editCode}>
-                    <Tooltip titsle="修改">
-                        <span onClick={edit} className="arbess-listAction-edit">
-                            <EditOutlined />
+              {edit && (
+                  <PrivilegeWrapper code={code?.editCode} domainId={domainId}>
+                      <Tooltip title="修改">
+                        <span onClick={edit} style={{cursor:"pointer",marginRight:15}}>
+                            <EditOutlined style={{fontSize:16}}/>
                         </span>
-                    </Tooltip>
-                </PrivilegeButton>
-            }
+                      </Tooltip>
+                  </PrivilegeWrapper>
+              )}
             {
                 isMore &&
                 <Dropdown
@@ -59,13 +61,13 @@ const ListAction = props =>{
                     placement={"bottomRight"}
                 >
                     <span>
-                        <PrivilegeButton code={code?.delCode}>
+                        <PrivilegeWrapper code={code?.delCode} domainId={domainId}>
                             <Tooltip title="更多">
                                 <span className="arbess-listAction-more">
                                     <img src={pip_more} width={18} alt={'更多'}/>
                                 </span>
                             </Tooltip>
-                        </PrivilegeButton>
+                        </PrivilegeWrapper>
                     </span>
                 </Dropdown>
             }

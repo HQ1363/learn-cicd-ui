@@ -16,6 +16,7 @@ import Button from "../../../../common/component/button/Button";
 import EnvModal from "./EnvModal";
 import envStore from "../store/EnvStore";
 import "./Env.scss";
+import {PrivilegeButton} from "tiklab-privilege-ui";
 
 const Env = props =>{
 
@@ -126,6 +127,10 @@ const Env = props =>{
                     edit={()=>editAuth(record)}
                     del={()=>delAuth(record)}
                     isMore={true}
+                    code={{
+                        editCode: 'pipeline_environment_update',
+                        delCode: 'pipeline_environment_delete',
+                    }}
                 />
             )
         }
@@ -147,11 +152,13 @@ const Env = props =>{
                             {title:'环境'}
                         ]}
                     >
-                        <Button
-                            type={'primary'}
-                            title={"添加环境"}
-                            onClick={createEnv}
-                        />
+                        <PrivilegeButton code={'pipeline_environment_add'}>
+                            <Button
+                                type={'primary'}
+                                title={"添加环境"}
+                                onClick={createEnv}
+                            />
+                        </PrivilegeButton>
                     </BreadCrumb>
                     <EnvModal
                         visible={visible}

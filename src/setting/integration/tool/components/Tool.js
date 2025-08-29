@@ -169,8 +169,8 @@ const Tool = props =>{
                         del={()=>delTool(record)}
                         isMore={true}
                         code={{
-                            editCode: 'pip_set_tool_update',
-                            delCode: 'pip_set_tool_delete',
+                            editCode: 'pipeline_tool_integration_update',
+                            delCode: 'pipeline_tool_integration_delete',
                         }}
                     />
                 )
@@ -194,7 +194,7 @@ const Tool = props =>{
                             {title:'工具集成'}
                         ]}
                     >
-                        <PrivilegeButton code={'pip_set_tool_create'}>
+                        <PrivilegeButton code={'pipeline_tool_integration_add'}>
                             <ToolAddBtn
                                 visible={visible}
                                 setVisible={setVisible}

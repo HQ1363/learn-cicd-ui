@@ -99,13 +99,13 @@ const TaskAdd = props =>{
             title: "构建",
             desc:[
                 {type: mvn},
+                {type: build_gradle},
                 {type: nodejs},
                 {type: build_docker},
                 {type: build_go},
                 {type: build_python},
                 {type: build_php},
                 {type: build_net_core},
-                {type: build_gradle},
                 {type: build_c_add},
             ]
         },

@@ -13,19 +13,18 @@ import ListEmpty from "../../../../common/component/list/ListEmpty";
 import ListAction from "../../../../common/component/list/ListAction";
 import VariableAddEdit from "./VariableAddEdit";
 import "./Variable.scss";
-import {pipeline_task_update} from "../../../../common/utils/Constant";
 import Page from "../../../../common/component/page/Page";
 import {deleteSuccessReturnCurrenPage} from "../../../../common/utils/Client";
 import VersionInfo from "../../../../common/component/versionInfo/VersionInfo";
+import {PrivilegeProjectButton} from "tiklab-privilege-ui";
 
 const pageSize = 13;
 
 const Variable = props =>{
 
-    const {findCount,taskStore,variableStore,match} = props
+    const {findCount,variableStore,match} = props
 
     const {findVariablePage,deleteVariable} = variableStore;
-    const {taskPermissions} = taskStore;
     const pageParam = {
         pageSize: pageSize,
         currentPage: 1,
@@ -40,8 +39,6 @@ const Variable = props =>{
     const [spinning,setSpinning] = useState(false);
     //请求数据
     const [requestParam,setRequestParam] = useState({pageParam})
-    //流水线更新
-    const taskUpdate = taskPermissions?.includes(pipeline_task_update);
     //流水线id
     const pipelineId = match.params.id;
 
@@ -134,7 +131,7 @@ const Variable = props =>{
             width:"30%",
             ellipsis:true,
         },
-        taskUpdate ? {
+        {
             title: "操作",
             dataIndex: "action",
             key: "action",
@@ -145,9 +142,15 @@ const Variable = props =>{
                     edit={()=>editVariable(record)}
                     del={()=>delVariable(record)}
                     isMore={true}
+                    code={{
+                        editCode: 'pip_design_var_update',
+                        delCode: 'pip_design_var_delete',
+                    }}
+                    type={'domain'}
+                    domainId={pipelineId}
                 />
             )
-        } : {width:0},
+        }
     ]
 
     return(
@@ -166,7 +169,9 @@ const Variable = props =>{
                         <div className="variable-up-num">
                             共{variableData?.totalRecord||0}条
                         </div>
-                        { taskUpdate && <Button title={"添加"} onClick={addVariable}/> }
+                        <PrivilegeProjectButton code={'pip_design_var_add'} domainId={pipelineId}>
+                            <Button title={"添加"} onClick={addVariable}/>
+                        </PrivilegeProjectButton>
                         <VariableAddEdit
                             {...props}
                             findVariable={findVariable}

@@ -19,22 +19,22 @@ const PipelineSetting = props =>{
         {
             id:`/pipeline/${pipelineId}/setting/info`,
             title:"流水线信息",
-            purviewCode:"pipeline_seting",
+            purviewCode: 'pip_setting_msg',
         },
         {
             id:`/pipeline/${pipelineId}/setting/user`,
             title:"成员",
-            purviewCode:"pipeline_user",
+            purviewCode: 'domain_user',
         },
         {
             id:`/pipeline/${pipelineId}/setting/role`,
             title:"权限",
-            purviewCode:"pipeline_auth",
+            purviewCode: 'domain_role',
         },
         {
             id:`/pipeline/${pipelineId}/setting/message`,
             title:"消息",
-            purviewCode:"pip_message_notice",
+            purviewCode: 'domain_message',
         },
     ]
 
@@ -44,6 +44,7 @@ const PipelineSetting = props =>{
             domainId={pipelineId}
             projectRouters={projectRouters}
             outerPath={`/pipeline/${pipelineId}/setting`}
+            asideTitle={'设置'}
         >
         </PipelineSetAside>
     )

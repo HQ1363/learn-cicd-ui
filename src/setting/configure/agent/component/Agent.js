@@ -6,7 +6,7 @@
  * @LastEditTime: 2025/3/12
  */
 import React,{useState,useEffect} from 'react';
-import {Row, Col, Table, Space, Radio, Spin} from "antd";
+import {Row, Col, Table, Space, Radio, Spin, message} from "antd";
 import BreadCrumb from "../../../../common/component/breadcrumb/BreadCrumb";
 import ListIcon from "../../../../common/component/list/ListIcon";
 import ListEmpty from "../../../../common/component/list/ListEmpty";
@@ -16,19 +16,22 @@ import {deleteSuccessReturnCurrenPage} from "../../../../common/utils/Client";
 import agentStore from "../store/AgentStore";
 import Button from "../../../../common/component/button/Button";
 import {disableFunction} from "tiklab-core-ui";
-import EnhanceModal from "../../../../common/component/modal/EnhanceModal";
 import {DownOutlined, PlaySquareOutlined, RightOutlined} from "@ant-design/icons";
 import EnhanceEntranceModal from "../../../../common/component/modal/EnhanceEntranceModal";
+import {PrivilegeButton} from "tiklab-privilege-ui";
 import "./Agent.scss";
+import {inject,observer} from "mobx-react";
 
 const pageSize = 13;
 
 const Agent = (props) => {
 
-    const {AgentAddComponent,updateAgentRole} = props;
+    const {AgentAddComponent,updateAgentRole,systemRoleStore} = props;
 
     const {findAgentPage,updateAgent,findAgentRoleList} = agentStore;
+    const {systemPermissions} = systemRoleStore;
 
+    const agentUpdate = systemPermissions?.includes('pipeline_agent_update');
     const disable = disableFunction();
 
     const pageParam = {
@@ -188,10 +191,12 @@ const Agent = (props) => {
             width:"10%",
             ellipsis:true,
             render:(text,record) => (
-                <ListAction
-                    del={()=>delAgent(record)}
-                    isMore={true}
-                />
+                <PrivilegeButton code={'pipeline_agent_delete'}>
+                    <ListAction
+                        del={()=>delAgent(record)}
+                        isMore={true}
+                    />
+                </PrivilegeButton>
             )
         },
     ]
@@ -227,7 +232,11 @@ const Agent = (props) => {
             icon: <PlaySquareOutlined />,
             content: (
                 <div className="bottom-agent">
-                    <Radio.Group value={agentRole?.type} onChange={onChange}>
+                    <Radio.Group
+                        value={agentRole?.type}
+                        onChange={onChange}
+                        disabled={!disable && !agentUpdate}
+                    >
                         <Space direction="vertical" size={'large'}>
                             <Radio value={1}>
                                 随机
@@ -278,10 +287,11 @@ const Agent = (props) => {
                             {title:'Agent'}
                         ]}
                     >
-                        <Button
-                            type={'primary'}
-                            onClick={addAgent}
-                        >添加Agent</Button>
+                        <PrivilegeButton code={disable ? null : 'pipeline_agent_add'}>
+                            <Button type={'primary'} onClick={addAgent}>
+                                添加Agent
+                            </Button>
+                        </PrivilegeButton>
                     </BreadCrumb>
                     {
                         AgentAddComponent &&
@@ -346,4 +356,4 @@ const Agent = (props) => {
 }
 
 
-export default Agent
+export default inject('systemRoleStore')(observer(Agent))

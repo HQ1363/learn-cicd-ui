@@ -80,8 +80,7 @@ export const toolSourceFareScanner = 'sourcefare-scanner';
 /**
  * 权限
  */
-export const pipeline_task_update = 'pipeline_task_update'; //流水线更新
-export const pipeline_task_run = 'pipeline_task_run'; //流水线运行
+export const pipeline_task_update = 'pip_design_update'; //设计更新
 
 /**
  * 运行状态

@@ -6,13 +6,14 @@
  * @LastEditTime: 2025/3/12
  */
 import React,{useEffect,useState} from "react";
-import {Select, Space, Row, Col, Spin, Dropdown, Form, Input} from "antd";
+import {Select, Space, Row, Col, Spin, Dropdown, Form} from "antd";
 import {getUser} from "tiklab-core-ui";
 import PipelineTable from "./PipelineTable";
 import BreadCrumb from "../../../common/component/breadcrumb/BreadCrumb";
 import Button from "../../../common/component/button/Button";
 import Tabs from "../../../common/component/tabs/Tabs";
 import SearchInput from "../../../common/component/search/SearchInput";
+import SearchSelect from "../../../common/component/search/SearchSelect";
 import {debounce} from "../../../common/utils/Client";
 import pipelineStore from "../store/PipelineStore";
 import envStore from "../../../setting/configure/env/store/EnvStore";
@@ -23,6 +24,7 @@ import pipScreen from "../../../assets/images/svg/pip_screen.svg";
 import ListIcon from "../../../common/component/list/ListIcon";
 import ListEmpty from "../../../common/component/list/ListEmpty";
 import homePageStore from "../../../home/store/HomePageStore";
+import {PrivilegeButton} from "tiklab-privilege-ui";
 
 const pageSize = 10;
 
@@ -31,7 +33,9 @@ const Pipeline = props =>{
     const {findUserPipelinePage,findPipelineCount,findUserPage} = pipelineStore;
     const {findEnvList} = envStore;
     const {findGroupList} = groupingStore;
-    const {findAllOpen} = homePageStore;
+    const {findOpenPage} = homePageStore;
+
+    const user = getUser();
 
     const pageParam = {
         pageSize:pageSize,
@@ -69,9 +73,11 @@ const Pipeline = props =>{
         // 获取环境和应用管理
         getEnvOrGroup()
         // 获取常用流水线
-        findAllOpen(4).then(res=>{
+        findOpenPage({
+            pageParam:{pageSize:4,currentPage:1},
+        }).then(res=>{
             if(res.code===0){
-                setNewlyOpen(res.data || [])
+                setNewlyOpen(res?.data?.dataList || [])
             }
         }).finally(()=>{
             setOpenSpinning(false)
@@ -122,7 +128,7 @@ const Pipeline = props =>{
             orderParams: [{name: "createTime", orderType: "desc"}],
         };
         if(listType==='create'){
-            param.createUserId = pipelineParam?.createUserId || getUser().userId;
+            param.createUserId = pipelineParam?.createUserId || user.userId;
         }
         if(listType==='follow'){
             param.pipelineFollow = 1;
@@ -271,7 +277,9 @@ const Pipeline = props =>{
                             {title:'流水线'}
                         ]}
                     >
-                        <Button onClick={onClick} type={"primary"} title={"新建流水线"}/>
+                        <PrivilegeButton code={'pipeline_create'}>
+                            <Button onClick={onClick} type={"primary"} title={"新建流水线"}/>
+                        </PrivilegeButton>
                     </BreadCrumb>
                     <PipelineAdd
                         {...props}
@@ -288,7 +296,7 @@ const Pipeline = props =>{
                                     <div className="pipelineRecent-content">
                                         {
                                             newlyOpen.map(item=> {
-                                                const {pipeline,pipelineExecState} = item
+                                                const {pipeline,execStatus} = item
                                                 return (
                                                     <div className="pipelineRecent-item" key={pipeline?.id}
                                                          onClick={()=> props.history.push(`/pipeline/${pipeline?.id}/config`)}
@@ -308,11 +316,11 @@ const Pipeline = props =>{
                                                         <div className="pipelineRecent-item-details">
                                                             <div className="pipelineRecent-item-detail">
                                                                 <span className="details-desc">成功</span>
-                                                                <span>{pipelineExecState?.successNumber || 0}</span>
+                                                                <span>{execStatus?.successNumber || 0}</span>
                                                             </div>
                                                             <div className="pipelineRecent-item-detail">
                                                                 <span className="details-desc">失败</span>
-                                                                <span>{pipelineExecState?.errorNumber || 0}</span>
+                                                                <span>{execStatus?.errorNumber || 0}</span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -336,6 +344,42 @@ const Pipeline = props =>{
                             onClick={clickType}
                         />
                         <Space>
+                            <SearchSelect
+                                showSearch
+                                filterOption={(input, option) =>
+                                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                }
+                                style={{width:150}}
+                                placeholder={"应用"}
+                                onChange={value=>onValuesChange({
+                                    groupId: value
+                                })}
+                            >
+                                <Select.Option value={'all'} key={'all'}>全部</Select.Option>
+                                {
+                                    groupList && groupList.map(item=>(
+                                        <Select.Option value={item.id} key={item.id}>{item.groupName}</Select.Option>
+                                    ))
+                                }
+                            </SearchSelect>
+                            <SearchSelect
+                                showSearch
+                                filterOption={(input, option) =>
+                                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                }
+                                style={{width:150}}
+                                placeholder={"环境"}
+                                onChange={value=>onValuesChange({
+                                    envId: value
+                                })}
+                            >
+                                <Select.Option value={'all'} key={'all'}>全部</Select.Option>
+                                {
+                                    envList && envList.map(item=>(
+                                        <Select.Option value={item.id} key={item.id}>{item.envName}</Select.Option>
+                                    ))
+                                }
+                            </SearchSelect>
                             <SearchInput
                                 placeholder="搜索名称"
                                 onPressEnter={onChangeSearch}
@@ -360,26 +404,6 @@ const Pipeline = props =>{
                                                     {
                                                         userList && userList.map(item=>(
                                                             <Select.Option key={item.id} value={item.id}>{item.nickname}</Select.Option>
-                                                        ))
-                                                    }
-                                                </Select>
-                                            </Form.Item>
-                                            <Form.Item label={'应用'} name={'groupId'}>
-                                                <Select placeholder={"应用"} bordered={false} getPopupContainer={e=>e.parentElement}>
-                                                    <Select.Option value={'all'} key={'all'}>全部</Select.Option>
-                                                    {
-                                                        groupList && groupList.map(item=>(
-                                                            <Select.Option value={item.id} key={item.id}>{item.groupName}</Select.Option>
-                                                        ))
-                                                    }
-                                                </Select>
-                                            </Form.Item>
-                                            <Form.Item label={'环境'} name={'envId'}>
-                                                <Select placeholder={"环境"} bordered={false} getPopupContainer={e=>e.parentElement}>
-                                                    <Select.Option value={'all'} key={'all'}>全部</Select.Option>
-                                                    {
-                                                        envList && envList.map(item=>(
-                                                            <Select.Option value={item.id} key={item.id}>{item.envName}</Select.Option>
                                                         ))
                                                     }
                                                 </Select>

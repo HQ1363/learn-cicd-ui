@@ -12,10 +12,11 @@ import {
     MenuUnfoldOutlined,
 } from "@ant-design/icons";
 import {observer} from "mobx-react";
+import {PrivilegeProjectButton} from "tiklab-privilege-ui";
 
 const PipelineAside = (props) => {
 
-    const {isExpand,setIsExpand,themeType,initRouters,backUrl,ChangeComponent,id} = props;
+    const {isExpand,setIsExpand,themeType,initRouters,backUrl,ChangeComponent,domainId} = props;
 
     const path = props.location.pathname;
 
@@ -26,7 +27,7 @@ const PipelineAside = (props) => {
 
     useEffect(() => {
         setPipelineRouters(initRouters)
-    }, [id]);
+    }, [domainId]);
 
     /**
      * 折叠
@@ -75,13 +76,15 @@ const PipelineAside = (props) => {
                 }
                 {
                     pipelineRouters.map(item=>(
-                        <div key={item.id}
-                             className={`aside-item ${path.indexOf(item.id) === 0 ? "aside-select":""}`}
-                             onClick={()=>onSelect(item)}
-                        >
-                            <div className="aside-item-icon">{item.icon}</div>
-                            <div className="aside-item-title">{item.title}</div>
-                        </div>
+                        <PrivilegeProjectButton key={item.id} domainId={domainId} code={item.purviewCode}>
+                            <div key={item.id}
+                                 className={`aside-item ${path.indexOf(item.id) === 0 ? "aside-select":""}`}
+                                 onClick={()=>onSelect(item)}
+                            >
+                                <div className="aside-item-icon">{item.icon}</div>
+                                <div className="aside-item-title">{item.title}</div>
+                            </div>
+                        </PrivilegeProjectButton>
                     ))
                 }
             </div>

@@ -12,6 +12,7 @@ import BreadCrumb from "../../../common/component/breadcrumb/BreadCrumb";
 import HistoryDetailTree from "./HistoryDetailTree";
 import {runStatusText,getTime} from "./HistoryCommon";
 import "./HistoryDetail.scss";
+import {runRun} from "../../../common/utils/Constant";
 
 const HistoryDetail = props =>{
 
@@ -19,6 +20,8 @@ const HistoryDetail = props =>{
 
     const scrollRef = useRef(null);
 
+    //获取当前历史运行状态
+    const isRun = historyItem?.runStatus === runRun;
     //获取当前流水线信息
     const pipeline = historyItem && historyItem.pipeline;
     //日志滚动条
@@ -28,7 +31,7 @@ const HistoryDetail = props =>{
 
     useEffect(() => {
         if(logData){
-            changeAnchor(logData,false)
+            changeAnchor(logData,isRun)
         }
     }, [logData]);
 

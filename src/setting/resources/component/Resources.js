@@ -6,16 +6,20 @@
  * @LastEditTime: 2025/3/12
  */
 import React, {useEffect, useState} from "react";
-import {message, Row, Col, Radio, Space, Spin} from 'antd';
+import {message, Row, Col, Radio, Spin} from 'antd';
 import {disableFunction,applySubscription} from "tiklab-core-ui";
 import BreadCrumb from "../../../common/component/breadcrumb/BreadCrumb";
 import EnhanceEntranceModal from "../../../common/component/modal/EnhanceEntranceModal";
 import resourceStore from "../store/ResourceStore";
 import "./Resources.scss";
+import {inject, observer} from "mobx-react";
 
 const Resources = props => {
 
-    const {findResourcesList,findAllCathe,updateCathe,findResourcesDetails} = resourceStore
+    const {systemRoleStore} = props;
+
+    const {findResourcesList,findAllCathe,updateCathe,findResourcesDetails} = resourceStore;
+    const {systemPermissions} = systemRoleStore;
 
     //加载状态
     const [isLoading,setIsLoading] = useState(true)
@@ -29,6 +33,7 @@ const Resources = props => {
     const [featureModal,setFeatureModal] = useState(false);
 
     const disable = disableFunction();
+    const resourceUpdate = systemPermissions?.includes('pipeline_resource_update');
 
     useEffect(()=>{
         // 获取占用内存
@@ -167,43 +172,43 @@ const Resources = props => {
                                     <div>
                                         <span>{limitation(resourceList?.useCacheNumber,'G')}</span>
                                         <span className='resources-item-separat'>/</span>
-                                        <span >{limitation(resourceList?.cacheNumber,'G')}</span>
+                                        <span>{limitation(resourceList?.cacheNumber,'G')}</span>
                                     </div>
                                 </div>
                             </div>
                             <div className='resources-info-item'>
                                 <div className='resources-item-title'>日志保存时长</div>
-                                <Radio.Group value={saveDur?.logCache} onChange={e => changeCathe(e,'logCache')}>
-                                    <Radio value={7}>7天</Radio>
+                                <Radio.Group
+                                    value={saveDur?.logCache}
+                                    onChange={e => changeCathe(e,'logCache')}
+                                    disabled={!disable && !resourceUpdate}
+                                >
+                                    <Radio value={7}>
+                                        7天
+                                    </Radio>
                                     <Radio value={15}>
-                                        <Space size='small'>
-                                            15天
-                                            {/*{disable&&<img src={pipFeature} alt={''} width={16} height={16}/>}*/}
-                                        </Space>
+                                        15天
                                     </Radio>
                                     <Radio value={30}>
-                                        <Space size={'small'}>
-                                            30天
-                                            {/*{disable&&<img src={pipFeature} alt={''} width={16} height={16}/>}*/}
-                                        </Space>
+                                        30天
                                     </Radio>
                                 </Radio.Group>
                             </div>
                             <div className='resources-info-item'>
                                 <div className='resources-item-title'>制品保存时长</div>
-                                <Radio.Group value={saveDur?.artifactCache} onChange={e => changeCathe(e,'artifactCache')}>
-                                    <Radio value={7}>7天</Radio>
+                                <Radio.Group
+                                    value={saveDur?.artifactCache}
+                                    onChange={e => changeCathe(e,'artifactCache')}
+                                    disabled={!disable && !resourceUpdate}
+                                >
+                                    <Radio value={7}>
+                                        7天
+                                    </Radio>
                                     <Radio value={15}>
-                                        <Space size='small'>
-                                            15天
-                                            {/*{disable&&<img src={pipFeature} alt={''} width={16} height={16}/>}*/}
-                                        </Space>
+                                        15天
                                     </Radio>
                                     <Radio value={30}>
-                                        <Space size='small'>
-                                            30天
-                                            {/*{disable&&<img src={pipFeature} alt={''} width={16} height={16}/>}*/}
-                                        </Space>
+                                        30天
                                     </Radio>
                                 </Radio.Group>
                             </div>
@@ -216,4 +221,4 @@ const Resources = props => {
 
 }
 
-export default Resources
+export default inject('systemRoleStore')(observer(Resources))

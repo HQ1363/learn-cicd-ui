@@ -19,6 +19,7 @@ import Page from "../../../../common/component/page/Page";
 import HostAddBtn from "./HostAddBtn";
 import {deleteSuccessReturnCurrenPage} from "../../../../common/utils/Client";
 import "./Host.scss";
+import {PrivilegeButton} from "tiklab-privilege-ui";
 
 const pageSize = 13;
 
@@ -188,6 +189,10 @@ const Host = props =>{
                         edit={()=>editHost(record)}
                         del={()=>delHost(record)}
                         isMore={true}
+                        code={{
+                            editCode: 'pipeline_host_update',
+                            delCode: 'pipeline_host_delete',
+                        }}
                     />
                 )
             }
@@ -210,13 +215,15 @@ const Host = props =>{
                             {title:'主机'}
                         ]}
                     >
-                        <HostAddBtn
-                            visible={visible}
-                            setVisible={setVisible}
-                            formValue={formValue}
-                            setFormValue={setFormValue}
-                            findAuth={findAuth}
-                        />
+                        <PrivilegeButton code={'pipeline_host_add'}>
+                            <HostAddBtn
+                                visible={visible}
+                                setVisible={setVisible}
+                                formValue={formValue}
+                                setFormValue={setFormValue}
+                                findAuth={findAuth}
+                            />
+                        </PrivilegeButton>
                     </BreadCrumb>
                     <div className="host-search">
                         <SearchInput

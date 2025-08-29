@@ -18,6 +18,7 @@ import K8sAddBtn from "./K8sAddBtn";
 import k8sStore from "../store/K8sStore";
 import K8sDetail from "./K8sDetail";
 import "./K8s.scss";
+import {PrivilegeButton} from "tiklab-privilege-ui";
 
 const pageSize = 13;
 
@@ -180,6 +181,10 @@ const K8s = props => {
                         edit={()=>editK8s(record)}
                         del={()=>delK8s(record)}
                         isMore={true}
+                        code={{
+                            editCode: 'pipeline_kubernetes_cluster_update',
+                            delCode: 'pipeline_kubernetes_cluster_delete',
+                        }}
                     />
                 )
             }
@@ -202,13 +207,15 @@ const K8s = props => {
                         {title:'Kubernetes集群'}
                     ]}
                 >
-                    <K8sAddBtn
-                        visible={visible}
-                        setVisible={setVisible}
-                        formValue={formValue}
-                        setFormValue={setFormValue}
-                        findAuth={findAuth}
-                    />
+                    <PrivilegeButton code={'pipeline_kubernetes_cluster_add'}>
+                        <K8sAddBtn
+                            visible={visible}
+                            setVisible={setVisible}
+                            formValue={formValue}
+                            setFormValue={setFormValue}
+                            findAuth={findAuth}
+                        />
+                    </PrivilegeButton>
                 </BreadCrumb>
                 <div className="k8s-content">
                     <Spin spinning={spinning}>

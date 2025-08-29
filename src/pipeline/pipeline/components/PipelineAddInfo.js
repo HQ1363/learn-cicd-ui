@@ -340,7 +340,7 @@ const PipelineAddInfo = forwardRef((props, ref) =>{
                     typeof changFresh === 'function' ? null :
                         <>
                             <Button onClick={onClick} title={"取消"} isMar={true}/>
-                            <PrivilegeProjectButton code={"pipeline_update"} domainId={pipeline && pipeline.id}>
+                            <PrivilegeProjectButton code={"pip_setting_update"} domainId={pipeline && pipeline.id}>
                                 <Button type={"primary"} title={"确定"} onClick={onOk}/>
                             </PrivilegeProjectButton>
                         </>

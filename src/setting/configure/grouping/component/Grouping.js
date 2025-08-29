@@ -16,6 +16,7 @@ import Button from "../../../../common/component/button/Button";
 import GroupingModal from "./GroupingModal";
 import groupingStore from "../store/GroupingStore";
 import "./Grouping.scss";
+import {PrivilegeButton} from "tiklab-privilege-ui";
 
 const Grouping = props =>{
 
@@ -127,6 +128,10 @@ const Grouping = props =>{
                     edit={()=>editAuth(record)}
                     del={()=>delAuth(record)}
                     isMore={true}
+                    code={{
+                        editCode: 'pipeline_update_application',
+                        delCode: 'pipeline_delete_application',
+                    }}
                 />
             )
         }
@@ -148,11 +153,13 @@ const Grouping = props =>{
                             {title:'应用'}
                         ]}
                     >
-                        <Button
-                            type={'primary'}
-                            title={"添加应用"}
-                            onClick={createEnv}
-                        />
+                        <PrivilegeButton code={'pipeline_create_application'}>
+                            <Button
+                                type={'primary'}
+                                title={"添加应用"}
+                                onClick={createEnv}
+                            />
+                        </PrivilegeButton>
                     </BreadCrumb>
                     <GroupingModal
                         visible={visible}

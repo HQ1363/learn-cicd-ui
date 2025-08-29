@@ -1,5 +1,5 @@
 /**
- * @Description: SonarQube 扫描
+ * @Description: sourcefare 扫描
  * @Author: gaomengyuan
  * @Date: 2025/5/26
  * @LastEditors: gaomengyuan
@@ -18,6 +18,7 @@ import {
     CheckCircleOutlined,
     CloseCircleOutlined,
 } from "@ant-design/icons";
+import {PrivilegeProjectButton} from "tiklab-privilege-ui";
 
 const pageSize = 15;
 
@@ -39,12 +40,12 @@ const SourceFareScan = (props) => {
     const [scanParam,setScanParam] = useState({pageParam});
 
     useEffect(() => {
-        //获取SonarQube
+        //获取sourcefare
         findSourceFareScan()
     }, [scanParam]);
 
     /**
-     * 获取SonarQube
+     * 获取sourcefare
      */
     const findSourceFareScan = () => {
         setSpinning(true)
@@ -72,9 +73,9 @@ const SourceFareScan = (props) => {
     }
 
     /**
-     * 删除SonarQube
+     * 删除SourceFare
      */
-    const delSonarQube = record =>{
+    const delSourceFare = record =>{
         deleteSourceFareScan(record.id).then(res=>{
             if(res.code===0){
                 const current = deleteSuccessReturnCurrenPage(scanData.totalRecord, pageSize, scanData.currentPage)
@@ -86,7 +87,7 @@ const SourceFareScan = (props) => {
     /**
      * 跳转详情
      */
-    const goSonarQube = (record) => {
+    const goSourceFare = (record) => {
         window.open(`${record.url}`)
     }
 
@@ -101,7 +102,7 @@ const SourceFareScan = (props) => {
                 const {  status, allTrouble, severityTrouble, noticeTrouble, suggestTrouble } = record;
                 return (
                     <div className='data-item-left'>
-                        <span className='data-item-name' onClick={()=>goSonarQube(record)}>
+                        <span className='data-item-name' onClick={()=>goSourceFare(record)}>
                             # {text || '--'}
                         </span>
                         {
@@ -152,10 +153,12 @@ const SourceFareScan = (props) => {
             width:"8%",
             ellipsis:true,
             render:(_,record)=> (
-                <ListAction
-                    del={()=>delSonarQube(record)}
-                    isMore={true}
-                />
+                <PrivilegeProjectButton domainId={params.id} code={'pip_test_report_sourcefare_delete'}>
+                    <ListAction
+                        del={()=>delSourceFare(record)}
+                        isMore={true}
+                    />
+                </PrivilegeProjectButton>
             )
         }
     ]

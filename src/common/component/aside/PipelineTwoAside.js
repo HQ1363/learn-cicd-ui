@@ -14,7 +14,7 @@ import {DownOutlined, UpOutlined} from "@ant-design/icons";
 
 const PipelineTwoAside = props =>{
 
-    const {route,projectRouters} = props
+    const {route,projectRouters,asideTitle} = props
 
     const path = props.location.pathname;
 
@@ -82,7 +82,7 @@ const PipelineTwoAside = props =>{
         <div className='project-nav'>
             <div className='project-nav-aside'>
                 <div className='project-nav-aside-head'>
-                    {route.path === '/statistics' && "统计"}
+                    {asideTitle}
                 </div>
                 { projectRouters.map(item=>{
                     return item.children && item.children.length > 0 ?

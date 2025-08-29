@@ -24,7 +24,7 @@ import Profile from "../../../common/component/profile/Profile";
 import ListIcon from "../../../common/component/list/ListIcon";
 import Page from "../../../common/component/page/Page";
 import Modals from "../../../common/component/modal/Modal";
-import {debounce} from "../../../common/utils/Client";
+import {debounce, delay} from "../../../common/utils/Client";
 import pip_xingxing from "../../../assets/images/svg/pip_xingxing.svg";
 import pip_xingxing_kong from "../../../assets/images/svg/pip_xingxing_kong.svg";
 import pip_more from "../../../assets/images/svg/pie_more.svg";
@@ -33,22 +33,18 @@ import "./PipelineTable.scss";
 import {runStatusIcon} from "../../history/components/HistoryCommon";
 import PipelineDelete from "./PipelineDelete";
 import PipelineAddInfo from "./PipelineAddInfo";
-import {getUser} from "tiklab-core-ui";
-import {PrivilegeProjectButton} from "tiklab-privilege-ui";
+import {PrivilegeButton} from "tiklab-privilege-ui";
 import moment from "moment";
 
 const PipelineTable = props =>{
 
-    const {pipelineData,changPage,changFresh,setIsLoading,systemRoleStore}=props
+    const {pipelineData,changPage,changFresh,setIsLoading}=props
 
     const {updateFollow,findPipelineCloneName,pipelineClone, importPipelineYaml,findUserPipeline} = pipelineStore;
-    const {execStart,execStop}=historyStore;
-    const {getInitProjectPermissions} = systemRoleStore;
+    const {execStart,execStop,validExecPipeline}=historyStore;
 
     const [form] = Form.useForm();
     const pipelineAddInfoRef = useRef(null);
-
-    const userId = getUser().userId;
 
     //所有流水线
     const [pipelineList,setPipelineList] = useState([]);
@@ -66,12 +62,6 @@ const PipelineTable = props =>{
     const [pipeline,setPipeline] = useState(null);
     //下拉框
     const [dropVisible,setDropVisible] = useState(null);
-
-    useEffect(() => {
-        if(dropVisible){
-            getInitProjectPermissions(userId,pipeline.id,pipeline?.power===1);
-        }
-    }, [dropVisible]);
 
     useEffect(()=>{
         if(cloneVisible){
@@ -113,27 +103,36 @@ const PipelineTable = props =>{
     /**
      * 运行或者终止
      */
-    const work = debounce(record =>{
-        setIsLoading(true)
-        if(record.state === 1){
-            execStart({
-                pipelineId:record.id
-            }).then(r=>{
-                setIsLoading(false)
-                if(r.code===0){
-                    return goInstance({
+    const work = debounce(async record =>{
+        setIsLoading(true);
+        const {state} = record;
+        try {
+            if(state===1){
+                const exec = await validExecPipeline({ pipelineId: record.id });
+                if(exec.code!==0){
+                    await delay(700);
+                    setIsLoading(false);
+                    await delay(100);
+                    message.info(exec.msg);
+                    return;
+                }
+                const startRes = await execStart({ pipelineId: record.id });
+                if(startRes.code===0){
+                    goInstance({
                         id:record.id,
-                        instanceId:r.data.instanceId
+                        instanceId:startRes.data.instanceId
                     })
                 }
-            })
-        } else {
-            execStop(record.id).then(r=>{
                 setIsLoading(false)
-                if(r.code===0){
-                    changFresh()
-                }
-            })
+                return
+            }
+            const stopRes = await execStop(record.id);
+            if(stopRes.code===0){
+                changFresh()
+            }
+            setIsLoading(false);
+        } catch (err) {
+            setIsLoading(false)
         }
     },1000)
 
@@ -171,6 +170,7 @@ const PipelineTable = props =>{
                 } else {
                     message.error("克隆失败")
                 }
+            }).finally(()=>{
                 setCloneStatus(false)
             })
         })
@@ -335,49 +335,55 @@ const PipelineTable = props =>{
                                 <img src={collect === 0 ? pip_xingxing_kong : pip_xingxing} alt={"收藏"} width={20} height={20}/>
                             </span>
                         </Tooltip>
-                        {
-                            exec ? (
-                                <Tooltip title={state===3 ? "等待":"运行"} >
-                                    <span className="pipelineTable-action" onClick={()=>work(record)}>
-                                        { state === 1 && <PlayCircleOutlined className="actions-se"/> }
-                                        { state === 2 && <Spin indicator={<LoadingOutlined className="actions-se" spin />} /> }
-                                        { state === 3 && <MinusCircleOutlined className="actions-se"/> }
-                                    </span>
-                                </Tooltip>
-                            ) : (
-                                <Tooltip title={'当前没有运行权限，请联系管理员分配'}>
-                                    <span className="pipelineTable-action-ban">
-                                        <PlayCircleOutlined className="actions-se"/>
-                                    </span>
-                                </Tooltip>
-                            )
-                        }
+                        <PrivilegeButton code={"pipeline_run"}>
+                            {
+                                exec ? (
+                                    <Tooltip title={state===3 ? "等待":"运行"} >
+                                        <span className="pipelineTable-action" onClick={()=>work(record)}>
+                                            { state === 1 && <PlayCircleOutlined className="actions-se"/> }
+                                            { state === 2 && <Spin indicator={<LoadingOutlined className="actions-se" spin />} /> }
+                                            { state === 3 && <MinusCircleOutlined className="actions-se"/> }
+                                        </span>
+                                    </Tooltip>
+                                ) : (
+                                    <Tooltip title={'流水线未配置完成'}>
+                                        <span className="pipelineTable-action-ban">
+                                            <PlayCircleOutlined className="actions-se"/>
+                                        </span>
+                                    </Tooltip>
+                                )
+                            }
+                        </PrivilegeButton>
                         <Dropdown
                             overlay={
                                 <div className="arbess-dropdown-more">
-                                    <PrivilegeProjectButton code={"pipeline_update"} domainId={record.id}>
+                                    <PrivilegeButton code={"pipeline_update"}>
                                         <div className="dropdown-more-item" onClick={()=>toEdit(record)}>
                                             <EditOutlined /> 编辑
                                         </div>
-                                    </PrivilegeProjectButton>
-                                    <PrivilegeProjectButton code={"pipeline_delete"} domainId={record.id}>
+                                    </PrivilegeButton>
+                                    <PrivilegeButton code={"pipeline_delete"}>
                                         <div className="dropdown-more-item" onClick={()=>toDelete(record)}>
                                             <DeleteOutlined /> 删除
                                         </div>
-                                    </PrivilegeProjectButton>
-                                    <PrivilegeProjectButton code={"pipeline_seting"} domainId={record.id}>
+                                    </PrivilegeButton>
+                                    <PrivilegeButton code={"pipeline_setting"}>
                                         <div className='dropdown-more-setting'>
                                             <div className="dropdown-more-item dropdown-more-item-setting" onClick={()=>toSetting(record)}>
                                                 <img src={pip_setting} width={16} height={16}/> 设置
                                             </div>
                                         </div>
-                                    </PrivilegeProjectButton>
-                                    <div className="dropdown-more-item" onClick={()=>toClone(record)}>
-                                        <CopyOutlined /> 克隆
-                                    </div>
-                                    <div className="dropdown-more-item" onClick={()=>toYaml(record)}>
-                                        <ExportOutlined /> 导出
-                                    </div>
+                                    </PrivilegeButton>
+                                    <PrivilegeButton code={"pipeline_clone"}>
+                                        <div className="dropdown-more-item" onClick={()=>toClone(record)}>
+                                            <CopyOutlined /> 克隆
+                                        </div>
+                                    </PrivilegeButton>
+                                    <PrivilegeButton code={"pipeline_import"}>
+                                        <div className="dropdown-more-item" onClick={()=>toYaml(record)}>
+                                            <ExportOutlined /> 导出
+                                        </div>
+                                    </PrivilegeButton>
                                 </div>
                             }
                             trigger={['click']}
@@ -490,4 +496,4 @@ const PipelineTable = props =>{
     )
 }
 
-export default inject('systemRoleStore')(observer(PipelineTable));
+export default observer(PipelineTable);

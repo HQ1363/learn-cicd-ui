@@ -1,4 +1,4 @@
-import {observable,action} from "mobx";
+import {action, observable} from "mobx";
 import {message} from "antd";
 import {Axios} from "tiklab-core-ui";
 
@@ -63,8 +63,7 @@ class TaskStore {
     findAllTask = async value =>{
         const param = new FormData()
         param.append("pipelineId",value)
-        const data = await Axios.post("/tasks/finAllTask",param)
-        return data
+        return await Axios.post("/tasks/finAllTask", param)
     }
 
     /**
@@ -76,26 +75,25 @@ class TaskStore {
     finYamlTask = async value =>{
         const param = new FormData()
         param.append("pipelineId",value)
-        const data = await Axios.post("/tasks/finYamlTask",param)
-        return data
+        return await Axios.post("/tasks/finYamlTask", param)
     }
 
     /**
      * 更新任务
-     * @param values
+     * @param task
      * @returns {Promise<*>}
      */
     @action
-    updateTask = async values =>{
+    updateTask = async task =>{
         const param = {
             taskId:this.dataItem.taskId,
-            values,
+            task,
         }
         const data = await Axios.post("/tasks/updateTask",param)
         if(data.code===0){
-            // this.taskFresh = !this.taskFresh
-            this.mustFieldFresh = !this.mustFieldFresh
-            await this.findOneTasksOrTask(param.taskId)
+            await this.updateTasksMustField(param.taskId);
+            await this.findOneTasksOrTask(param.taskId);
+            this.mustFieldFresh = !this.mustFieldFresh;
         } else {
             this.dataItem = {...this.dataItem}
         }
@@ -116,10 +114,7 @@ class TaskStore {
         const data = await Axios.post("/tasks/updateTaskName",param)
         if(data.code===0){
             this.taskFresh = !this.taskFresh
-            this.dataItem = {
-                ...this.dataItem,
-                taskName
-            }
+            this.dataItem = {...this.dataItem, taskName}
         }
         if(data.code===58001){
             message.error(data.msg)
@@ -179,6 +174,18 @@ class TaskStore {
             message.error(data.msg)
         }
         return data
+    }
+
+    /**
+     * 更新多任务未填的必需任务
+     * @param value
+     * @returns {Promise<*>}
+     */
+    @action
+    updateTasksMustField = async value =>{
+        const param = new FormData()
+        param.append("taskId",value)
+        return await Axios.post("/tasks/updateTasksMustField", param)
     }
 
     /**

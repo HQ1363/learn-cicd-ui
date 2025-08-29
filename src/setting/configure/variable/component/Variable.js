@@ -17,6 +17,7 @@ import variableStore from "../store/VariableStore";
 import Page from "../../../../common/component/page/Page";
 import VariableModal from "./VariableModal";
 import {deleteSuccessReturnCurrenPage} from "../../../../common/utils/Client";
+import {PrivilegeButton} from "tiklab-privilege-ui";
 
 const pageSize = 13;
 
@@ -142,6 +143,10 @@ const Variable = (props) => {
                     edit={()=>editVariable(record)}
                     del={()=>delVariable(record)}
                     isMore={true}
+                    code={{
+                        editCode: 'pipeline_variable_update',
+                        delCode: 'pipeline_variable_delete',
+                    }}
                 />
             )
         }
@@ -163,12 +168,14 @@ const Variable = (props) => {
                             {title:'变量'}
                         ]}
                     >
-                        <Button
-                            type={'primary'}
-                            onClick={()=>setVisible(true)}
-                        >
-                            添加变量
-                        </Button>
+                        <PrivilegeButton code={'pipeline_variable_add'}>
+                            <Button
+                                type={'primary'}
+                                onClick={()=>setVisible(true)}
+                            >
+                                添加变量
+                            </Button>
+                        </PrivilegeButton>
                     </BreadCrumb>
                     <VariableModal
                         visible={visible}

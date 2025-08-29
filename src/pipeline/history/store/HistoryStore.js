@@ -38,9 +38,24 @@ class HistoryStore {
         }
         const data = await Axios.post("/exec/rollBackStart", params)
         if(data.code!==0){
-            message.error(data.msg)
+            message.info(data.msg)
         }
         return data
+    }
+
+    /**
+     * 效验流水线是否能运行
+     * @param value
+     * @returns {Promise<*>}
+     */
+    @action
+    validExecPipeline = async value =>{
+        const params = {
+            ...value,
+            runWay:1,
+            userId:getUser().userId,
+        }
+        return await Axios.post("/exec/validExecPipeline", params)
     }
 
     /**
@@ -57,7 +72,7 @@ class HistoryStore {
         }
         const data = await Axios.post("/exec/start", params)
         if(data.code!==0){
-            message.error(data.msg)
+            message.info(data.msg)
         }
         return data
     }

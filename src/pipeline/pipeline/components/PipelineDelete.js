@@ -82,6 +82,7 @@ const PipelineDelete = (props) => {
                             className={`${delError? "inputs-error":""}`}
                             placeholder="请输入提示内容以确认继续操作"
                             onChange={e=>setDelValue(e.target.value)}
+                            value={delValue}
                         />
                     </div>
                     <div className="pipelineReDel-modal-error">

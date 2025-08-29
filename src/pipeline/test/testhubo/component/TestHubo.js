@@ -14,6 +14,7 @@ import {deleteSuccessReturnCurrenPage} from "../../../../common/utils/Client";
 import ListAction from "../../../../common/component/list/ListAction";
 import testhuboStore from "../store/TestHuboStore";
 import "./TestHubo.scss";
+import {PrivilegeProjectButton} from "tiklab-privilege-ui";
 
 const pageSize = 10;
 
@@ -137,10 +138,12 @@ const TestHubo = props => {
             width:"8%",
             ellipsis:true,
             render:(_,record)=> (
-                <ListAction
-                    del={()=>delTestHubo(record)}
-                    isMore={true}
-                />
+                <PrivilegeProjectButton domainId={params.id} code={'pip_test_report_testhubo_delete'}>
+                    <ListAction
+                        del={()=>delTestHubo(record)}
+                        isMore={true}
+                    />
+                </PrivilegeProjectButton>
             )
         }
     ]

@@ -5,6 +5,7 @@ import SettingAside from "./common/component/aside/SettingAside";
 import PipelineSetAside from "./common/component/aside/PipelineSetAside";
 import PipelineTwoAside from "./common/component/aside/PipelineTwoAside";
 import AsyncComponent from "./common/lazy/SyncComponent";
+import PipelineAside from "./pipeline/navigator/PipelineAside";
 
 const Index=AsyncComponent(()=>import("./common/layout/Layout"))
 
@@ -27,7 +28,7 @@ const HomePage=AsyncComponent(()=>import("./home/components/HomePage"))
  * 流水线
  */
 const Pipeline=AsyncComponent(()=>import("./pipeline/pipeline/components/Pipeline"))
-const PipelineDetails=AsyncComponent(()=>import("./pipeline/navigator/PipelineAside"))
+const PipelineDetail=AsyncComponent(()=>import("./pipeline/navigator/PipelineDetail"))
 const Overview=AsyncComponent(()=>import("./pipeline/overview/components/Overview"))
 const Dynamic=AsyncComponent(()=>import("./pipeline/overview/components/Dynamic"))
 const Design=AsyncComponent(()=>import("./pipeline/design/navigator/Design"))
@@ -66,6 +67,7 @@ const K8s=AsyncComponent(()=>import('./setting/configure/k8s/components/K8s'))
 const Variable=AsyncComponent(()=>import('./setting/configure/variable/component/Variable'))
 
 // message
+const Message=AsyncComponent(()=>import("./setting/message/Message"))
 const MessageSendType=AsyncComponent(()=>import("./setting/message/MessageSendType"))
 const MessageNotice=AsyncComponent(()=>import("./setting/message/MessageNotice"))
 const DomainMessageNotice=AsyncComponent(()=>import("./setting/message/DomainMessageNotice"))
@@ -115,8 +117,6 @@ const MessageType=AsyncComponent(()=>import("./setting/base/message/MessageType"
 const SystemMessageNotice=AsyncComponent(()=>import("./setting/base/message/SystemMessageNotice"))
 const ProjectMessageNotice=AsyncComponent(()=>import("./setting/base/message/ProjectMessageNotice"))
 
-
-
 export {
     AsyncComponent,
 
@@ -126,6 +126,7 @@ export {
     SettingAside,
     PipelineSetAside,
     PipelineTwoAside,
+    PipelineAside,
 
     Index,
     Login,
@@ -139,7 +140,7 @@ export {
     HomePage,
 
     Pipeline,
-    PipelineDetails,
+    PipelineDetail,
     Overview,
     Dynamic,
 
@@ -184,6 +185,7 @@ export {
     K8s,
     Variable,
 
+    Message,
     MessageSendType,
     MessageNotice,
     MyLog,

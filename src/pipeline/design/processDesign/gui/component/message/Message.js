@@ -21,6 +21,8 @@ import PostprocessUserAdd from "../../../../message/components/MessageUserAdd";
 import "./Message.scss";
 import {messageList, messageTitle} from "../../../../message/components/MessageAddEdit";
 import Profile from "../../../../../../common/component/profile/Profile";
+import {PrivilegeProjectButton} from "tiklab-privilege-ui";
+import {pipeline_task_update} from "../../../../../../common/utils/Constant";
 
 const Message = props =>{
 
@@ -233,7 +235,9 @@ const Message = props =>{
                 </Form>
                 <div className="post-pose-btn">
                     <Button title={"取消"} isMar={true} onClick={onCancel}/>
-                    <Button title={"保存"} type={"primary"} onClick={onOk}/>
+                    <PrivilegeProjectButton code={pipeline_task_update} domainId={pipeline?.id}>
+                        <Button title={"保存"} type={"primary"} onClick={onOk}/>
+                    </PrivilegeProjectButton>
                 </div>
             </div>
         )
@@ -254,19 +258,21 @@ const Message = props =>{
                     <div className="pose-item-title">
                         {item.name}
                     </div>
-                    <div className="pose-item-del">
-                        <span data-title-bottom={"删除"} onClick={e=>e.stopPropagation()}>
-                             <Popconfirm
-                                 placement="bottomRight"
-                                 title={"你确定删除吗"}
-                                 okText="确定"
-                                 cancelText="取消"
-                                 onConfirm={e=>del(e,item)}
-                             >
-                                <DeleteOutlined />
-                             </Popconfirm>
-                        </span>
-                    </div>
+                    <PrivilegeProjectButton code={pipeline_task_update} domainId={pipeline?.id}>
+                        <div className="pose-item-del">
+                            <span data-title-bottom={"删除"} onClick={e=>e.stopPropagation()}>
+                                 <Popconfirm
+                                     placement="bottomRight"
+                                     title={"你确定删除吗"}
+                                     okText="确定"
+                                     cancelText="取消"
+                                     onConfirm={e=>del(e,item)}
+                                 >
+                                    <DeleteOutlined />
+                                 </Popconfirm>
+                            </span>
+                        </div>
+                    </PrivilegeProjectButton>
                 </div>
                 {
                     poseObj?.id === item.id && poseHtml(item)
@@ -278,7 +284,9 @@ const Message = props =>{
     return(
         <div className="pose-pose">
             <div className="pose-pose-content">
-                { poseObj?.pose==='add' &&  <div className='add-title'>添加消息通知</div>}
+                <PrivilegeProjectButton code={pipeline_task_update} domainId={pipeline?.id}>
+                    { poseObj?.pose==='add' &&  <div className='add-title'>添加消息通知</div>}
+                </PrivilegeProjectButton>
                 { poseObj?.pose==='add' && poseHtml()}
                 <Spin spinning={spinning}>
                     {

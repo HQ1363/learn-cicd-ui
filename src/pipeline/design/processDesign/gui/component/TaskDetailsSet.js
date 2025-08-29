@@ -8,10 +8,11 @@
 import React, {useEffect, useState} from "react";
 import Variable from "./variable/Variable";
 import Message from "./message/Message";
-import {Dropdown} from "antd";
 import Button from "../../../../../common/component/button/Button";
 import countStore from "../../../../../setting/home/store/CountStore";
 import {getUser} from "tiklab-core-ui";
+import {pipeline_task_update} from "../../../../../common/utils/Constant";
+import {PrivilegeProjectButton} from "tiklab-privilege-ui";
 
 const TaskDetailsSet = (props) => {
 
@@ -100,11 +101,13 @@ const TaskDetailsSet = (props) => {
                         </span>
                     </div>
                 </div>
-                <Button
-                    title={settingType==='variable' ? "添加变量":"添加消息通知"}
-                    type={"link-nopadding"}
-                    onClick={addInput}
-                />
+                <PrivilegeProjectButton code={pipeline_task_update} domainId={pipeline?.id}>
+                    <Button
+                        title={settingType==='variable' ? "添加变量":"添加消息通知"}
+                        type={"link-nopadding"}
+                        onClick={addInput}
+                    />
+                </PrivilegeProjectButton>
             </div>
             { settingType==='variable' &&
                 <Variable

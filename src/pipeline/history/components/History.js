@@ -13,7 +13,7 @@ import {
     PlayCircleOutlined,
 } from "@ant-design/icons";
 import {observer} from "mobx-react";
-import {deleteSuccessReturnCurrenPage,debounce} from "../../../common/utils/Client";
+import {deleteSuccessReturnCurrenPage, debounce, delay} from "../../../common/utils/Client";
 import ListEmpty from "../../../common/component/list/ListEmpty";
 import Profile from "../../../common/component/profile/Profile";
 import BreadCrumb from "../../../common/component/breadcrumb/BreadCrumb";
@@ -27,8 +27,9 @@ import historyStore from "../store/HistoryStore";
 import pipelineStore from "../../pipeline/store/PipelineStore";
 import pip_trigger from "../../../assets/images/svg/pip_trigger.svg";
 import "./History.scss";
-import {runRun, runWait} from "../../../common/utils/Constant";
+import {runError, runHalt, runRun, runTimeout, runWait} from "../../../common/utils/Constant";
 import {getUser} from "tiklab-core-ui";
+import {PrivilegeButton,PrivilegeProjectButton} from "tiklab-privilege-ui";
 
 const pageSize = 12;
 
@@ -40,16 +41,19 @@ const History = props =>{
 
     const {
         findUserInstance,findPipelineInstance,deleteInstance,execStart,execStop,rollBackStart,setHistoryList,
-        findPipelineInstanceCount,page,historyList
+        validExecPipeline,findPipelineInstanceCount,page,historyList
     } = historyStore;
 
     const intervalRef = useRef(null);
     const user = getUser();
+    const routePath = route.path==='/history';
 
     //历史信息
     const [historyItem,setHistoryItem] = useState(null);
     //加载状态
     const [isLoading,setIsLoading] = useState(false);
+    //加载提示语
+    const [loadingTip,setLoadingTip] = useState('');
     //历史运行阶段详情状态
     const [runVisible,setRunVisible] = useState(false);
     const pageParam = {
@@ -102,7 +106,8 @@ const History = props =>{
         if(activeTab==='state'){
             param.state = requestParam?.state || 'run'
         }
-        const apiCall = route.path==='/history'
+        clearInterval(intervalRef.current);
+        const apiCall = routePath
             ? findUserInstance(param)
             : findPipelineInstance({ ...param, pipelineId: match.params.id });
         apiCall.then(Res=>{
@@ -110,8 +115,11 @@ const History = props =>{
                 if(!Res.data || Res.data.dataList.length<1 ){
                     return
                 }
-                const runStatus = Res.data.dataList[0].runStatus;
-                if(runStatus===runRun || runStatus===runWait){
+                const statesList = Res.data.dataList.map(item => item.runStatus) || [];
+                const hasCriticalState = [runRun, runWait].some(state =>
+                    statesList.includes(state)
+                );
+                if(hasCriticalState){
                     findInter()
                 }
             }
@@ -122,7 +130,6 @@ const History = props =>{
      * 开启定时器
      */
     const findInter = () => {
-        clearInterval(intervalRef.current);
         intervalRef.current = setInterval(()=>{
             let param = {...requestParam};
             if(activeTab==='userId'){
@@ -131,15 +138,18 @@ const History = props =>{
             if(activeTab==='state'){
                 param.state = requestParam?.state || 'run'
             }
-            const apiCall = route.path==='/history'
+            const apiCall = routePath
                 ? findUserInstance(param)
                 : findPipelineInstance({ ...param, pipelineId: match.params.id });
             apiCall.then(Res=>{
                 if(!Res.data || Res.data.dataList.length<1 ){
                     clearInterval(intervalRef.current)
                 }
-                const runStatus = Res.data.dataList[0].runStatus;
-                if(runStatus!==runRun && runStatus!==runWait){
+                const statesList = Res.data.dataList.map(item => item.runStatus) || [];
+                const hasCriticalState = [runRun, runWait].some(state =>
+                    statesList.includes(state)
+                );
+                if(!hasCriticalState){
                     clearInterval(intervalRef.current)
                 }
             })
@@ -196,48 +206,81 @@ const History = props =>{
     /**
      * 运行
      */
-    const startPipeline = debounce(record=>{
+    const startPipeline = debounce(async (record) => {
         setIsLoading(true);
-        const {pipeline} = record;
-        findOnePipeline(pipeline.id).then(res=>{
-            if(res.code===0){
-                if(res.data.state===2){
-                    message.info("当前流水线正在在运行！",0.5,()=>setIsLoading(false))
-                } else {
-                    execStart({
-                        pipelineId:pipeline.id
-                    }).then(res=>{
-                        if(res.code===0) {
-                            details(res.data);
-                        }
-                    }).finally(()=>setIsLoading(false))
-                }
+        const { pipeline } = record;
+        try {
+            setLoadingTip('查询流水线信息……');
+            const res = await findOnePipeline(pipeline.id);
+            if (res.code !== 0) {
+                setIsLoading(false);
+                setLoadingTip('');
+                message.error(res.msg);
+                return;
             }
-        })
-    },1000);
+            if (res.data.state === 2) {
+                setIsLoading(false);
+                setLoadingTip('');
+                message.info("当前流水线正在运行！", 0.5);
+                return;
+            }
+            setLoadingTip('效验流水线配置信息……');
+            const exec = await validExecPipeline({ pipelineId: pipeline.id });
+            if (exec.code !== 0) {
+                await delay(700);
+                setIsLoading(false);
+                setLoadingTip('');
+                await delay(100);
+                message.info(exec.msg);
+                return;
+            }
+            const startRes = await execStart({ pipelineId: pipeline.id });
+            if (startRes.code === 0) {
+                details(startRes.data);
+            }
+            setIsLoading(false);
+            setLoadingTip('');
+        } catch (err) {
+            setIsLoading(false);
+            setLoadingTip('');
+        }
+    }, 1000);
 
     /**
      * 回滚
      */
-    const rollBackPipeline = debounce(record => {
+    const rollBackPipeline = debounce(async record => {
         setIsLoading(true);
         const {pipeline,instanceId} = record;
-        findOnePipeline(pipeline.id).then(res=>{
-            if(res.code===0){
-                if(res.data.state===2){
-                    message.info("当前流水线正在在运行！",0.5,()=>setIsLoading(false))
-                } else {
-                    rollBackStart({
-                        pipelineId:pipeline.id,
-                        instanceId:instanceId
-                    }).then(res=>{
-                        if(res.code===0) {
-                            details(res.data);
-                        }
-                    }).finally(()=>setIsLoading(false))
-                }
+        try {
+            setLoadingTip('查询流水线信息……');
+            const res = await findOnePipeline(pipeline.id);
+            if (res.code !== 0) {
+                setIsLoading(false);
+                setLoadingTip('');
+                message.error(res.msg);
+                return;
             }
-        })
+            if (res.data.state === 2) {
+                setIsLoading(false);
+                setLoadingTip('');
+                message.info("当前流水线正在运行！", 0.5);
+                return;
+            }
+            setLoadingTip('效验流水线配置信息……');
+            const startRes = await rollBackStart({
+                pipelineId:pipeline.id,
+                instanceId:instanceId
+            });
+            if(startRes.code===0){
+                details(startRes.data);
+            }
+            setIsLoading(false);
+            setLoadingTip('');
+        } catch (e) {
+            setIsLoading(false);
+            setLoadingTip('');
+        }
     },1000)
 
     const columns = [
@@ -251,7 +294,7 @@ const History = props =>{
                 return (
                     <span className="history-table-name" onClick={()=>details(record)}>
                         {
-                            route.path==='/history' &&
+                            routePath &&
                             <span className="history-table-pipeline">{record.pipeline && record.pipeline.name}</span>
                         }
                         <span className="history-table-findNumber"> # {text}</span>
@@ -331,18 +374,10 @@ const History = props =>{
             width:"10%",
             ellipsis:true,
             render:(_,record)=> {
-                const {exec,runStatus} = record;
-                if(!exec){
-                    return (
-                        <Tooltip title={"当前没有运行权限，请联系管理员分配"}>
-                            <span className='history-table-action-ban'>
-                                <PlayCircleOutlined />
-                            </span>
-                        </Tooltip>
-                    )
-                }
+                const {exec,rollbackExec,runStatus} = record;
                 switch (runStatus) {
-                    case "run":
+                    case runRun:
+                    case runWait:
                         return (
                             <Tooltip title={"终止"}>
                                 <span
@@ -356,26 +391,102 @@ const History = props =>{
                     default:
                         return (
                             <Space size='middle'>
-                                <Tooltip title={"运行"} >
-                                    <span
-                                        onClick={()=>startPipeline(record)}
-                                        className='history-table-action'
-                                    >
-                                        <PlayCircleOutlined />
-                                    </span>
-                                </Tooltip>
-                                <Tooltip title={"回滚"} >
-                                    <span
-                                        onClick={()=>rollBackPipeline(record)}
-                                        className='history-table-action'
-                                    >
-                                        <HistoryOutlined />
-                                    </span>
-                                </Tooltip>
-                                <ListAction
-                                    del={()=>delHistory(record)}
-                                    isMore={true}
-                                />
+                                {
+                                    routePath ?
+                                        <>
+                                            <PrivilegeButton code={'pipeline_history_run'}>
+                                                {
+                                                    exec ?
+                                                        <Tooltip title={"运行"} >
+                                                            <span
+                                                                onClick={()=>startPipeline(record)}
+                                                                className='history-table-action'
+                                                            >
+                                                                <PlayCircleOutlined />
+                                                            </span>
+                                                        </Tooltip>
+                                                        :
+                                                        <Tooltip title={"流水线正在运行"}>
+                                                            <span className='history-table-action-ban'>
+                                                                <PlayCircleOutlined />
+                                                            </span>
+                                                        </Tooltip>
+                                                }
+                                            </PrivilegeButton>
+                                            <PrivilegeButton code={'pipeline_history_rollback'}>
+                                                {
+                                                    rollbackExec ?
+                                                        <Tooltip title={"回滚"} >
+                                                            <span
+                                                                onClick={()=>rollBackPipeline(record)}
+                                                                className='history-table-action'
+                                                            >
+                                                                <HistoryOutlined />
+                                                            </span>
+                                                        </Tooltip>
+                                                        :
+                                                        <Tooltip title={"流水线正在运行或无法获取到制品"} >
+                                                            <span className='history-table-action-ban'>
+                                                                <HistoryOutlined />
+                                                            </span>
+                                                        </Tooltip>
+                                                }
+                                            </PrivilegeButton>
+                                            <PrivilegeButton code={'pipeline_history_delete'}>
+                                                <ListAction
+                                                    del={()=>delHistory(record)}
+                                                    isMore={true}
+                                                />
+                                            </PrivilegeButton>
+                                        </>
+                                        :
+                                        <>
+                                            <PrivilegeProjectButton domainId={match.params.id} code={'pip_history_run'}>
+                                                {
+                                                    exec ?
+                                                        <Tooltip title={"运行"} >
+                                                            <span
+                                                                onClick={()=>startPipeline(record)}
+                                                                className='history-table-action'
+                                                            >
+                                                                <PlayCircleOutlined />
+                                                            </span>
+                                                        </Tooltip>
+                                                        :
+                                                        <Tooltip title={"流水线正在运行"}>
+                                                            <span className='history-table-action-ban'>
+                                                                <PlayCircleOutlined />
+                                                            </span>
+                                                        </Tooltip>
+                                                }
+                                            </PrivilegeProjectButton>
+                                            <PrivilegeProjectButton domainId={match.params.id} code={'pip_history_rollback'}>
+                                                {
+                                                    rollbackExec ?
+                                                        <Tooltip title={"回滚"} >
+                                                            <span
+                                                                onClick={()=>rollBackPipeline(record)}
+                                                                className='history-table-action'
+                                                            >
+                                                                <HistoryOutlined />
+                                                            </span>
+                                                        </Tooltip>
+                                                        :
+                                                        <Tooltip title={"流水线正在运行或无法获取到制品"} >
+                                                            <span className='history-table-action-ban'>
+                                                                <HistoryOutlined />
+                                                            </span>
+                                                        </Tooltip>
+                                                }
+                                            </PrivilegeProjectButton>
+                                            <PrivilegeProjectButton domainId={match.params.id} code={'pip_history_delete'}>
+                                                <ListAction
+                                                    del={()=>delHistory(record)}
+                                                    isMore={true}
+                                                />
+                                            </PrivilegeProjectButton>
+                                        </>
+                                }
                             </Space>
                         )
                 }
@@ -417,7 +528,7 @@ const History = props =>{
                         activeTab={activeTab}
                         setActiveTab={setActiveTab}
                     />
-                    <Spin spinning={isLoading}>
+                    <Spin spinning={isLoading} tip={loadingTip}>
                         <div className="history-table">
                             <Table
                                 bordered={false}

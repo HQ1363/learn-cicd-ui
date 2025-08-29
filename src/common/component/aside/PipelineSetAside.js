@@ -14,7 +14,7 @@ import {DownOutlined, UpOutlined} from "@ant-design/icons";
 
 const PipelineSetAside = props =>{
 
-    const {route,domainId,outerPath,projectRouters} = props
+    const {route,domainId,outerPath,projectRouters,asideTitle} = props
 
     const path = props.location.pathname;
 
@@ -84,14 +84,12 @@ const PipelineSetAside = props =>{
             domainId={domainId}
             projectRouters={projectRouters}
             outerPath={outerPath}
-            noAccessPath={"/noaccess"}
+            noAccessPath={`/pipeline/${domainId}/noaccess`}
         >
             <div className='project-nav'>
                 <div className='project-nav-aside'>
                     <div className='project-nav-aside-head'>
-                        {route.path === '/pipeline/:id/setting' && "设置"}
-                        {route.path === '/pipeline/:id/test' && "测试报告"}
-                        {route.path === '/pipeline/:id/statistics' && "统计"}
+                        {asideTitle}
                     </div>
                     { projectRouters.map(item=>{
                         return item.children && item.children.length > 0 ?

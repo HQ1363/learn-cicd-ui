@@ -16,6 +16,7 @@ import HostGroupAdd from "./HostGroupAdd";
 import Profile from "../../../../common/component/profile/Profile";
 import ListAction from "../../../../common/component/list/ListAction";
 import "./HostGroup.scss";
+import {PrivilegeButton} from "tiklab-privilege-ui";
 
 const HostGroup = (props) => {
 
@@ -130,6 +131,10 @@ const HostGroup = (props) => {
                         edit={()=>editHostGroup(record)}
                         del={()=>delHostGroup(record)}
                         isMore={true}
+                        code={{
+                            editCode: 'pipeline_host_group_update',
+                            delCode: 'pipeline_host_group_delete',
+                        }}
                     />
                 )
             }
@@ -151,11 +156,13 @@ const HostGroup = (props) => {
                             {title:'主机组'}
                         ]}
                     >
-                        <Button
-                            type={"primary"}
-                            title={"添加主机组"}
-                            onClick={addHostGroup}
-                        />
+                        <PrivilegeButton code={'pipeline_host_group_add'}>
+                            <Button
+                                type={"primary"}
+                                title={"添加主机组"}
+                                onClick={addHostGroup}
+                            />
+                        </PrivilegeButton>
                     </BreadCrumb>
                     <HostGroupAdd
                         visible={visible}

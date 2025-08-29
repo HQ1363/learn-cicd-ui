@@ -114,11 +114,13 @@ const BasicInfo = props =>{
                         title={"取消"}
                         isMar={true}
                     />
-                    <Button
-                        onClick={clearPipeline}
-                        type={"dangerous"}
-                        title={"清理"}
-                    />
+                    <PrivilegeProjectButton code={"pip_setting_clean"} domainId={pipeline && pipeline.id}>
+                        <Button
+                            onClick={clearPipeline}
+                            type={"dangerous"}
+                            title={"清理"}
+                        />
+                    </PrivilegeProjectButton>
                 </div>
             )
         },
@@ -138,7 +140,7 @@ const BasicInfo = props =>{
                         title={"取消"}
                         isMar={true}
                     />
-                    <PrivilegeProjectButton code={"pipeline_delete"} domainId={pipeline && pipeline.id}>
+                    <PrivilegeProjectButton code={"pip_setting_delete"} domainId={pipeline && pipeline.id}>
                         <Button
                             onClick={()=>setDelVisible(true)}
                             type={"dangerous"}

@@ -54,7 +54,7 @@ export const runStatusIcon = type =>{
         case runSuspend:
             return <MinusCircleOutlined style={{color: "#ffbc00"}}/>
         case runTimeout:
-            return <FieldTimeOutlined style={{color:"orange", fontSize:16}}/>
+            return <FieldTimeOutlined style={{color:"#ffa500", fontSize:16}}/>
     }
 }
 

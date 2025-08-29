@@ -18,7 +18,7 @@ import "./HomePage.scss";
 
 const HomePage = props =>{
 
-    const {findAllOpen} = homePageStore;
+    const {findOpenPage} = homePageStore;
     const {findRunTimeSpan,findRunResultSpan,findDayRateCount,findRecentDaysFormatted,findRunNumberSpan} = statisticsStore;
 
     const chartRefs = {
@@ -105,9 +105,11 @@ const HomePage = props =>{
      */
     const findOpen = (chartKey) => {
         setSpinning(pev=>({...pev, [chartKey]: true}));
-        findAllOpen(4).then(res=> {
+        findOpenPage({
+            pageParam:{pageSize:4,currentPage:1},
+        }).then(res=> {
             if(res.code===0){
-                setNewlyOpen(res.data || [])
+                setNewlyOpen(res?.data?.dataList || [])
             }
         }).finally(()=>setSpinning(pev=>({...pev, [chartKey]: false})))
     }
@@ -344,7 +346,7 @@ const HomePage = props =>{
                                     <div className="pipelineRecent-content">
                                         {
                                             newlyOpen.map(item=> {
-                                                const {pipeline,pipelineExecState} = item
+                                                const {pipeline,execStatus} = item
                                                 return(
                                                     <div className="pipelineRecent-item" key={pipeline?.id}
                                                          onClick={()=> props.history.push(`/pipeline/${pipeline?.id}/history`)}
@@ -364,11 +366,11 @@ const HomePage = props =>{
                                                         <div className="pipelineRecent-item-details">
                                                             <div className="pipelineRecent-item-detail">
                                                                 <span className="details-desc">成功</span>
-                                                                <span>{pipelineExecState?.successNumber || 0}</span>
+                                                                <span>{execStatus?.successNumber || 0}</span>
                                                             </div>
                                                             <div className="pipelineRecent-item-detail">
                                                                 <span className="details-desc">失败</span>
-                                                                <span>{pipelineExecState?.errorNumber || 0}</span>
+                                                                <span>{execStatus?.errorNumber || 0}</span>
                                                             </div>
                                                         </div>
                                                     </div>

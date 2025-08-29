@@ -122,6 +122,9 @@ ul li{
     background: #ffffff;
     width: 150px;
     padding: 8px;
+    &:empty{
+        display: none;
+    }
     .dropdown-more-item{
         cursor: pointer;
         padding: 5px;

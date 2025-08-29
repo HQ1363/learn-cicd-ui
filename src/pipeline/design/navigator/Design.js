@@ -6,7 +6,7 @@
  * @LastEditTime: 2025/3/11
  */
 import React,{useState,useEffect} from "react";
-import {Spin, Tooltip} from "antd";
+import {message, Spin} from "antd";
 import {inject,observer,Provider} from "mobx-react";
 import taskStore from "../processDesign/gui/store/TaskStore";
 import stageStore from "../processDesign/gui/store/StageStore";
@@ -26,7 +26,8 @@ import Variable from "../variable/components/Variable";
 import Message from "../message/components/Message";
 import "./Design.scss";
 import {getUser} from "tiklab-core-ui";
-import {pipeline_task_run} from "../../../common/utils/Constant";
+import {PrivilegeProjectButton} from "tiklab-privilege-ui";
+import {delay} from "../../../common/utils/Client";
 
 const Design = props =>{
 
@@ -43,7 +44,7 @@ const Design = props =>{
 
     const {domainPermissions} = systemRoleStore;
     const {pipeline,findOnePipeline} = pipelineStore;
-    const {execStart} = historyStore;
+    const {execStart,validExecPipeline} = historyStore;
     const {setTaskPermissions,taskFresh,mustFieldFresh} = taskStore;
     const {validStagesMustField,stageMustField,stageFresh} = stageStore;
     const {findPipelineCount} = countStore;
@@ -92,7 +93,6 @@ const Design = props =>{
         validStagesMustField(pipelineId).then()
     }, [taskFresh,stageFresh,mustFieldFresh]);
 
-
     useEffect(()=>{
         //监听运行状态，获取流水线信息
         if(!isDetails){
@@ -103,14 +103,26 @@ const Design = props =>{
     /**
      * 开始运行
      */
-    const run = () =>{
-        setIsSpin(true)
-        execStart({pipelineId:pipeline.id}).then(res=>{
-            if(res.code===0){
-                setHistoryItem(res.data && res.data)
+    const run = async () =>{
+        setIsSpin(true);
+        try {
+            const exec = await validExecPipeline({ pipelineId: pipeline.id });
+            if(exec.code!==0){
+                await delay(700);
+                setIsSpin(false);
+                await delay(100);
+                message.info(exec.msg);
+                return;
+            }
+            const startRes = await execStart({ pipelineId: pipeline.id });
+            if(startRes.code===0){
+                setHistoryItem(startRes?.data)
                 setIsDetails(true)
             }
-        }).finally(()=>setIsSpin(false))
+            setIsSpin(false);
+        } catch (e) {
+            setIsSpin(false);
+        }
     }
 
     const typeLis = [
@@ -159,15 +171,6 @@ const Design = props =>{
                 <Button type={"disabled"} title={"运行"}/>
             )
         }
-        if(!pipelinePermissions?.includes(pipeline_task_run)){
-            return (
-                <Tooltip title={'当前没有运行权限，请联系管理员分配'}>
-                    <span>
-                        <Button title={"运行"}/>
-                    </span>
-                </Tooltip>
-            )
-        }
         return (
             <Button type={"primary"} title={"运行"} onClick={run}/>
         )
@@ -176,7 +179,7 @@ const Design = props =>{
     return(
         <Provider {...store}>
             <div className="design">
-                <Spin spinning={isSpin}>
+                <Spin spinning={isSpin} tip={'效验流水线配置信息……'}>
                     <div className="design-up">
                         <div className="design-top">
                             <div className='design-top-nav'>
@@ -206,7 +209,9 @@ const Design = props =>{
                                 </div>
                             </div>
                             <div className="changeView-btn">
-                                {runButtonHtml()}
+                                <PrivilegeProjectButton code={'pip_design_run'} domainId={pipelineId}>
+                                    {runButtonHtml()}
+                                </PrivilegeProjectButton>
                             </div>
                         </div>
                     </div>

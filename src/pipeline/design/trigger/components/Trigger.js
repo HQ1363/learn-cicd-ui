@@ -9,7 +9,6 @@ import React, {useEffect, useState} from "react";
 import {Row, Col, Spin, Form, Radio, TimePicker, Input, Switch, Button as ButtonA, message} from "antd";
 import {inject,observer} from "mobx-react";
 import "./Trigger.scss";
-import {pipeline_task_update} from "../../../../common/utils/Constant";
 import moment from "moment/moment";
 import {CopyOutlined} from "@ant-design/icons";
 import {copyText} from "../../../../common/utils/Client";
@@ -32,7 +31,9 @@ const Trigger = props =>{
     //加载状态
     const [spinning,setSpinning] = useState(false);
     //流水线更新
-    const taskUpdate = taskPermissions?.includes(pipeline_task_update);
+    const webHookUpdate = taskPermissions?.includes('pip_design_webhook');
+    const timeoutUpdate = taskPermissions?.includes('pip_design_timeout');
+
     //流水线id
     const pipelineId = match.params.id;
     //表单实例
@@ -168,38 +169,47 @@ const Trigger = props =>{
                                     colon={false}
                                     onValuesChange={onValuesChange}
                                 >
-                                    <Form.Item label="状态" name={"status"} valuePropName="checked">
-                                        <Switch
-                                            disabled={!taskUpdate}
-                                            checkedChildren="开启"
-                                            unCheckedChildren="关闭"
-                                        />
-                                    </Form.Item>
                                     {
                                         triggerType==='webhook' ?
-                                            <Form.Item label="WebHook地址" name={"url"}>
-                                                <Input.Group compact>
-                                                    <Input
-                                                        style={{width: 'calc(100% - 32px)'}}
-                                                        value={webHookData?.url}
-                                                        disabled={!taskUpdate || webHookData?.status!==1}
+                                            <>
+                                                <Form.Item label="状态" name={"status"} valuePropName="checked">
+                                                    <Switch
+                                                        disabled={!webHookUpdate}
+                                                        checkedChildren="开启"
+                                                        unCheckedChildren="关闭"
                                                     />
-                                                    <ButtonA
-                                                        icon={<CopyOutlined />}
-                                                        onClick={()=>copyText(webHookData.url)}
-                                                    />
-                                                </Input.Group>
-                                            </Form.Item>
+                                                </Form.Item>
+                                                <Form.Item label="WebHook地址" name={"url"}>
+                                                    <Input.Group compact>
+                                                        <Input
+                                                            style={{width: 'calc(100% - 32px)'}}
+                                                            value={webHookData?.url}
+                                                            disabled={!webHookUpdate || webHookData?.status!==1}
+                                                        />
+                                                        <ButtonA
+                                                            icon={<CopyOutlined />}
+                                                            onClick={()=>copyText(webHookData.url)}
+                                                        />
+                                                    </Input.Group>
+                                                </Form.Item>
+                                            </>
                                             :
                                             <>
+                                                <Form.Item label="状态" name={"status"} valuePropName="checked">
+                                                    <Switch
+                                                        disabled={!timeoutUpdate}
+                                                        checkedChildren="开启"
+                                                        unCheckedChildren="关闭"
+                                                    />
+                                                </Form.Item>
                                                 <Form.Item label="触发方式" name={"execType"}>
-                                                    <Radio.Group disabled={!taskUpdate || triggerData?.status!==1}>
+                                                    <Radio.Group disabled={!timeoutUpdate || triggerData?.status!==1}>
                                                         <Radio value={1}>单次触发</Radio>
                                                         <Radio value={2}>周期触发</Radio>
                                                     </Radio.Group>
                                                 </Form.Item>
                                                 <Form.Item label="日期选择" name={"weekTime"}>
-                                                    <Radio.Group disabled={!taskUpdate || triggerData?.status!==1}>
+                                                    <Radio.Group disabled={!timeoutUpdate || triggerData?.status!==1}>
                                                         <Radio.Button value={1} >星期一</Radio.Button>
                                                         <Radio.Button value={2} >星期二</Radio.Button>
                                                         <Radio.Button value={3} >星期三</Radio.Button>
@@ -213,7 +223,7 @@ const Trigger = props =>{
                                                     <TimePicker
                                                         placeholder="触发时间"
                                                         format={"HH:mm"}
-                                                        disabled={!taskUpdate || triggerData?.status!==1}
+                                                        disabled={!timeoutUpdate || triggerData?.status!==1}
                                                     />
                                                 </Form.Item>
                                             </>

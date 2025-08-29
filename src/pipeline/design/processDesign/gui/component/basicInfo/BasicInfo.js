@@ -182,7 +182,8 @@ const BasicInfo = props => {
      */
     const changName = e =>{
         setEnter(false)
-        const value = e.target.value
+        const value = e.target.value;
+        if(!value){return}
         if(dataItem.formType==="task"){
             if(WhetherChange(value,dataItem.taskName)){
                 updateTaskName(value)

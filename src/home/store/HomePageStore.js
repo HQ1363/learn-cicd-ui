@@ -1,4 +1,4 @@
-import {observable,action} from "mobx";
+import {action} from "mobx";
 import {Axios, getUser} from "tiklab-core-ui";
 
 class HomePageStore{
@@ -9,11 +9,11 @@ class HomePageStore{
      * @returns {Promise<*>}
      */
     @action
-    findAllOpen = async value =>{
-        const param = new FormData()
-        param.append("number",value)
-        const data = await Axios.post("/open/findAllOpen",param)
-        return data
+    findOpenPage = async value =>{
+        return await Axios.post("/open/findOpenPage", {
+            ...value,
+            userId: getUser().userId
+        })
     }
 
     /**

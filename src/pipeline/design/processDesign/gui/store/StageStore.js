@@ -1,4 +1,4 @@
-import {observable,action} from "mobx";
+import {action, observable} from "mobx";
 import {Axios} from "tiklab-core-ui";
 import {message} from "antd";
 
@@ -20,7 +20,7 @@ class StageStore {
     createStage = async value =>{
         const data = await Axios.post("/stage/createStage",value)
         if(data.code===0){
-            this.stageFresh=!this.stageFresh
+            this.stageFresh =! this.stageFresh
         }
         if(data.code===58001){
             message.error(data.msg)
@@ -53,8 +53,7 @@ class StageStore {
     finAllStage = async value =>{
         const param = new FormData()
         param.append("pipelineId",value)
-        const data = await Axios.post("/stage/finAllStage",param)
-        return data
+        return await Axios.post("/stage/finAllStage", param)
     }
 
     /**

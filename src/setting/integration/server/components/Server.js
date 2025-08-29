@@ -166,7 +166,7 @@ const Server = props =>{
             <ListAction
                 edit={() => editServer(record)}
                 code={{
-                    editCode: 'pip_set_server_update',
+                    editCode: 'pipeline_service_integration_update',
                 }}
             />
         ) : (
@@ -175,8 +175,8 @@ const Server = props =>{
                 del={() => delServer(record)}
                 isMore={true}
                 code={{
-                    editCode: 'pip_set_server_update',
-                    delCode: 'pip_set_server_delete',
+                    editCode: 'pipeline_service_integration_update',
+                    delCode: 'pipeline_service_integration_delete',
                 }}
             />
         );
@@ -413,7 +413,7 @@ const Server = props =>{
                             {title:'服务集成'}
                         ]}
                     >
-                        <PrivilegeButton code={'pip_set_server_create'}>
+                        <PrivilegeButton code={'pipeline_service_integration_add'}>
                             <ServerAddBtn
                                 type={'gitee'}
                                 visible={visible}

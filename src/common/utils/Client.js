@@ -167,3 +167,5 @@ export function formatNumber(num) {
     const wValue = Math.floor(num / 10000);
     return `${wValue}w+`;
 }
+
+export const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));

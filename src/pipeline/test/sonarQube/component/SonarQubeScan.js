@@ -20,6 +20,7 @@ import {
     ExclamationCircleOutlined,
     QuestionCircleOutlined
 } from "@ant-design/icons";
+import {PrivilegeProjectButton} from "tiklab-privilege-ui";
 
 const pageSize = 15;
 
@@ -162,10 +163,12 @@ const SonarQubeScan = (props) => {
             width:"8%",
             ellipsis:true,
             render:(_,record)=> (
-                <ListAction
-                    del={()=>delSonarQube(record)}
-                    isMore={true}
-                />
+                <PrivilegeProjectButton domainId={params.id} code={'pip_test_report_sonarqube_delete'}>
+                    <ListAction
+                        del={()=>delSonarQube(record)}
+                        isMore={true}
+                    />
+                </PrivilegeProjectButton>
             )
         }
     ]

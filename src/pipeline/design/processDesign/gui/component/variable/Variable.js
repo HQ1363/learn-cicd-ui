@@ -13,6 +13,8 @@ import Button from "../../../../../../common/component/button/Button";
 import ListEmpty from "../../../../../../common/component/list/ListEmpty";
 import {Validation} from "../../../../../../common/utils/Client";
 import "./Variable.scss";
+import {pipeline_task_update} from "../../../../../../common/utils/Constant";
+import {PrivilegeProjectButton} from "tiklab-privilege-ui";
 
 const Variable = props => {
 
@@ -174,7 +176,9 @@ const Variable = props => {
                 </Form.Item>
                 <div className="inputs-variable-btn">
                     <Button onClick={()=>onCancel()} title={"取消"} isMar={true}/>
-                    <Button onClick={()=>onOk(item)} title={"保存"} type={"primary"}/>
+                    <PrivilegeProjectButton code={pipeline_task_update} domainId={pipeline?.id}>
+                        <Button onClick={()=>onOk(item)} title={"保存"} type={"primary"}/>
+                    </PrivilegeProjectButton>
                 </div>
             </Form>
         )
@@ -195,19 +199,21 @@ const Variable = props => {
                     }
                     </div>
                     <div className="inputs-variable-varKey">{item && item.varKey}</div>
-                    <div className="inputs-variable-opt">
-                        <span data-title-bottom={"删除"} onClick={e=>e.stopPropagation()}>
-                            <Popconfirm
-                                placement="bottomRight"
-                                title={"你确定删除吗"}
-                                okText="确定"
-                                cancelText="取消"
-                                onConfirm={e=>reduceInput(e,item)}
-                            >
-                                <DeleteOutlined />
-                             </Popconfirm>
-                        </span>
-                    </div>
+                    <PrivilegeProjectButton code={pipeline_task_update} domainId={pipeline?.id}>
+                        <div className="inputs-variable-opt">
+                            <span data-title-bottom={"删除"} onClick={e=>e.stopPropagation()}>
+                                <Popconfirm
+                                    placement="bottomRight"
+                                    title={"你确定删除吗"}
+                                    okText="确定"
+                                    cancelText="取消"
+                                    onConfirm={e=>reduceInput(e,item)}
+                                >
+                                    <DeleteOutlined />
+                                 </Popconfirm>
+                            </span>
+                        </div>
+                    </PrivilegeProjectButton>
                 </div>
                 {
                     variableObj?.varId === item.varId &&
@@ -222,7 +228,9 @@ const Variable = props => {
     return(
         <div className="pose-variable">
             <div className="pose-variable-content">
-                {variableObj?.var==='add' &&  <div className='add-title'>添加变量</div>}
+                <PrivilegeProjectButton code={pipeline_task_update} domainId={pipeline?.id}>
+                    {variableObj?.var==='add' &&  <div className='add-title'>添加变量</div>}
+                </PrivilegeProjectButton>
                 {variableObj?.var==='add' && inputHtml()}
                 <Spin spinning={spinning}>
                     {

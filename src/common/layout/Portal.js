@@ -8,13 +8,10 @@
 import React, {useEffect, useState} from "react";
 import {
     BellOutlined,
-    LeftCircleOutlined,
     QuestionCircleOutlined,
-    RightCircleOutlined,
 } from "@ant-design/icons";
 import PortalMessage from "./PortalMessage";
 import {inject, observer} from "mobx-react";
-import PipelineAside from "./PipelineAside";
 import {getUser, productTitle, productImg, productWhiteImg} from "tiklab-core-ui";
 import {renderRoutes} from "react-router-config";
 import Profile from "../component/profile/Profile";
@@ -24,7 +21,7 @@ import './Portal.scss';
 
 const Portal = props =>{
 
-    const {route,history,systemRoleStore,HelpLink,AppLink,AvatarLink,customLogo=null,firstRouters,pipelineRouters} = props;
+    const {route,history,systemRoleStore,HelpLink,AppLink,AvatarLink,customLogo=null,firstRouters} = props;
 
     const {getSystemPermissions} = systemRoleStore;
 
@@ -79,19 +76,8 @@ const Portal = props =>{
 
     //侧边导航
     const asideHtml = () => {
-        if(path.startsWith('/setting')){
-            return props.children
-        }
-        if(path!=='/pipeline/' && path.startsWith('/pipeline/')){
-            return (
-                <PipelineAside
-                    {...props}
-                    isExpand={isExpand}
-                    setIsExpand={setIsExpand}
-                    themeType={themeType}
-                    pipelineRouters={pipelineRouters}
-                />
-            )
+        if (path.startsWith('/setting') || (path.startsWith('/pipeline/') && path !== '/pipeline/')) {
+            return null;
         }
         const logoData = logoHtml();
         return (

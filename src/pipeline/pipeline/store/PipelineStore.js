@@ -1,4 +1,4 @@
-import {action,observable} from "mobx";
+import {action, observable} from "mobx";
 import {Axios, getUser} from "tiklab-core-ui";
 import {message} from "antd";
 
@@ -127,8 +127,7 @@ export class PipelineStore {
         const param = new FormData()
         param.append("pipelineId",value.pipelineId)
         param.append("pipelineName",value.pipelineName)
-        const data = await Axios.post("/pipeline/pipelineClone",param)
-        return data
+        return await Axios.post("/pipeline/pipelineClone", param)
     }
 
     /**
@@ -140,8 +139,7 @@ export class PipelineStore {
     findPipelineCloneName = async value =>{
         const param = new FormData()
         param.append("pipelineId",value)
-        const data = await Axios.post("/pipeline/findPipelineCloneName",param)
-        return data
+        return await Axios.post("/pipeline/findPipelineCloneName", param)
     }
 
     /**
@@ -153,12 +151,11 @@ export class PipelineStore {
     importPipelineYaml = async value =>{
         const param = new FormData()
         param.append("pipelineId",value)
-        const data = await Axios.post(
+        return await Axios.post(
             "/pipeline/importPipelineYaml",
             param,
             {},
             {responseType: "blob"})
-        return data
     }
 
     /**
@@ -206,8 +203,7 @@ export class PipelineStore {
      */
     @action
     findUserPage =async value =>{
-        const data =  await Axios.post("/user/user/findUserPage",value)
-        return data
+        return await Axios.post("/user/user/findUserPage", value)
     }
 
     /**
@@ -217,8 +213,7 @@ export class PipelineStore {
      */
     @action
     findDmUserPage = async value =>{
-        const data = await Axios.post("/dmUser/findDmUserPage",value)
-        return data
+        return await Axios.post("/dmUser/findDmUserPage", value)
     }
 
     /**

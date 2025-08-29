@@ -14,7 +14,7 @@ import {
     HomePage,
 
     Pipeline,
-    PipelineDetails,
+    PipelineDetail,
     Overview,
     Dynamic,
 
@@ -59,8 +59,7 @@ import {
     K8s,
     Variable,
 
-    MessageSendType,
-    MessageNotice,
+    Message,
     MyLog,
     BackupRestore,
     RequestError,
@@ -168,8 +167,13 @@ const routers=[
             },
             {
                 path:"/pipeline/:id",
-                component: PipelineDetails,
+                component: PipelineDetail,
                 routes:[
+                    {
+                        path:"/pipeline/:id/noaccess",
+                        component:NoAccess,
+                        exact:true,
+                    },
                     {
                         path:"/pipeline/:id/overview",
                         exact:true,
@@ -315,13 +319,8 @@ const routers=[
                         exact: true,
                     },
                     {
-                        path:"/setting/notice",
-                        component: MessageNotice,
-                        exact: true,
-                    },
-                    {
-                        path:"/setting/send",
-                        component: MessageSendType,
+                        path:"/setting/message",
+                        component: Message,
                         exact: true,
                     },
                     {

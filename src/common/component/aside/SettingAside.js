@@ -8,10 +8,11 @@
 import React, {useState} from "react";
 import {DownOutlined, HomeOutlined, ProjectOutlined, UpOutlined} from "@ant-design/icons";
 import {SystemNav,PrivilegeButton} from "tiklab-privilege-ui";
-import {applyJump, disableFunction} from 'tiklab-core-ui';
+import {applyJump} from 'tiklab-core-ui';
 import {inject,observer} from "mobx-react";
 import  {ExportOutlined} from "@ant-design/icons";
 import "./SettingAside.scss";
+import {renderRoutes} from "react-router-config";
 
 const templateRouter = [
     {
@@ -89,7 +90,7 @@ const templateRouter = [
 
 const SettingAside = props =>  {
 
-    const {outerPath,applicationRouters,systemRoleStore} = props;
+    const {applicationRouters,systemRoleStore,route} = props;
 
     const {systemPermissions} = systemRoleStore;
 
@@ -206,39 +207,44 @@ const SettingAside = props =>  {
     }
 
     return (
-        <SystemNav
-            {...props}
-            applicationRouters={menus()}
-            outerPath={outerPath}
-            expandedTree={expandedTree}
-            setExpandedTree={setExpandedTree}
-            noAccessPath={"/noaccess"}
-        >
-            <div className="system-aside">
-                <ul className="system-aside-top">
-                    <li className='system-aside-head'>
-                        <span onClick={()=>props.history.push(`${outerPath}/home`)}>
-                            设置
-                        </span>
-                    </li>
-                    <li className="system-aside-back" onClick={()=>props.history.push('/pipeline')}>
-                        <div className='aside-back-box'>
+        <div className='arbess-layout'>
+            <SystemNav
+                {...props}
+                applicationRouters={menus()}
+                outerPath={"/setting"}
+                expandedTree={expandedTree}
+                setExpandedTree={setExpandedTree}
+                noAccessPath={"/noaccess"}
+            >
+                <div className="system-aside">
+                    <ul className="system-aside-top">
+                        <li className='system-aside-head'>
+                            <span onClick={()=>props.history.push(`/setting/home`)}>
+                                设置
+                            </span>
+                        </li>
+                        <li className="system-aside-back" onClick={()=>props.history.push('/pipeline')}>
+                            <div className='aside-back-box'>
                            <span className="aside-back-box-icon">
                                 <HomeOutlined />
                             </span>
-                            <span className="aside-back-box-title">返回首页</span>
-                        </div>
-                    </li>
-                    {
-                        menus().map(firstItem => {
-                            return firstItem.children && firstItem.children.length > 0 ?
-                                renderSubMenu(firstItem,20) : renderMenu(firstItem,20)
-                        })
-                    }
-                    {props.children}
-                </ul>
+                                <span className="aside-back-box-title">返回首页</span>
+                            </div>
+                        </li>
+                        {
+                            menus().map(firstItem => {
+                                return firstItem.children && firstItem.children.length > 0 ?
+                                    renderSubMenu(firstItem,20) : renderMenu(firstItem,20)
+                            })
+                        }
+                        {props.children}
+                    </ul>
+                </div>
+            </SystemNav>
+            <div className='arbess-layout-content'>
+                {renderRoutes(route.routes)}
             </div>
-        </SystemNav>
+        </div>
     )
 }
 
