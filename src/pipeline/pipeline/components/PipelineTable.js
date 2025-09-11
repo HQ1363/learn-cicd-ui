@@ -278,7 +278,7 @@ const PipelineTable = props =>{
             }
         },
         {
-            title: "最近构建信息",
+            title: "最近构建",
             dataIndex: "lastBuildTime",
             key: "lastBuildTime",
             width:"25%",
@@ -346,7 +346,7 @@ const PipelineTable = props =>{
                                         </span>
                                     </Tooltip>
                                 ) : (
-                                    <Tooltip title={'流水线未配置完成'}>
+                                    <Tooltip title={'流水线正在运行或等待运行中'}>
                                         <span className="pipelineTable-action-ban">
                                             <PlayCircleOutlined className="actions-se"/>
                                         </span>

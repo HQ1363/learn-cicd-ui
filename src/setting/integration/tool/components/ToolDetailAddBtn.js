@@ -7,9 +7,9 @@
  */
 import React from "react";
 import Button from "../../../../common/component/button/Button";
-import ToolModal from "./ToolModal";
+import ToolDetailModal from "./ToolDetailModal";
 
-const ToolAddBtn = (props) => {
+const ToolDetailAddBtn = (props) => {
 
     const {isConfig,scmType,visible,setVisible,formValue,setFormValue,findAllScm} = props
 
@@ -27,19 +27,19 @@ const ToolAddBtn = (props) => {
         <>
             <Button
                 onClick={addTool}
-                type={scmType? "row":"primary"}
-                title={scmType? "添加":"添加工具"}
+                type={isConfig? "row":"primary"}
+                title={isConfig? "添加":"添加工具"}
             />
-            <ToolModal
+            <ToolDetailModal
                 visible={visible}
                 setVisible={setVisible}
                 formValue={formValue}
                 findAllScm={findAllScm}
-                externalScmType={scmType}
+                scmType={scmType}
                 isConfig={isConfig}
             />
         </>
     )
 }
 
-export default ToolAddBtn;
+export default ToolDetailAddBtn;

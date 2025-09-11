@@ -20,7 +20,6 @@ import {
     gitpuk,
     pri_gitlab,
     sonar,
-    testhubo,
     mvn,
     nodejs,
     build_docker,
@@ -44,6 +43,8 @@ import {
     host_strategy,
     docker_blue_green,
     k8s_blue_green,
+    code_gitea,
+    test_postin,
 } from '../../../../../common/utils/Constant';
 import "./TaskAdd.scss";
 import {disableFunction} from "tiklab-core-ui";
@@ -77,6 +78,7 @@ const TaskAdd = props =>{
                 {type: gitlab},
                 {type: svn},
                 {type: pri_gitlab},
+                {type: code_gitea},
             ]
         },
         {
@@ -91,7 +93,7 @@ const TaskAdd = props =>{
             id:"test",
             title:"测试",
             desc:[
-                {type: testhubo},
+                {type: test_postin},
             ]
         },
         {

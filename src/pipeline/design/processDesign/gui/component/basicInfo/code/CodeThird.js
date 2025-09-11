@@ -12,7 +12,15 @@ import FormsAuth from "../FormsAuth";
 import FormsSelect from "../FormsSelect";
 import codeThirdStore from "../../../store/CodeThirdStore";
 import FormsTool from "../FormsTool";
-import {gitee, github, gitlab, gitpuk, pri_gitlab, toolGit} from "../../../../../../../common/utils/Constant";
+import {
+    gitee,
+    github,
+    gitlab,
+    gitpuk,
+    pri_gitlab,
+    code_gitea,
+    toolGit
+} from "../../../../../../../common/utils/Constant";
 
 const CodeThird = props =>{
 
@@ -24,6 +32,7 @@ const CodeThird = props =>{
         findGithubRpy,findGithubBranch,
         findGitlabRpy,findGitlabBranch,
         findPriGitlabRpy,findPriGitlabBranch,
+        findGiteaRpy,findGiteaBranch,
     } = codeThirdStore
     const {updateTask,dataItem} = taskStore
 
@@ -52,7 +61,7 @@ const CodeThird = props =>{
         const task = dataItem.task
         if(task?.houseId===value){
             return;
-            }
+        }
         setProhibited(false)
         updateTask({houseId:value})
     }
@@ -80,11 +89,12 @@ const CodeThird = props =>{
             [gitee]: findGiteeRpy,
             [github]: findGithubRpy,
             [gitlab]: findGitlabRpy,
-            [pri_gitlab]: findPriGitlabRpy
+            [pri_gitlab]: findPriGitlabRpy,
+            [code_gitea]: findGiteaRpy,
         };
         const finder = repoFinders[dataItem.taskType];
         if (finder) {
-            const rpyRes = await finder(authId);
+            const rpyRes = await finder({authId});
             if (rpyRes.code === 0) {
                 setCodeRpy(rpyRes.data);
             }
@@ -107,7 +117,8 @@ const CodeThird = props =>{
             [gitee]: findGiteeBranch,
             [github]: findGithubBranch,
             [gitlab]: findGitlabBranch,
-            [pri_gitlab]: findPriGitlabBranch
+            [pri_gitlab]: findPriGitlabBranch,
+            [code_gitea]: findGiteaBranch,
         };
         const finder = repoFinders[dataItem.taskType];
         if(finder){

@@ -94,6 +94,15 @@ class ServerStore{
         return data
     }
 
+    /**
+     * 服务集成统计
+     * @returns {Promise<*>}
+     */
+    @action
+    findAuthServerByTypeGroup = async ()=>{
+        return await Axios.post("/authServer/findAuthServerByTypeGroup")
+    }
+
 }
 
 const serverStore  = new ServerStore();

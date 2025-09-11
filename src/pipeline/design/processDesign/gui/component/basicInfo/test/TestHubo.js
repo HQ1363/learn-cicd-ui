@@ -48,7 +48,7 @@ const TestHubo = props => {
                 return;
             case 'testPlan':
                 findTestHuboPlanList({
-                    repositoryId:dataItem.task?.testSpace?.id,
+                    workspaceId:dataItem.task?.testSpace?.id,
                     authId:authId,
                 }).then(res=>{
                     if(res.code===0){
@@ -58,7 +58,7 @@ const TestHubo = props => {
                 return;
             default:
                 findTestHuboEnvList({
-                    repositoryId:dataItem.task?.testSpace?.id,
+                    workspaceId:dataItem.task?.testSpace?.id,
                     authId:authId,
                 }).then(res=>{
                     if(res.code===0){
@@ -81,15 +81,15 @@ const TestHubo = props => {
 
             <FormsSelect
                 rules={[{required:true, message:"测试空间不能为空"}]}
-                name={["testSpace","name"]}
-                label={"测试空间"}
+                name={["testSpace","workspaceName"]}
+                label={"测试项目"}
                 isSpin={isSpin}
                 onFocus={()=>onFocus('testSpace')}
                 onChange={value=>onChange(value,'testSpace')}
             >
                 {
                     testSpace && testSpace.map(item=>{
-                        return <Select.Option key={item.id} value={item.id}>{item.name}</Select.Option>
+                        return <Select.Option key={item.id} value={item.id}>{item.workspaceName}</Select.Option>
                     })
                 }
             </FormsSelect>

@@ -9,7 +9,6 @@ $aside-border-color: #e4e4e4;
   .arbess-aside {
     position: relative;
     transition: width 0.3s ease, transform 0.3s ease;
-    border-right: 1px solid var(--arbess-border-color);
     .ant-avatar {
       width: 24px;
       height: 24px;

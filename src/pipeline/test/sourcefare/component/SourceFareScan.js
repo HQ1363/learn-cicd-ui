@@ -6,7 +6,7 @@
  * @LastEditTime: 2025/5/26
  */
 import React,{useState,useEffect} from "react";
-import {Row, Col, Spin, Divider, Table} from "antd";
+import {Row, Col, Spin, Divider, Table, Tooltip} from "antd";
 import BreadCrumb from "../../../../common/component/breadcrumb/BreadCrumb";
 import Page from "../../../../common/component/page/Page";
 import ListEmpty from "../../../../common/component/list/ListEmpty";
@@ -20,7 +20,7 @@ import {
 } from "@ant-design/icons";
 import {PrivilegeProjectButton} from "tiklab-privilege-ui";
 
-const pageSize = 15;
+const pageSize = 10;
 
 const SourceFareScan = (props) => {
 
@@ -96,10 +96,10 @@ const SourceFareScan = (props) => {
             title: "名称",
             dataIndex: "id",
             key: "id",
-            width:"65%",
+            width:"34%",
             ellipsis:true,
             render:(text,record) =>{
-                const {  status, allTrouble, severityTrouble, noticeTrouble, suggestTrouble } = record;
+                const { status } = record;
                 return (
                     <div className='data-item-left'>
                         <span className='data-item-name' onClick={()=>goSourceFare(record)}>
@@ -113,28 +113,59 @@ const SourceFareScan = (props) => {
                             status==='fail' &&
                             <CloseCircleOutlined className='fail-text'/>
                         }
+                    </div>
+                )
+            }
+        },
+        {
+            title: "扫描信息",
+            dataIndex: "allTrouble",
+            key: "allTrouble",
+            width:"33%",
+            ellipsis:true,
+            render:(text,record)=>{
+                const { allTrouble, severityTrouble, noticeTrouble, suggestTrouble } = record;
+                return (
+                    <Tooltip
+                        title={
+                            <div>
+                                <div className='data-item-count-tip'>
+                                    <div className='data-item-count-tip-key'>总数</div>
+                                    <div>{allTrouble}</div>
+                                </div>
+                                <div className='data-item-count-tip'>
+                                    <div className='data-item-count-tip-key'>严重问题</div>
+                                    <div>{severityTrouble}</div>
+                                </div>
+                                <div className='data-item-count-tip'>
+                                    <div className='data-item-count-tip-key'>警告问题</div>
+                                    <div>{noticeTrouble}</div>
+                                </div>
+                                <div className='data-item-count-tip'>
+                                    <div className='data-item-count-tip-key'>提示问题</div>
+                                    <div>{suggestTrouble}</div>
+                                </div>
+                            </div>
+                        }
+                    >
                         <div className='data-item-count'>
-                            <div className='data-item-pass'>
-                                <span className='count-key'>总数</span>
+                            <div className={`data-item-pass ${allTrouble > 0 ? 'text-all': ''}`}>
                                 {allTrouble}
                             </div>
                             <Divider type="vertical" />
-                            <div className='data-item-pass'>
-                                <span className='count-key'>严重问题</span>
+                            <div className={`data-item-pass ${severityTrouble > 0 ? 'text-severity': ''}`}>
                                 {severityTrouble}
                             </div>
                             <Divider type="vertical" />
-                            <div className='data-item-pass'>
-                                <span className='count-key'>警告问题</span>
+                            <div className={`data-item-pass ${noticeTrouble > 0 ? 'text-notice': ''}`}>
                                 {noticeTrouble}
                             </div>
                             <Divider type="vertical" />
-                            <div className='data-item-fail'>
-                                <span className='count-key'>提示问题</span>
+                            <div className={`data-item-pass ${suggestTrouble > 0 ? 'text-suggest': ''}`}>
                                 {suggestTrouble}
                             </div>
                         </div>
-                    </div>
+                    </Tooltip>
                 )
             }
         },
@@ -142,7 +173,7 @@ const SourceFareScan = (props) => {
             title: "扫描时间",
             dataIndex: "createTime",
             key: "createTime",
-            width:"27%",
+            width:"25%",
             ellipsis:true,
             render:text=>text || '--'
         },

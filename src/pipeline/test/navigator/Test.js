@@ -41,8 +41,8 @@ const Test = (props) => {
             title: '自动化测试',
             children: [
                 {
-                    id: `/pipeline/${pipelineId}/test/testHubo`,
-                    title: 'TestHubo',
+                    id: `/pipeline/${pipelineId}/test/postIn`,
+                    title: 'PostIn',
                     purviewCode: 'pip_test_report_testhubo_find',
                 }
             ]

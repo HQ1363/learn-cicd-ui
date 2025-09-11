@@ -15,6 +15,7 @@ import ListAction from "../../../../common/component/list/ListAction";
 import testhuboStore from "../store/TestHuboStore";
 import "./TestHubo.scss";
 import {PrivilegeProjectButton} from "tiklab-privilege-ui";
+import {CheckCircleOutlined, CloseCircleOutlined} from "@ant-design/icons";
 
 const pageSize = 10;
 
@@ -96,28 +97,51 @@ const TestHubo = props => {
 
     const columns = [
         {
-            title: "测试信息",
-            dataIndex: "testPlanId",
-            key: "testPlanId",
-            width:"65%",
+            title: "测试计划",
+            dataIndex: "testonId",
+            key: "testonId",
+            width:"37%",
             ellipsis:true,
             render:(text,record) =>{
-                const { passNum, failNum } = record;
+                const {execStatus} = record;
                 return (
                     <div className='data-item-left'>
-                        <span className='data-item-name' onClick={()=>goTestHubo(record)}>
+                        <span
+                            className={`${text ? 'data-item-name' : 'data-item-name-ban'}`}
+                            onClick={()=>text ? goTestHubo(record) : undefined}
+                        >
                             # {text || '--'}
                         </span>
-                        <div className='data-item-count'>
-                            <div className='data-item-pass'>
-                                <span className='count-key'>成功数</span>
-                                {passNum || '0'}
-                            </div>
-                            <Divider type="vertical" />
-                            <div className='data-item-fail'>
-                                <span className='count-key'>失败数</span>
-                                {failNum || '0'}
-                            </div>
+                        {
+                            execStatus==='success' &&
+                            <CheckCircleOutlined className='success-text'/>
+                        }
+                        {
+                            execStatus==='fail' &&
+                            <CloseCircleOutlined className='fail-text'/>
+                        }
+                    </div>
+                )
+            }
+        },
+        {
+            title: "测试信息",
+            dataIndex: "passNum",
+            key: "passNum",
+            width:"30%",
+            ellipsis:true,
+            render:(text,record) => {
+                const { passNum, failNum } = record;
+                return (
+                    <div className='data-item-count'>
+                        <div className='data-item-pass'>
+                            <span className='count-key'>成功数</span>
+                            {passNum || '0'}
+                        </div>
+                        <Divider type="vertical" />
+                        <div className='data-item-pass'>
+                            <span className='count-key'>失败数</span>
+                            {failNum || '0'}
                         </div>
                     </div>
                 )
@@ -127,7 +151,7 @@ const TestHubo = props => {
             title: "执行时间",
             dataIndex: "time",
             key: "time",
-            width:"27%",
+            width:"25%",
             ellipsis:true,
             render:text=>text || '--'
         },
@@ -162,7 +186,7 @@ const TestHubo = props => {
                     <BreadCrumb
                         crumbs={[
                             {title:'自动化测试'},
-                            {title:'TestHubo'}
+                            {title:'PostIn'}
                         ]}
                     />
                    <Spin spinning={isLoading}>

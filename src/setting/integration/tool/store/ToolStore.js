@@ -75,6 +75,16 @@ class ToolStore {
         return data
     }
 
+    /**
+     * 工具集成统计
+     * @returns {Promise<*>}
+     */
+    @action
+    findScmByTypeGroup = async ()=>{
+        return await Axios.post("/scm/findScmByTypeGroup")
+    }
+
+
 }
 
 const toolStore = new ToolStore();

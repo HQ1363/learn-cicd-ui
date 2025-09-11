@@ -11,10 +11,7 @@ class CodeThirdStore {
      */
     @action
     findGittokRpy = async value =>{
-        const params = {
-            authId:value
-        }
-        const data = await Axios.post("/code/third/gittok/findStoreHouseList",params)
+        const data = await Axios.post("/code/third/gittok/findStoreHouseList",value)
         if(data.code!==0){
             message.error(data.msg)
         }
@@ -28,11 +25,10 @@ class CodeThirdStore {
      */
     @action
     findGittokBranch = async value =>{
-        const params = {
-            authId:value.authId,
-            houseId:value.houseId
+        const data =  await Axios.post("/code/third/gittok/findHouseBranchList",value)
+        if(data.code!==0){
+            message.error(data.msg)
         }
-        const data =  await Axios.post("/code/third/gittok/findHouseBranchList",params)
         return data
     }
 
@@ -43,10 +39,7 @@ class CodeThirdStore {
      */
     @action
     findGiteeRpy = async value =>{
-        const params = {
-            authId:value
-        }
-        const data = await Axios.post("/code/third/gitee/findStoreHouseList",params)
+        const data = await Axios.post("/code/third/gitee/findStoreHouseList",value)
         if(data.code!==0){
             message.error(data.msg)
         }
@@ -60,11 +53,10 @@ class CodeThirdStore {
      */
     @action
     findGiteeBranch = async value =>{
-        const params = {
-            authId:value.authId,
-            houseId:value.houseId
+        const data =  await Axios.post("/code/third/gitee/findHouseBranchList",value)
+        if(data.code!==0){
+            message.error(data.msg)
         }
-        const data =  await Axios.post("/code/third/gitee/findHouseBranchList",params)
         return data
     }
 
@@ -75,10 +67,7 @@ class CodeThirdStore {
      */
     @action
     findGithubRpy = async value =>{
-        const params = {
-            authId:value
-        }
-        const data = await Axios.post("/code/third/github/findStoreHouseList",params)
+        const data = await Axios.post("/code/third/github/findStoreHouseList",value)
         if(data.code!==0){
             message.error(data.msg)
         }
@@ -92,11 +81,10 @@ class CodeThirdStore {
      */
     @action
     findGithubBranch = async value =>{
-        const params = {
-            authId:value.authId,
-            houseId:value.houseId
+        const data =  await Axios.post("/code/third/github/findHouseBranchList",value)
+        if(data.code!==0){
+            message.error(data.msg)
         }
-        const data =  await Axios.post("/code/third/github/findHouseBranchList",params)
         return data
     }
 
@@ -107,10 +95,7 @@ class CodeThirdStore {
      */
     @action
     findGitlabRpy = async value =>{
-        const params = {
-            authId:value
-        }
-        const data = await Axios.post("/code/third/gitlab/findStoreHouseList",params)
+        const data = await Axios.post("/code/third/gitlab/findStoreHouseList",value)
         if(data.code!==0){
             message.error(data.msg)
         }
@@ -124,11 +109,10 @@ class CodeThirdStore {
      */
     @action
     findGitlabBranch = async value =>{
-        const params = {
-            authId:value.authId,
-            houseId:value.houseId
+        const data =  await Axios.post("/code/third/gitlab/findHouseBranchList",value)
+        if(data.code!==0){
+            message.error(data.msg)
         }
-        const data =  await Axios.post("/code/third/gitlab/findHouseBranchList",params)
         return data
     }
 
@@ -139,10 +123,7 @@ class CodeThirdStore {
      */
     @action
     findPriGitlabRpy = async value =>{
-        const params = {
-            authId:value
-        }
-        const data = await Axios.post("/code/third/pri/v4/gitlab/findStoreHouseList",params)
+        const data = await Axios.post("/code/third/pri/v4/gitlab/findStoreHouseList",value)
         if(data.code!==0){
             message.error(data.msg)
         }
@@ -156,11 +137,35 @@ class CodeThirdStore {
      */
     @action
     findPriGitlabBranch = async value =>{
-        const params = {
-            authId:value.authId,
-            houseId:value.houseId
+        const data = await Axios.post("/code/third/pri/v4/gitlab/findHouseBranchList",value)
+        if(data.code!==0){
+            message.error(data.msg)
         }
-        const data = await Axios.post("/code/third/pri/v4/gitlab/findHouseBranchList",params)
+        return data
+    }
+
+    /**
+     * 获取gitea仓库
+     * @param value
+     * @returns {Promise<void>}
+     */
+    @action
+    findGiteaRpy = async value =>{
+        const data = await Axios.post("/code/third/pri/gitea/findStoreHouseList",value)
+        if(data.code!==0){
+            message.error(data.msg)
+        }
+        return data
+    }
+
+    /**
+     * 获取gitea分支
+     * @param value
+     * @returns {Promise<void>}
+     */
+    @action
+    findGiteaBranch = async value =>{
+        const data = await Axios.post("/code/third/pri/gitea/findHouseBranchList",value)
         if(data.code!==0){
             message.error(data.msg)
         }

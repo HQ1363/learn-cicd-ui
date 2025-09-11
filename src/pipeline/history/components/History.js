@@ -326,7 +326,7 @@ const History = props =>{
                         text===1 &&
                         <>
                             <Profile userInfo={record?.user}/>
-                            <div className="runWay-user">{record?.user?.nickname || "--"}手动触发</div>
+                            <div className="runWay-user">{record?.user?.nickname || "--"} · 手动触发</div>
                         </>
                     }
                     {
@@ -340,7 +340,7 @@ const History = props =>{
                         text===3 &&
                         <>
                             <Profile userInfo={record?.user}/>
-                            <div className="runWay-user">{record?.user?.nickname || "--"}回滚触发</div>
+                            <div className="runWay-user">{record?.user?.nickname || "--"} · 回滚触发</div>
                         </>
                     }
                     {

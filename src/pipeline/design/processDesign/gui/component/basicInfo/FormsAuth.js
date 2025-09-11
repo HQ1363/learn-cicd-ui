@@ -8,7 +8,7 @@
 import React,{useState,useEffect} from "react";
 import {inject,observer} from "mobx-react";
 import {Select, Divider} from "antd";
-import ServerAddBtn from "../../../../../../setting/integration/server/components/ServerAddBtn";
+import ServerDetailAddBtn from "../../../../../../setting/integration/server/components/ServerDetailAddBtn";
 import HostAddBtn from "../../../../../../setting/configure/host/component/HostAddBtn";
 import K8sAddBtn from "../../../../../../setting/configure/k8s/components/K8sAddBtn";
 import hostStore from "../../../../../../setting/configure/host/store/HostStore";
@@ -35,6 +35,7 @@ import {
     download_nexus,
     sourcefare,
     host_order,
+    code_gitea, test_postin,
 } from "../../../../../../common/utils/Constant";
 import {taskTitle} from "../TaskCommon";
 import {maskString} from "../../../../../../common/utils/Client";
@@ -82,11 +83,17 @@ const FormsAuth = props =>{
             case github:
             case gitlab:
             case pri_gitlab:
-            case testhubo:
             case gitpuk:
             case sonar:
             case sourcefare:
                 finsServer(taskType)
+                break
+            case testhubo:
+            case test_postin:
+                finsServer('postin')
+                break
+            case code_gitea:
+                finsServer('gitea')
                 break
             case upload_hadess:
             case download_hadess:
@@ -162,14 +169,15 @@ const FormsAuth = props =>{
             case github:
             case gitlab:
             case pri_gitlab:
+            case code_gitea:
                 return `${title}授权信息`
             case gitpuk:
             case sonar:
-                return `${title}服务`
             case sourcefare:
-                return 'SourceFare服务'
+                return `${title}服务`
             case testhubo:
-                return 'TestHubo服务'
+            case test_postin:
+                return 'PostIn服务'
             case liunx:
             case docker:
             case host_order:
@@ -201,12 +209,14 @@ const FormsAuth = props =>{
             case pri_gitlab:
             case gitpuk:
             case testhubo:
+            case test_postin:
             case sonar:
             case sourcefare:
             case upload_hadess:
             case upload_nexus:
             case download_hadess:
             case download_nexus:
+            case code_gitea:
                 return item.serverId
             case liunx:
             case host_order:
@@ -244,17 +254,21 @@ const FormsAuth = props =>{
             case gitlab:
             case pri_gitlab:
             case sonar:
-                return <ServerAddBtn type={taskType} {...commonProps}/>;
+                return <ServerDetailAddBtn type={taskType} {...commonProps}/>;
+            case code_gitea:
+                return <ServerDetailAddBtn type={'gitea'} {...commonProps}/>;
             case gitpuk:
-            case testhubo:
             case sourcefare:
-                return version === 'cloud' ? null : <ServerAddBtn type={taskType} {...commonProps}/>;
+                return version === 'cloud' ? null : <ServerDetailAddBtn type={taskType} {...commonProps}/>;
+            case testhubo:
+            case test_postin:
+                return version === 'cloud' ? null : <ServerDetailAddBtn type={'postin'} {...commonProps}/>;
             case upload_hadess:
             case download_hadess:
-                return version === 'cloud' ? null : <ServerAddBtn type={'hadess'} {...commonProps}/>
+                return version === 'cloud' ? null : <ServerDetailAddBtn type={'hadess'} {...commonProps}/>
             case upload_nexus:
             case download_nexus:
-                return version === 'cloud' ? null : <ServerAddBtn type={'nexus'} {...commonProps}/>
+                return version === 'cloud' ? null : <ServerDetailAddBtn type={'nexus'} {...commonProps}/>
             default: return null
         }
     }
@@ -267,6 +281,7 @@ const FormsAuth = props =>{
         switch (taskType) {
             case gitpuk:
             case testhubo:
+            case test_postin:
             case sonar:
             case sourcefare:
             case upload_hadess:
@@ -278,6 +293,7 @@ const FormsAuth = props =>{
             case gitlab:
             case pri_gitlab:
             case github:
+            case code_gitea:
                 return `${item.name}(${maskString(item.accessToken)})`;
             case upload_ssh:
             case download_ssh:
@@ -310,6 +326,7 @@ const FormsAuth = props =>{
             case docker:
             case k8s:
             case testhubo:
+            case test_postin:
             case sonar:
             case gitee:
             case github:
@@ -318,6 +335,7 @@ const FormsAuth = props =>{
             case gitpuk:
             case sourcefare:
             case host_order:
+            case code_gitea:
                 rule = [{required:true,message:`${label()}不能为空`}];
                 break;
             default:

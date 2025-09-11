@@ -344,6 +344,11 @@ const Pipeline = props =>{
                             onClick={clickType}
                         />
                         <Space>
+                            <SearchInput
+                                placeholder="搜索名称"
+                                onPressEnter={onChangeSearch}
+                                style={{ width: 180 }}
+                            />
                             <SearchSelect
                                 showSearch
                                 filterOption={(input, option) =>
@@ -380,11 +385,6 @@ const Pipeline = props =>{
                                     ))
                                 }
                             </SearchSelect>
-                            <SearchInput
-                                placeholder="搜索名称"
-                                onPressEnter={onChangeSearch}
-                                style={{ width: 180 }}
-                            />
                             <Dropdown
                                 overlay={
                                     <div className='pipeline-senior-screen-drop'>

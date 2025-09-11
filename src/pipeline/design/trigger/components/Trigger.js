@@ -13,6 +13,8 @@ import moment from "moment/moment";
 import {CopyOutlined} from "@ant-design/icons";
 import {copyText} from "../../../../common/utils/Client";
 import VersionInfo from "../../../../common/component/versionInfo/VersionInfo";
+import TaskMirror from "../../../../common/component/editor/CodeMirror";
+
 
 const Trigger = props =>{
 
@@ -192,6 +194,29 @@ const Trigger = props =>{
                                                         />
                                                     </Input.Group>
                                                 </Form.Item>
+                                                <div className='trigger-webhook-tip'>
+                                                    <div className='webhook-tip-desc'>
+                                                        使用说明：启用流水线Webhook触发后，可以直接使用以下命令触发运行流水线
+                                                    </div>
+                                                    <div className='webhook-tip-command'>
+                                                        <TaskMirror
+                                                            mirrorValue={`curl --request POST ${webHookData?.url}`}
+                                                            options={{
+                                                                mode: 'shell',
+                                                                theme:'default',
+                                                                lineNumbers: false,
+                                                                readOnly: true,
+                                                            }}
+                                                            autoSize={{ max: 1 }}
+                                                        />
+                                                        <div
+                                                            className='webhook-tip-command-copy'
+                                                            onClick={()=>copyText(`curl --request POST ${webHookData?.url}`)}
+                                                        >
+                                                            <CopyOutlined />
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </>
                                             :
                                             <>

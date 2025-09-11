@@ -56,7 +56,7 @@ import {
     host_order,
     host_strategy,
     build_gradle,
-    build_c_add,
+    build_c_add, code_gitea, test_postin,
 } from "../../../../../../common/utils/Constant";
 import ToolScript from "./tool/ToolScript";
 import UploadHadess from "./upload/UploadHadess";
@@ -122,10 +122,12 @@ const BasicInfo = props => {
             case gitlab:
             case pri_gitlab:
             case gitpuk:
+            case code_gitea:
                 return <CodeThird {...props}/>
             case maventest:
                 return <TestMvnUnit {...props}/>
             case testhubo:
+            case test_postin:
                 return <TestHubo {...props}/>
             case nodejs:
                 return <BuildNode {...props}/>

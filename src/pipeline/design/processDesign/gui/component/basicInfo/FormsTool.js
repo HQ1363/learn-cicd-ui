@@ -10,7 +10,7 @@ import FormsSelect from "./FormsSelect";
 import {Divider, Select} from "antd";
 import {inject, observer} from "mobx-react";
 import toolStore from "../../../../../../setting/integration/tool/store/ToolStore";
-import ToolAddBtn from "../../../../../../setting/integration/tool/components/ToolAddBtn";
+import ToolDetailAddBtn from "../../../../../../setting/integration/tool/components/ToolDetailAddBtn";
 import {scmNameSuffix, scmTitle} from "../../../../../../setting/integration/tool/components/ToolCommon";
 
 const FormsTool = (props) => {
@@ -68,7 +68,7 @@ const FormsTool = (props) => {
                     {menu}
                     <Divider style={{margin:"4px 0"}} />
                     <div style={{cursor:"pointer"}} onClick={()=>setOpen(false)}>
-                        <ToolAddBtn
+                        <ToolDetailAddBtn
                             isConfig={true}
                             visible={visible}
                             setVisible={setVisible}

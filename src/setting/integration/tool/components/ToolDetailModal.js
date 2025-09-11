@@ -10,46 +10,27 @@ import {Form, Input, Select, Upload} from "antd";
 import {Validation} from "../../../../common/utils/Client";
 import Modals from "../../../../common/component/modal/Modal";
 import toolStore from "../store/ToolStore";
-import {scmList, scmPlaceholder, scmTitle} from "./ToolCommon";
+import {scmPlaceholder, scmTitle} from "./ToolCommon";
 import {getUser} from "tiklab-core-ui";
 import Button from "../../../../common/component/button/Button";
 import {getAPIgateway} from "tiklab-core-ui";
 
-const ToolModal = props =>{
+const ToolDetailModal = props =>{
 
-    const {visible,setVisible,formValue,findAllScm,externalScmType='jdk',isConfig} = props;
+    const {visible,setVisible,formValue,findAllScm,scmType='jdk',isConfig} = props;
 
     const {updatePipelineScm} = toolStore;
 
     const user = getUser();
     const [form] = Form.useForm()
-    //环境配置类型
-    const [scmType,setScmType] = useState("jdk");
     //本地上传二进制包
     const [fileList, setFileList] = useState([]);
 
     useEffect(()=>{
-        if(visible){
-            // 表单初始化
-            if(formValue){
-                form.setFieldsValue(formValue)
-                setScmType(formValue.scmType)
-                return
-            }
-            form.setFieldsValue({
-                scmType:externalScmType
-            })
-            setScmType(externalScmType)
+        if(visible && formValue){
+            form.setFieldsValue(formValue)
         }
     },[visible])
-
-    /**
-     * 切换环境配置类型
-     * @param value
-     */
-    const changScmType = value => {
-        setScmType(value);
-    }
 
     /**
      * 更改添加方式
@@ -77,6 +58,7 @@ const ToolModal = props =>{
             const {pkg,...rest} = values;
             updatePipelineScm({
                 scmId: formValue && formValue.scmId,
+                scmType: scmType,
                 ...rest
             }).then(res=>{
                 if(res.code===0){
@@ -113,17 +95,6 @@ const ToolModal = props =>{
                     autoComplete="off"
                     initialValues={{addType:'local'}}
                 >
-                    <Form.Item name="scmType" label="环境配置类型" rules={[{required:true,message:`请选择环境配置类型`}]}>
-                        <Select onChange={changScmType} disabled={formValue || isConfig} placeholder={'环境配置类型'}>
-                            {
-                                scmList.map(item=>(
-                                    <Select.Option value={item} key={item}>
-                                        { scmTitle[item] }
-                                    </Select.Option>
-                                ))
-                            }
-                        </Select>
-                    </Form.Item>
                     <Form.Item
                         label={`名称`}
                         name="scmName"
@@ -234,4 +205,4 @@ const ToolModal = props =>{
     )
 }
 
-export default ToolModal
+export default ToolDetailModal

@@ -144,7 +144,7 @@ const SettingAside = props =>  {
         return (
             <PrivilegeButton key={data.id} code={data.purviewCode} {...props}>
                 <li style={{cursor:"pointer",paddingLeft:deep}}
-                    className={`system-aside-li system-aside-second ${path === data.id  ? "system-aside-select":""}`}
+                    className={`system-aside-li system-aside-second ${path===data.id  ? "system-aside-select":""}`}
                     onClick={()=>select(data)}
                     key={data.id}
                 >
@@ -156,10 +156,6 @@ const SettingAside = props =>  {
                         !!data.isUnify && !authConfig?.authType &&
                         <span className='aside-second-link'><ExportOutlined /></span>
                     }
-                    {/*{*/}
-                    {/*    data.isEnhance && disable &&*/}
-                    {/*    <img src={feature} alt="增强功能" width={16} height={16}/>*/}
-                    {/*}*/}
                 </li>
             </PrivilegeButton>
         )

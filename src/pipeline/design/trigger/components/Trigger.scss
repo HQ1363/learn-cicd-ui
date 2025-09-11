@@ -35,4 +35,38 @@
             background-color: var(--tiklab-gray-400);
         }
     }
+    .trigger-webhook-tip{
+        margin-top: 50px;
+        .webhook-tip-desc{
+            margin-bottom: 6px;
+            color: #888888;
+            font-size: 13px;
+        }
+        .webhook-tip-command{
+            background-color: var(--tiklab-gray-600);
+            border-radius: 4px;
+            padding: 16px;
+            position: relative;
+            .CodeMirror{
+                height: 55px;
+            }
+            .CodeMirror-sizer{
+                padding: 10px !important;
+            }
+            .webhook-tip-command-copy{
+                position: absolute;
+                right: 5px;
+                top: 5px;
+                font-size: 12px;
+                cursor: pointer;
+            }
+            ::-webkit-scrollbar {
+                max-width: 5px;
+                max-height: 5px;
+            }
+            ::-webkit-scrollbar-track {
+                background: transparent;
+            }
+        }
+    }
 }

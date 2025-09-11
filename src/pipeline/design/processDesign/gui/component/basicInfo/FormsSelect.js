@@ -46,9 +46,9 @@ const FormsSelect = props => {
                     }
                     setBordered(false)
                 }}
-                onChange={value=>{
+                onChange={(value,option)=>{
                     if(res.onChange) {
-                        res.onChange(value);
+                        res.onChange(value,option);
                     }
                     setBordered(false)
                 }}

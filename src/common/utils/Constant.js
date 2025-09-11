@@ -16,8 +16,10 @@ export const gitlab = 'gitlab'; //Github
 export const pri_gitlab = 'pri_gitlab'; //自建Github
 export const svn = 'svn'; //Svn
 export const gitpuk = 'gitpuk'; //GitPuk
+export const code_gitea = 'code_gitea'; // Gitea
 export const maventest = 'maventest'; //Maven单元测试
-export const testhubo = 'testhubo'; //TestHubo自动化测试
+export const testhubo = 'testhubo'; //PostIn自动化测试
+export const test_postin = 'test_postin'; //PostIn自动化测试
 export const mvn = 'maven'; //Maven构建
 export const nodejs = 'nodejs'; //Node.Js构建
 export const build_docker = 'build_docker'; //Docker构建
@@ -58,11 +60,12 @@ export const serverGithub = 'github';
 export const serverGitlab = 'gitlab';
 export const serverPriGitlab = 'pri_gitlab';
 export const serverGitpuk = 'gitpuk';
-export const serverTesthubo = 'testhubo';
+export const serverPostIn = 'postin';
 export const serverSonar = 'sonar';
 export const serverNexus = 'nexus';
 export const serverHadess = 'hadess';
 export const serverSourceFare = 'sourcefare';
+export const serverGitea = 'gitea';
 
 /**
  * 工具常量

@@ -14,7 +14,7 @@ const AuthType = props =>{
         <>
             <Form.Item label="认证类型" name="authType">
                 <Select placeholder={'认证类型'}>
-                    <Select.Option value={1}>username&password</Select.Option>
+                    <Select.Option value={1}>用户名密码</Select.Option>
                     <Select.Option value={2}>私钥</Select.Option>
                 </Select>
             </Form.Item>

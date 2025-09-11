@@ -10,22 +10,31 @@
             white-space: nowrap;
             text-overflow: ellipsis;
             -o-text-overflow: ellipsis;
-            max-width: 100%;
             display: inline-block;
             vertical-align: middle;
+            width: 140px;
+            line-height: 36px;
+            max-width: 95%;
             &:hover{
                 cursor: pointer;
                 color: var(--tiklab-blue);
+            }
+            &-ban{
+                color: #999999;
+                font-weight: var(--tiklab-font-weight-bold);
+                display: inline-block;
+                vertical-align: middle;
+                width: 140px;
+                line-height: 36px;
             }
         }
         .data-item-count{
             display: flex;
             align-items: center;
-            padding-top: 5px;
             color: var(--tiklab-gray-500);
             font-size: 13px;
-            .data-item-pass,.data-item-fail{
-                max-width: 50%;
+            .data-item-pass{
+                width: 70px;
                 overflow: hidden;
                 white-space: nowrap;
                 text-overflow: ellipsis;
@@ -34,6 +43,12 @@
             .count-key{
                 padding-right: 5px;
             }
+        }
+        .fail-text{
+            color: #f06f6f;
+        }
+        .success-text{
+            color: var(--tiklab-blue);
         }
     }
 }

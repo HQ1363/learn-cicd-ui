@@ -9,10 +9,9 @@ $aside-border-color: #e4e4e4;
     height: 100%;
     flex-grow: 0;
     flex-shrink: 0;
-    flex-basis: 180px;
+    flex-basis: 200px;
     overflow: auto;
     background: var(--arbess-aside-two-color);
-    border-right: 1px solid var(--arbess-border-color);
     .project-nav-aside-head{
       height: 40px;
       line-height: 40px;

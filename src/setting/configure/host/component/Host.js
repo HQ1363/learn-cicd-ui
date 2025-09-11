@@ -155,7 +155,7 @@ const Host = props =>{
             key:"authType",
             width:"18%",
             ellipsis:true,
-            render: text => text===1?"username&password":"私钥"
+            render: text => text===1 ? "用户名密码":"私钥"
         },
         {
             title:"创建人",

@@ -12,7 +12,7 @@ import {Col, Row} from "antd";
 import {
     build_c_add, build_go, build_gradle,
     build_net_core, build_php, build_python, git,
-    liunx, mvn, nodejs, script, sourcefare, testhubo
+    liunx, mvn, nodejs, script, sourcefare, test_postin
 } from "../../../common/utils/Constant";
 
 const PipelineAddMould = ({setTemplateType}) =>{
@@ -64,7 +64,7 @@ const PipelineAddMould = ({setTemplateType}) =>{
                     ],
                     templates:[
                         {types:[git]},
-                        {types:[sourcefare,testhubo]},
+                        {types:[sourcefare,test_postin]},
                         {types:[mvn]},
                         {types:[liunx]}
                     ]
@@ -94,7 +94,7 @@ const PipelineAddMould = ({setTemplateType}) =>{
                     ],
                     templates:[
                         {types:[git]},
-                        {types:[sourcefare,testhubo]},
+                        {types:[sourcefare,test_postin]},
                         {types:[build_gradle]},
                         {types:[liunx]}
                     ]
@@ -130,7 +130,7 @@ const PipelineAddMould = ({setTemplateType}) =>{
                     ],
                     templates:[
                         {types:[git]},
-                        {types:[sourcefare,testhubo]},
+                        {types:[sourcefare,test_postin]},
                         {types:[nodejs]},
                         {types:[liunx]}
                     ]
@@ -166,7 +166,7 @@ const PipelineAddMould = ({setTemplateType}) =>{
                     ],
                     templates:[
                         {types:[git]},
-                        {types:[sourcefare,testhubo]},
+                        {types:[sourcefare,test_postin]},
                         {types:[build_go]},
                         {types:[liunx]}
                     ]
@@ -202,7 +202,7 @@ const PipelineAddMould = ({setTemplateType}) =>{
                     ],
                     templates:[
                         {types:[git]},
-                        {types:[sourcefare,testhubo]},
+                        {types:[sourcefare,test_postin]},
                         {types:[build_python]},
                         {types:[liunx]}
                     ]
@@ -238,7 +238,7 @@ const PipelineAddMould = ({setTemplateType}) =>{
                     ],
                     templates:[
                         {types:[git]},
-                        {types:[sourcefare,testhubo]},
+                        {types:[sourcefare,test_postin]},
                         {types:[build_php]},
                         {types:[liunx]}
                     ]
@@ -274,7 +274,7 @@ const PipelineAddMould = ({setTemplateType}) =>{
                     ],
                     templates:[
                         {types:[git]},
-                        {types:[sourcefare,testhubo]},
+                        {types:[sourcefare,test_postin]},
                         {types:[build_net_core]},
                         {types:[liunx]}
                     ]
@@ -310,7 +310,7 @@ const PipelineAddMould = ({setTemplateType}) =>{
                     ],
                     templates:[
                         {types:[git]},
-                        {types:[sourcefare,testhubo]},
+                        {types:[sourcefare,test_postin]},
                         {types:[build_c_add]},
                         {types:[liunx]}
                     ]

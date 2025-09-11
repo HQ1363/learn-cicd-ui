@@ -211,7 +211,7 @@ const TestOverview = props => {
                 sm={{ span: "24" }}
                 md={{ span: "24" }}
                 lg={{ span: "24" }}
-                xl={{ span: "18", offset: "3" }}
+                xl={{ span: "22", offset: "1" }}
                 xxl={{ span: "18", offset: "3" }}
             >
                 <div className='arbess-home-limited'>
@@ -234,9 +234,9 @@ const TestOverview = props => {
                                     {count?.sourceFareNumbe || '0' }
                                 </div>
                             </div>
-                            <div className='home-count-item' onClick={()=>goPath('testHubo')}>
+                            <div className='home-count-item' onClick={()=>goPath('postIn')}>
                                 <div className='home-count-item-label'>
-                                    TestHubo
+                                   PostIn
                                 </div>
                                 <div className='home-count-item-value'>
                                     {count?.testHuboNumber || '0' }

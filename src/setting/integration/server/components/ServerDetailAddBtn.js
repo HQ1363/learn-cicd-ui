@@ -7,9 +7,9 @@
  */
 import React from "react";
 import Button from "../../../../common/component/button/Button";
-import ServerModal from "./ServerModal";
+import ServerDetailModal from "./ServerDetailModal";
 
-const ServerAddBtn = props =>{
+const ServerDetailAddBtn = props =>{
 
     const {isConfig,visible,setVisible,formValue,setFormValue,findAuth,type} = props
 
@@ -23,7 +23,6 @@ const ServerAddBtn = props =>{
         }
     }
 
-
     return(
         <>
             <Button
@@ -31,10 +30,10 @@ const ServerAddBtn = props =>{
                 type={isConfig?"row":"primary"}
                 title={isConfig?"添加":"添加服务"}
             />
-            <ServerModal
+            <ServerDetailModal
+                type={type}
                 visible={visible}
                 setVisible={setVisible}
-                type={type}
                 formValue={formValue || null}
                 findAuth={findAuth}
                 isConfig={isConfig}
@@ -43,4 +42,4 @@ const ServerAddBtn = props =>{
     )
 }
 
-export default ServerAddBtn
+export default ServerDetailAddBtn

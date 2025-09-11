@@ -6,7 +6,7 @@
  * @LastEditTime: 2025/5/26
  */
 import React,{useState,useEffect} from "react";
-import {Row, Col, Spin, Divider, Table} from "antd";
+import {Row, Col, Spin, Divider, Table, Tooltip} from "antd";
 import BreadCrumb from "../../../../common/component/breadcrumb/BreadCrumb";
 import Page from "../../../../common/component/page/Page";
 import ListEmpty from "../../../../common/component/list/ListEmpty";
@@ -22,7 +22,7 @@ import {
 } from "@ant-design/icons";
 import {PrivilegeProjectButton} from "tiklab-privilege-ui";
 
-const pageSize = 15;
+const pageSize = 10;
 
 const SonarQubeScan = (props) => {
 
@@ -96,16 +96,16 @@ const SonarQubeScan = (props) => {
     const columns = [
         {
             title: "名称",
-            dataIndex: "name",
-            key: "name",
-            width:"65%",
+            dataIndex: "id",
+            key: "id",
+            width:"34%",
             ellipsis:true,
             render:(text,record) =>{
-                const { id, status, ncloc, files, bugs, loophole } = record;
+                const { id, status } = record;
                 return (
                     <div className='data-item-left'>
                         <span className='data-item-name' onClick={()=>goSonarQube(record)}>
-                            # {text || id || '--'}
+                            # {id || '--'}
                         </span>
                         {
                             status==='OK' &&
@@ -123,28 +123,59 @@ const SonarQubeScan = (props) => {
                             status==='NONE' &&
                                 <QuestionCircleOutlined className='warn-text'/>
                         }
+                    </div>
+                )
+            }
+        },
+        {
+            title: "扫描信息",
+            dataIndex: "allTrouble",
+            key: "allTrouble",
+            width:"33%",
+            ellipsis:true,
+            render:(text,record)=>{
+                const {  ncloc, files, bugs, loophole } = record;
+                return (
+                    <Tooltip
+                        title={
+                            <div>
+                                <div className='data-item-count-tip'>
+                                    <div className='data-item-count-tip-key'>代码行数</div>
+                                    <div>{ncloc}</div>
+                                </div>
+                                <div className='data-item-count-tip'>
+                                    <div className='data-item-count-tip-key'>文件数量</div>
+                                    <div>{files}</div>
+                                </div>
+                                <div className='data-item-count-tip'>
+                                    <div className='data-item-count-tip-key'>Bug数量</div>
+                                    <div>{bugs}</div>
+                                </div>
+                                <div className='data-item-count-tip'>
+                                    <div className='data-item-count-tip-key'>漏洞数量</div>
+                                    <div>{loophole}</div>
+                                </div>
+                            </div>
+                        }
+                    >
                         <div className='data-item-count'>
-                            <div className='data-item-pass'>
-                                <span className='count-key'>代码行数</span>
+                            <div className={`data-item-pass ${ncloc > 0 ? 'text-ncloc': ''}`}>
                                 {ncloc}
                             </div>
                             <Divider type="vertical" />
-                            <div className='data-item-pass'>
-                                <span className='count-key'>文件数量</span>
+                            <div className={`data-item-pass ${files > 0 ? 'text-files': ''}`}>
                                 {files}
                             </div>
                             <Divider type="vertical" />
-                            <div className='data-item-pass'>
-                                <span className='count-key'>Bug数量</span>
+                            <div className={`data-item-pass ${bugs > 0 ? 'text-bugs': ''}`}>
                                 {bugs}
                             </div>
                             <Divider type="vertical" />
-                            <div className='data-item-fail'>
-                                <span className='count-key'>漏洞数量</span>
+                            <div className={`data-item-pass ${loophole > 0 ? 'text-loophole': ''}`}>
                                 {loophole}
                             </div>
                         </div>
-                    </div>
+                    </Tooltip>
                 )
             }
         },
@@ -152,7 +183,7 @@ const SonarQubeScan = (props) => {
             title: "扫描时间",
             dataIndex: "createTime",
             key: "createTime",
-            width:"27%",
+            width:"25%",
             ellipsis:true,
             render:text=>text || '--'
         },

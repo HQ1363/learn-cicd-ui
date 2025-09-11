@@ -5,8 +5,8 @@
  * @LastEditors: gaomengyuan
  * @LastEditTime: 2025/3/12
  */
-import React,{useEffect,useState } from "react";
-import {Form,Input,Select,Tooltip,Spin} from "antd";
+import React,{useEffect } from "react";
+import {Form,Input,Tooltip,Spin} from "antd";
 import {QuestionCircleOutlined} from "@ant-design/icons";
 import AuthType from "../../../common/AuthType";
 import serverStore from "../store/ServerStore";
@@ -19,27 +19,13 @@ import {
     serverGitlab,
     serverPriGitlab,
     serverGitpuk,
-    serverTesthubo,
-    serverSonar,
-    serverNexus,
+    serverPostIn,
     serverHadess,
-    serverSourceFare
+    serverSourceFare,
+    serverGitea,
 } from "../../../../common/utils/Constant";
 
-export const serverTitle = {
-    [serverGitee]: 'Gitee',
-    [serverGithub]: 'GitHub',
-    [serverGitlab]: 'GitLab',
-    [serverPriGitlab]: '自建GitLab',
-    [serverSonar]: 'Sonar',
-    [serverNexus]: 'Nexus',
-    [serverGitpuk]: 'GitPuk',
-    [serverTesthubo]: 'TestHubo',
-    [serverHadess]: 'Hadess',
-    [serverSourceFare]: 'SourceFare',
-}
-
-const ServerModal = props =>{
+const ServerDetailModal = props =>{
 
     const {visible,setVisible,formValue,findAuth,type, isConfig} = props
 
@@ -48,33 +34,13 @@ const ServerModal = props =>{
 
     const [form] = Form.useForm();
 
-    // 授权类型
-    const [serverWay,setServerWay] = useState(serverGitee);
 
     useEffect(()=>{
-        // 表单初始化
-        if(visible){
-            renderFormValue(formValue)
+        if(visible && formValue){
+            // 表单初始化
+            form.setFieldsValue(formValue)
         }
     },[visible])
-
-    const renderFormValue = formValue => {
-        if(formValue){
-            form.setFieldsValue(formValue)
-            setServerWay(formValue.type)
-            return
-        }
-        form.setFieldsValue({type:type})
-        setServerWay(type)
-    }
-
-    /**
-     * 改变授权类型
-     * @param value
-     */
-    const changeServerWay = value =>{
-        setServerWay(value)
-    }
 
     /**
      * 服务配置添加或者更新确定
@@ -82,11 +48,12 @@ const ServerModal = props =>{
     const onOk = () =>{
         if(skin) return
         form.validateFields().then((values) => {
+            const param = {
+                type: type,
+                ...values,
+            }
             if(formValue){
-                const param = {
-                    serverId:formValue.serverId,
-                    ...values,
-                }
+                param.serverId = formValue.serverId;
                 updateAuthServer(param).then(r=>{
                     if(r.code===0){
                         findAuth()
@@ -94,7 +61,7 @@ const ServerModal = props =>{
                     }
                 })
             } else {
-                createAuthServer(values).then(r=>{
+                createAuthServer(param).then(r=>{
                     if(r.code===0){
                         findAuth()
                         onCancel()
@@ -116,14 +83,11 @@ const ServerModal = props =>{
 
     /**
      * 服务地址是否禁用
-     * @returns {boolean}
      */
-    const serverAddressDisabled = () =>
-        [serverGitpuk, serverHadess, serverTesthubo, serverSourceFare].includes(formValue?.type)
-        && version === 'cloud';
+    const serverAddressDisabled = [serverGitpuk, serverHadess, serverPostIn, serverSourceFare].includes(type) && version === 'cloud'
 
     const serverWayHtml = () => {
-        switch (serverWay) {
+        switch (type) {
             case serverGitee:
             case serverGithub:
             case serverGitlab:
@@ -139,20 +103,21 @@ const ServerModal = props =>{
                     </Form.Item>
                 )
             case serverPriGitlab:
+            case serverGitea:
                 return (
                     <>
                         <Form.Item
                             name={'serverAddress'}
-                            label={'Gitlab服务器地址'}
+                            label={'服务器地址'}
                             rules={[
                                 {required:true,message:"Gitlab服务器地址不能空"},
                                 {
                                     pattern:/^(https?:\/\/)[^\s\/]+(\.[^\s\/]+)+(\/[^\s\/]*)*[^\s\/\\.,。，、;:'"?!]$/,
-                                    message:"请输入正确的Gitlab服务器地址"
+                                    message:"请输入正确的服务器地址"
                                 }
                             ]}
                         >
-                            <Input placeholder={'Gitlab服务器地址，如 http://172.13.1.10:80'}/>
+                            <Input placeholder={'服务器地址，如 http://172.13.1.10:80'}/>
                         </Form.Item>
                         <Form.Item
                             name={'accessToken'}
@@ -184,18 +149,13 @@ const ServerModal = props =>{
                                 }
                             ]}
                         >
-                            <Input disabled={serverAddressDisabled()} type={"url"} placeholder={'服务器地址'}/>
+                            <Input disabled={serverAddressDisabled} type={"url"} placeholder={'服务器地址'}/>
                         </Form.Item>
                         <AuthType/>
                     </>
                 )
         }
     }
-
-    const authTypeList = version==='cloud' ?
-        [serverGitee,serverGithub,serverGitlab,serverPriGitlab,serverSonar,serverNexus]
-        :
-        [serverGitee,serverGithub,serverGitlab,serverPriGitlab,serverGitpuk,serverTesthubo,serverSonar,serverNexus,serverHadess,serverSourceFare];
 
     return(
         <Modals
@@ -210,17 +170,8 @@ const ServerModal = props =>{
                         form={form}
                         layout="vertical"
                         autoComplete="off"
-                        initialValues={{type:type,authWay:1,authType:1}}
+                        initialValues={{authWay:1,authType:1}}
                     >
-                        <Form.Item name="type" label="授权类型">
-                            <Select onChange={changeServerWay} disabled={formValue || isConfig}>
-                                {
-                                    authTypeList.map(code=>(
-                                        <Select.Option value={code} key={code}>{serverTitle[code]}</Select.Option>
-                                    ))
-                                }
-                            </Select>
-                        </Form.Item>
                         <Form.Item
                             name="name"
                             label="名称"
@@ -236,4 +187,4 @@ const ServerModal = props =>{
     )
 }
 
-export default ServerModal
+export default ServerDetailModal

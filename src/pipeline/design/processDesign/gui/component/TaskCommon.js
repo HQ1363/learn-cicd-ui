@@ -26,6 +26,7 @@ import pip_host_order from "../../../../../assets/images/svg/pip_host_order.svg"
 import pip_host_strategy from "../../../../../assets/images/svg/pip_host_strategy.svg";
 import pip_gradle from "../../../../../assets/images/svg/pip_gradle.svg";
 import pip_c_add from "../../../../../assets/images/svg/pip_c_add.svg";
+import pip_gitea from "../../../../../assets/images/svg/pip_gitea.svg";
 import {productImg} from "tiklab-core-ui";
 import {
     git,
@@ -66,7 +67,7 @@ import {
     docker_blue_green,
     k8s_blue_green,
     build_gradle,
-    build_c_add,
+    build_c_add, code_gitea, test_postin,
 } from '../../../../../common/utils/Constant';
 
 /**
@@ -84,8 +85,10 @@ export const taskTitle = type =>{
         case pri_gitlab:  return "自建GitLab"
         case svn:  return "SVN"
         case gitpuk:  return "自建GitPuk"
+        case code_gitea:  return "Gitea"
         case maventest: return "Maven单元测试"
         case testhubo: return "TestHubo自动化测试"
+        case test_postin: return "PostIn自动化测试"
         case mvn: return "Maven构建"
         case nodejs: return "Node.Js构建"
         case build_docker: return "Docker构建"
@@ -136,8 +139,10 @@ export const TaskIcon = props =>{
             case pri_gitlab: return pip_gitlab
             case svn: return pip_svn
             case gitpuk: return productImg.gitpuk
+            case code_gitea: return pip_gitea
             case maventest: return pip_ceshi
             case testhubo: return productImg.testhubo
+            case test_postin: return productImg.postin
             case mvn: return maven
             case nodejs: return pip_nodejs
             case build_docker: return pip_docker
@@ -192,6 +197,7 @@ export const HeadlineTitle = type =>{
         case gitpuk:
         case gitee:
         case github:
+        case code_gitea:
             return '源码'
         case sonar:
         case spotbugs:
@@ -199,6 +205,7 @@ export const HeadlineTitle = type =>{
             return '代码扫描'
         case maventest:
         case testhubo:
+        case test_postin:
             return '测试'
         case mvn:
         case nodejs:

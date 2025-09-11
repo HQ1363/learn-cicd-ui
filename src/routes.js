@@ -52,10 +52,12 @@ import {
     Auth,
     Host,
     HostGroup,
-    Tool,
     Resources,
     Agent,
     Server,
+    ServerDetail,
+    Tool,
+    ToolDetail,
     K8s,
     Variable,
 
@@ -245,7 +247,7 @@ const routers=[
                                 exact: true,
                             },
                             {
-                                path:"/pipeline/:id/test/testHubo",
+                                path:"/pipeline/:id/test/postIn",
                                 component: TestHubo,
                                 exact: true,
                             },
@@ -359,8 +361,18 @@ const routers=[
                         exact: true,
                     },
                     {
+                        path:"/setting/tool/:type",
+                        component: ToolDetail,
+                        exact: true,
+                    },
+                    {
                         path: "/setting/server",
                         component: Server,
+                        exact: true,
+                    },
+                    {
+                        path: "/setting/server/:type",
+                        component: ServerDetail,
                         exact: true,
                     },
                     {

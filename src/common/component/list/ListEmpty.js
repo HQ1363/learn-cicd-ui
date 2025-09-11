@@ -10,12 +10,12 @@ import {Empty} from "antd";
 
 const ListEmpty = props =>{
 
-    const {title} = props
+    const {description} = props
 
     return (
         <Empty
             className='arbess-list-empty'
-            description={title ? title : "没有查询到数据"}
+            description={description ? description : "没有查询到数据"}
         />
     )
 
