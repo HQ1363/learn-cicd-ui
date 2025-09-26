@@ -111,7 +111,7 @@ const Overview = props =>{
         })
         //实例统计
         setSpinning(pev=>({...pev, instanceTrend: true}));
-        findPipelineInstanceCount(pipelineId).then(res=>{
+        findPipelineInstanceCount({pipelineId}).then(res=>{
             if(res.code===0){
                 setInstanceCount(res.data);
                 renderInstanceCountChart(res.data);

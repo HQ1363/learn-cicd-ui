@@ -86,7 +86,6 @@ const BasicInfo = props =>{
             title:"流水线信息",
             desc: "更新流水线信息",
             icon: <EditOutlined />,
-            enCode:"pipeline_update",
             content: (
                 <div className="bottom-rename">
                     <PipelineAddInfo
@@ -129,7 +128,6 @@ const BasicInfo = props =>{
             title:"流水线删除",
             desc: "删除流水线",
             icon: <DeleteOutlined />,
-            enCode: "pipeline_delete",
             content: (
                 <div className="bottom-delete">
                     <div style={{color:"#ff0000",paddingBottom:5,fontSize:13}}>

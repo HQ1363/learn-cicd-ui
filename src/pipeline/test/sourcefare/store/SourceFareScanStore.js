@@ -18,6 +18,20 @@ class SourceFareScanStore {
      * @returns {Promise<unknown>}
      */
     @action
+    findSourceFareProjectList = async value =>{
+        const data = await Axios.post('/sourceFare/remote/findSourceFareProjectList',value)
+        if(data.code !==0 ){
+            message.error(data.msg)
+        }
+        return data;
+    }
+
+    /**
+     * 获取SourceFare
+     * @param value
+     * @returns {Promise<unknown>}
+     */
+    @action
     findSourceFareScanPage = async value =>{
         return await Axios.post('/sourceFareScan/findSourceFareScanPage',value)
     }

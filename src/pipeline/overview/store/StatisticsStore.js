@@ -53,9 +53,7 @@ class StatisticsStore {
      */
     @action
     findPipelineInstanceCount = async data => {
-        const value = new FormData();
-        value.append('pipelineId',data)
-        return await Axios.post('/pipeline/count/findPipelineInstanceCount',value);
+        return await Axios.post('/pipeline/count/findPipelineInstanceCount',data);
     }
 
 

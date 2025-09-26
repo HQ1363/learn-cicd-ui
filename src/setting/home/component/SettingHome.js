@@ -106,7 +106,7 @@ const SettingHome = props => {
             <div className='home-message-box'>
                 <div className='home-title'>消息</div>
                 <div className='home-message'>
-                    <div className='home-message-item' onClick={()=>goPath('notice')}>
+                    <div className='home-message-item' onClick={()=>goPath('message')}>
                         <div className='home-left'>
                             <div className='home-icon'><MessageOutlined/></div>
                             <div className='home-label'>消息通知方案</div>
@@ -115,7 +115,7 @@ const SettingHome = props => {
                             {count?.noticeNumber || 0}
                         </div>
                     </div>
-                    <div className='home-message-item' onClick={()=>goPath('send')}>
+                    <div className='home-message-item' onClick={()=>goPath('message')}>
                         <div className='home-left'>
                             <div className='home-icon'><AlertOutlined /></div>
                             <div className='home-label'>消息发送方式</div>

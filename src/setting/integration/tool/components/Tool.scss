@@ -61,3 +61,38 @@
     }
   }
 }
+
+.tool-modal{
+  .tool-online-download{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .online-download-red{
+      color: #ff4d4f;
+    }
+    .online-download-blue{
+      color: var(--tiklab-blue);
+    }
+    .online-download-delete{
+      cursor: pointer;
+    }
+  }
+}
+
+.tool-online-modal{
+  .ant-table{
+    border: none !important;
+    .ant-table-tbody > tr > td{
+      border-bottom: 1px solid #f0f0f0 !important;
+    }
+  }
+  .version-download-btn{
+    cursor: pointer;
+    font-size: 16px;
+    &-ban{
+      cursor: not-allowed;
+      color: #999999;
+      font-size: 16px;
+    }
+  }
+}

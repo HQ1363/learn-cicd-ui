@@ -84,6 +84,34 @@ class ToolStore {
         return await Axios.post("/scm/findScmByTypeGroup")
     }
 
+    /**
+     * 下载
+     * @returns {Promise<*>}
+     */
+    @action
+    downloadFile = async value =>{
+        return await Axios.post("/scm/file/downloadFile",value)
+    }
+
+    /**
+     * 下载
+     * @returns {Promise<*>}
+     */
+    @action
+    downloadAndInstall = async value=>{
+        return await Axios.post("/scm/file/downloadAndInstall",value)
+    }
+
+    /**
+     * 下载状态
+     * @returns {Promise<*>}
+     */
+    @action
+    findScmRemoteFile = async value=>{
+        const param = new FormData()
+        param.append("id",value)
+        return await Axios.post("/scm/file/findScmRemoteFile",param)
+    }
 
 }
 

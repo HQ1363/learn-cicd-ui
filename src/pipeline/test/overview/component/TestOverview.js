@@ -231,7 +231,7 @@ const TestOverview = props => {
                                     SourceFare
                                 </div>
                                 <div className='home-count-item-value'>
-                                    {count?.sourceFareNumbe || '0' }
+                                    {count?.sourceFareNumber || '0' }
                                 </div>
                             </div>
                             <div className='home-count-item' onClick={()=>goPath('postIn')}>

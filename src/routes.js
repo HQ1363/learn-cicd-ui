@@ -62,7 +62,6 @@ import {
     Variable,
 
     Message,
-    MyLog,
     BackupRestore,
     RequestError,
 
@@ -388,11 +387,6 @@ const routers=[
                     {
                         path:"/setting/backups",
                         component: BackupRestore,
-                        exact: true,
-                    },
-                    {
-                        path:"/setting/myLog",
-                        component: MyLog,
                         exact: true,
                     },
                     {

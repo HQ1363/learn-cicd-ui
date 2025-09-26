@@ -1,6 +1,7 @@
 .trigger{
     display: flex;
     flex-direction: column;
+    min-width: 576px;
     .trigger-box{
         flex: 1;
     }
@@ -52,6 +53,14 @@
             }
             .CodeMirror-sizer{
                 padding: 10px !important;
+            }
+            .CodeMirror-hscrollbar{
+                overflow-x: hidden;
+            }
+            &:hover{
+                .CodeMirror-hscrollbar{
+                    overflow-x: auto;
+                }
             }
             .webhook-tip-command-copy{
                 position: absolute;

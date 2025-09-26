@@ -215,7 +215,7 @@ const ToolDetail = props =>{
             </Col>
         </Row>
     ) : (
-        <Row className="server arbess-home-limited">
+        <Row className="tool arbess-home-limited">
             <Col
                 xs={{ span: "24" }}
                 sm={{ span: "24" }}

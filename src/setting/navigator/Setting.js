@@ -143,11 +143,6 @@ const applicationRouters =  [
                 title:"备份与恢复",
                 purviewCode:"backups_and_recover",
             },
-            {
-                id:"/setting/myLog",
-                title:"操作日志",
-                purviewCode:'log',
-            },
         ]
     },
     {

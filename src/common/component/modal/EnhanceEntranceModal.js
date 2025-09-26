@@ -38,7 +38,7 @@ const EnhanceEntranceModal = (props) => {
     // 处理模式为page时的显示逻辑
     if (mode === "page") {
         return disableFunction() ? (
-            <div className="arbess-enhance-entrance-modal">
+            <div className="arbess-enhance-entrance-modal arbess-enhance-entrance-modal-page">
                 <div className='enhance-entrance-modal'>
                     <div className='enhance-entrance-modal-content'>
                         <EnhanceModalContent config={config} />
@@ -72,7 +72,7 @@ const EnhanceEntranceModal = (props) => {
     }, [visible]);
 
     return (
-        <div className={`arbess-enhance-entrance-modal ${visible ? "" : "arbess-enhance-entrance-modal-hidden"}`}>
+        <div className={`arbess-enhance-entrance-modal ${visible ? "arbess-enhance-entrance-modal-block" : "arbess-enhance-entrance-modal-hidden"}`}>
             <div className='enhance-entrance-modal'>
                 <div className='enhance-entrance-modal-content'>
                     <EnhanceModalContent config={config} contentRef={modalRef} />

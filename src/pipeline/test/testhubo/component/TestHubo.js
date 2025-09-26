@@ -103,7 +103,7 @@ const TestHubo = props => {
             width:"37%",
             ellipsis:true,
             render:(text,record) =>{
-                const {execStatus} = record;
+                const {execStatus,status} = record;
                 return (
                     <div className='data-item-left'>
                         <span

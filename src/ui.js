@@ -76,7 +76,6 @@ const MessageNotice=AsyncComponent(()=>import("./setting/message/MessageNotice")
 const DomainMessageNotice=AsyncComponent(()=>import("./setting/message/DomainMessageNotice"))
 
 // security
-const MyLog=AsyncComponent(()=>import("./setting/security/MyLog"))
 const BackupRestore=AsyncComponent(()=>import("./setting/security/BackupRestore"))
 const RequestError=AsyncComponent(()=>import("./setting/security/RequestError"))
 
@@ -193,7 +192,6 @@ export {
     Message,
     MessageSendType,
     MessageNotice,
-    MyLog,
     BackupRestore,
     RequestError,
 

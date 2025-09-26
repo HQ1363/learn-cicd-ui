@@ -1,6 +1,7 @@
 .variable{
     display: flex;
     flex-direction: column;
+    min-width: 576px;
     .variable-box{
         flex: 1;
     }

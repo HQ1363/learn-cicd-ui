@@ -183,8 +183,7 @@ const PortalMessage = props =>{
             <div className="messageModal">
                 <div className="messageModal-up">
                     <div className="messageModal-up-title">
-                        <span className="messageModal-up-icon"><BellOutlined/></span>
-                        <span>消息</span>
+                        消息
                     </div>
                     <Button title={<CloseOutlined />} type="text" onClick={onClose}/>
                 </div>
