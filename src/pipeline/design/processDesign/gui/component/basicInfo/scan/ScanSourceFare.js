@@ -110,6 +110,9 @@ const ScanSourceFare = props =>{
                             <Select.Option value={'java'}>Java</Select.Option>
                             <Select.Option value={'javascript'}>JavaScript</Select.Option>
                             <Select.Option value={'go'}>Go</Select.Option>
+                            <Select.Option value={'python'}>Python</Select.Option>
+                            <Select.Option value={'c3'}>c#</Select.Option>
+                            <Select.Option value={'c-cadd'}>c/c++</Select.Option>
                         </FormsSelect>
                         {
                             dataItem?.task?.codeType === 'java' &&

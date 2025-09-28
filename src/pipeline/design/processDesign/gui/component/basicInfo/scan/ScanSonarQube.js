@@ -56,8 +56,8 @@ const ScanSonarQube = props =>{
             }
             <FormsInput
                 name={"projectName"}
-                placeholder={"项目名称"}
-                label={"项目名称"}
+                placeholder={"项目Key"}
+                label={"项目Key"}
                 isRequire={true}
             />
             <FormsInput

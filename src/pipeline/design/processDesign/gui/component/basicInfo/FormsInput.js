@@ -34,9 +34,11 @@ const FormsInput = props =>{
     },[enter])
 
     // Git正则表达
-    const validCodeGit = /^(http(s)?:\/\/([^\/]+?\/){2}|git@[^:]+:[^\/]+?\/).*?\.git$/
+    const validCodeGit = /^(http(s)?:\/\/([^\/]+?\/){2}|git@[^:]+:[^\/]+?\/).*?\.git$/;
     // Svn正则表达
-    const validCodeSvn = /^svn(\+ssh)?:\/\/([^\/]+?\/){2}.*$/
+    const validCodeSvn = /^svn(\+ssh)?:\/\/([^\/]+?\/){2}.*$/;
+    // 项目key正则表达
+    const validScanProjectName = /^[A-Za-z]+$/;
 
     /**
      * form效验
@@ -50,10 +52,12 @@ const FormsInput = props =>{
             case "codeName":
                 if(type==='svn'){
                     return validCodeSvn.test(value)
-                } else if(type==='git'||type==='gitlab'){
+                } else if(type==='git' || type==='gitlab'){
                     return validCodeGit.test(value)
                 }
                 break
+            case "projectName":
+                return validScanProjectName.test(value)
             default:
                 if(isRequire){
                     return value && value.trim() !== ""
@@ -112,6 +116,12 @@ const FormsInput = props =>{
         if (name==="priKey"){
             rule = [
                 { required: true, message: `${label}不能为空` },
+            ]
+        }
+        if (name==='projectName'){
+            rule = [
+                { required: true, message: `${label}不能为空`},
+                { pattern: validScanProjectName, message: "项目Key只能输入英文"}
             ]
         }
         return rule;
