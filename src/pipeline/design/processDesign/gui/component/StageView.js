@@ -6,7 +6,7 @@
  * @LastEditTime: 2025/3/11
  */
 import React,{Fragment} from "react";
-import {EditOutlined, ExclamationCircleOutlined} from "@ant-design/icons";
+import {EditOutlined, ExclamationCircleOutlined, PlusOutlined} from "@ant-design/icons";
 import {observer,inject} from "mobx-react";
 import {TaskIcon} from "./TaskCommon";
 import ListEmpty from "../../../../../common/component/list/ListEmpty";
@@ -53,9 +53,8 @@ const StageView = props =>{
                 <div className="newStages-multi">
                     {
                         group && group.stageList && group.stageList.map((list,listIndex)=>{
-                            const isLastClass = (groupIndex === stageList?.length-1) && group.stageList.length === 1;
                             return(
-                               <div key={listIndex} className={`${!group.code?"multi-content":""} ${isLastClass ? 'view-last-content':''}`}>
+                               <div key={listIndex} className={`${!group.code?"multi-content":""}`}>
                                    <div className={`newStages-contents ${group.code?"newStages-code":""}`}>
                                        <div className="newStages-content">
                                            {
@@ -100,6 +99,8 @@ const StageView = props =>{
                             )
                         })
                     }
+                    <div className="multi-content add-newStages-contents">
+                    </div>
                 </div>
             </div>
         </Fragment>

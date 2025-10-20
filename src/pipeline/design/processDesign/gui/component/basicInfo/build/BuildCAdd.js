@@ -9,6 +9,8 @@ import React from "react";
 import FormsMirror from "../FormsMirror";
 import FormsInput from "../FormsInput";
 import {observer} from "mobx-react";
+import {toolCAdd} from "../../../../../../../common/utils/Constant";
+import FormsTool from "../FormsTool";
 
 const BuildCAdd = props =>{
 
@@ -36,17 +38,20 @@ const BuildCAdd = props =>{
 
     return(
         <>
+            <FormsTool
+                scmType={toolCAdd}
+            />
             <FormsInput
                 name={"buildAddress"}
                 placeholder={`"\/\" 代表当前源的根目录`}
-                label={"模块地址"}
+                label={"构建路径"}
                 addonBefore={"/"}
                 tipText={true}
             />
             <FormsMirror
                 name={"buildOrder"}
-                label={"执行命令"}
-                placeholder={"执行命令"}
+                label={"构建命令"}
+                placeholder={"构建命令"}
                 language={'cAdd'}
                 defineMode={defineMode}
             />

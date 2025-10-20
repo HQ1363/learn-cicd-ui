@@ -85,7 +85,7 @@ class ToolStore {
     }
 
     /**
-     * 下载
+     * 下载在线安装包
      * @returns {Promise<*>}
      */
     @action
@@ -94,7 +94,7 @@ class ToolStore {
     }
 
     /**
-     * 下载
+     * 下载在线安装包
      * @returns {Promise<*>}
      */
     @action
@@ -103,7 +103,7 @@ class ToolStore {
     }
 
     /**
-     * 下载状态
+     * 在线安装状态
      * @returns {Promise<*>}
      */
     @action
@@ -111,6 +111,17 @@ class ToolStore {
         const param = new FormData()
         param.append("id",value)
         return await Axios.post("/scm/file/findScmRemoteFile",param)
+    }
+
+    /**
+     * 全局安装检测路径
+     * @returns {Promise<*>}
+     */
+    @action
+    findEnvInfo = async value=>{
+        const param = new FormData()
+        param.append("type",value)
+        return await Axios.post("/scm/findEnvInfo",param)
     }
 
 }

@@ -67,6 +67,11 @@
         .taskForm-forms{
             padding-top: var(--tiklab-padding-item);
             padding-bottom: var(--tiklab-padding);
+            .taskForm-forms-config-title{
+                font-weight: 600;
+                margin-bottom: 10px;
+                font-size: 15px;
+            }
         }
         .body-taskForm-high{
             display: flex;

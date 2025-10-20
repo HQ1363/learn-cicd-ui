@@ -14,7 +14,9 @@ import {
     toolGo,
     toolK8s,
     toolSonarScanner,
-    toolSourceFareScanner
+    toolSourceFareScanner,
+    toolPhp,
+    toolPython, toolNetCore, toolCAdd
 } from "../../../../common/utils/Constant";
 import maven from "../../../../assets/images/maven.png";
 import pip_jdk from "../../../../assets/images/svg/pip_jdk.svg";
@@ -24,6 +26,10 @@ import pip_nodejs from "../../../../assets/images/svg/pip_nodejs.svg";
 import pip_go from "../../../../assets/images/svg/pip_go.svg";
 import pip_k8s from "../../../../assets/images/svg/pip_k8s.svg";
 import pip_sonar from "../../../../assets/images/svg/pip_sonar.svg";
+import pip_python from "../../../../assets/images/svg/pip_python.svg";
+import pip_c_add from "../../../../assets/images/svg/pip_c_add.svg";
+import pip_php from "../../../../assets/images/svg/pip_php.svg";
+import pip_net_core from "../../../../assets/images/svg/pip_net_core.svg";
 import {productImg} from "tiklab-core-ui";
 
 //工具类型
@@ -37,6 +43,10 @@ export const scmList = [
     toolK8s,
     toolSonarScanner,
     toolSourceFareScanner,
+    toolPython,
+    toolPhp,
+    toolNetCore,
+    toolCAdd,
 ];
 
 //工具名称
@@ -48,8 +58,12 @@ export const scmTitle = {
     [toolNode]: 'Node',
     [toolGo]: 'Go',
     [toolK8s]: 'kubectl',
-    [toolSonarScanner]: 'Sonar Scanner',
-    [toolSourceFareScanner]: 'SourceFare Scanner',
+    [toolSonarScanner]: 'SonarQube scanner',
+    [toolSourceFareScanner]: 'SourceFare scanner',
+    [toolPython]: 'Python',
+    [toolPhp]: 'PHP',
+    [toolNetCore]: '.Net Core',
+    [toolCAdd]: 'C++',
 };
 
 //工具类型
@@ -61,8 +75,12 @@ export const scmNameSuffix = {
     [toolNode]: 'Nodejs',
     [toolGo]: 'Go',
     [toolK8s]: 'kubectl',
-    [toolSonarScanner]: 'Sonar',
+    [toolSonarScanner]: 'SonarQube',
     [toolSourceFareScanner]: 'SourceFare',
+    [toolPython]: 'Other',
+    [toolPhp]: 'Other',
+    [toolNetCore]: 'Other',
+    [toolCAdd]: 'Other',
 };
 
 //工具图片
@@ -76,6 +94,10 @@ export const scmImage = {
     [toolK8s]: pip_k8s,
     [toolSonarScanner]: pip_sonar,
     [toolSourceFareScanner]: productImg.sourcefare,
+    [toolPython]: pip_python,
+    [toolPhp]: pip_php,
+    [toolNetCore]: pip_net_core,
+    [toolCAdd]: pip_c_add,
 }
 
 //工具说明
@@ -87,6 +109,6 @@ export const scmPlaceholder = {
     [toolNode]: '请输入Node安装路径，如 D:\\Node-v18.20.7\\bin',
     [toolGo]: '请输入Go安装路径，如 D:\\Go-v18.20.7\\bin',
     [toolK8s]: '请输入kubectl安装路径，如 D:\\kubectl-v18.20.7\\kubectl',
-    [toolSonarScanner]: '请输入Sonar Scanner安装路径，如 D:\\sonar-v18.20.7\\bin',
-    [toolSourceFareScanner]: '请输入SourceFare Scanner安装路径，如 D:\\sourceFare-v18.20.7\\bin',
+    [toolSonarScanner]: '请输入SonarQube scanner安装路径，如 D:\\sonar-v18.20.7\\bin',
+    [toolSourceFareScanner]: '请输入SourceFare scanner安装路径，如 D:\\sourceFare-v18.20.7\\bin',
 };

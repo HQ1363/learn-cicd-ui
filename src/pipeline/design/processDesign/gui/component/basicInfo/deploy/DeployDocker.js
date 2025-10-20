@@ -31,8 +31,8 @@ const DeployDocker = props =>{
             />
             <FormsMirror
                 name={"deployOrder"}
-                label={"启动命令"}
-                placeholder={"启动命令"}
+                label={"部署命令"}
+                placeholder={"部署命令"}
             />
         </>
     )

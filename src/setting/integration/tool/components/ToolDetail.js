@@ -120,7 +120,7 @@ const ToolDetail = props =>{
             title:"名称",
             dataIndex:"scmName",
             key:"scmName",
-            width:"35%",
+            width:"25%",
             ellipsis:true,
             render:text => (
                 <span>
@@ -130,10 +130,25 @@ const ToolDetail = props =>{
             )
         },
         {
+            title:"安装方式",
+            dataIndex:"addType",
+            key:"addType",
+            width:"15%",
+            ellipsis:true,
+            render: text => (
+                <>
+                    {text==='global'&& '全局安装'}
+                    {text==='local'&& '指定路径安装'}
+                    {text==='pkg'&& '安装包安装'}
+                    {text==='online'&& '安装包安装'}
+                </>
+            )
+        },
+        {
             title:"地址",
             dataIndex:"scmAddress",
             key:"scmAddress",
-            width:"55%",
+            width:"50%",
             ellipsis:true,
         },
         {

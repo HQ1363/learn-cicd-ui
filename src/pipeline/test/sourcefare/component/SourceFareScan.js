@@ -96,7 +96,7 @@ const SourceFareScan = (props) => {
             title: "名称",
             dataIndex: "id",
             key: "id",
-            width:"34%",
+            width:"30%",
             ellipsis:true,
             render:(text,record) =>{
                 const { status } = record;
@@ -121,10 +121,10 @@ const SourceFareScan = (props) => {
             title: "扫描信息",
             dataIndex: "allTrouble",
             key: "allTrouble",
-            width:"33%",
+            width:"37%",
             ellipsis:true,
             render:(text,record)=>{
-                const { allTrouble, severityTrouble, noticeTrouble, suggestTrouble } = record;
+                const { allTrouble, severityTrouble, noticeTrouble, suggestTrouble, errorTrouble } = record;
                 return (
                     <Tooltip
                         title={
@@ -132,6 +132,10 @@ const SourceFareScan = (props) => {
                                 <div className='data-item-count-tip'>
                                     <div className='data-item-count-tip-key'>总数</div>
                                     <div>{allTrouble}</div>
+                                </div>
+                                <div className='data-item-count-tip'>
+                                    <div className='data-item-count-tip-key'>错误问题</div>
+                                    <div>{errorTrouble}</div>
                                 </div>
                                 <div className='data-item-count-tip'>
                                     <div className='data-item-count-tip-key'>严重问题</div>
@@ -151,6 +155,10 @@ const SourceFareScan = (props) => {
                         <div className='data-item-count'>
                             <div className={`data-item-pass ${allTrouble > 0 ? 'text-all': ''}`}>
                                 {allTrouble}
+                            </div>
+                            <Divider type="vertical" />
+                            <div className={`data-item-pass ${errorTrouble > 0 ? 'text-error': ''}`}>
+                                {errorTrouble}
                             </div>
                             <Divider type="vertical" />
                             <div className={`data-item-pass ${severityTrouble > 0 ? 'text-severity': ''}`}>

@@ -79,6 +79,10 @@ export const toolGo = 'go';
 export const toolK8s = 'k8s';
 export const toolSonarScanner = 'sonar-scanner';
 export const toolSourceFareScanner = 'sourcefare-scanner';
+export const toolPython = 'python';
+export const toolPhp = 'php';
+export const toolNetCore = 'net_core';
+export const toolCAdd = 'c_add';
 
 /**
  * 权限

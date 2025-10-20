@@ -50,6 +50,7 @@ const FormsAuth = props =>{
     const {findKubectlList} = k8sStore;
     const {updateTask, dataItem: {taskType = ''} = {}} = taskStore;
 
+
     //弹出框
     const [visible,setVisible] = useState(false);
     //选择框列表
@@ -181,18 +182,18 @@ const FormsAuth = props =>{
             case liunx:
             case docker:
             case host_order:
-                return "主机地址"
+                return "部署主机"
             case k8s:
-                return "集群地址"
+                return "集群路径"
             case upload_hadess:
             case download_hadess:
                 return 'Hadess服务'
             case upload_ssh:
             case upload_nexus:
-                return "上传地址"
+                return "上传主机"
             case download_ssh:
             case download_nexus:
-                return '下载地址'
+                return '下载主机'
         }
     }
 

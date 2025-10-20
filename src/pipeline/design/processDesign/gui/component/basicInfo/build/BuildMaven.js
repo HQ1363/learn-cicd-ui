@@ -25,14 +25,14 @@ const BuildMaven = props =>{
             <FormsInput
                 name={"buildAddress"}
                 placeholder={`"\/\" 代表当前源的根目录`}
-                label={"模块地址"}
+                label={"构建路径"}
                 addonBefore={"/"}
                 tipText={true}
             />
             <FormsMirror
                 name={"buildOrder"}
-                label={"执行命令"}
-                placeholder={"执行命令"}
+                label={"构建命令"}
+                placeholder={"构建命令"}
             />
         </>
     )

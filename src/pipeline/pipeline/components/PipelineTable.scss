@@ -30,11 +30,13 @@
     }
 }
 
-.dropdown-more-setting{
-    margin-bottom: 3px;
-    padding-bottom: 3px;
-    border-bottom: 1px solid var(--arbess-border-color);
-    .dropdown-more-item-setting{
+.dropdown-more-item{
+    &-line{
+        margin-bottom: 3px;
+        padding-bottom: 3px;
+        border-bottom: 1px solid var(--arbess-border-color);
+    }
+    &-setting{
         display: flex;
         align-items: center;
         gap: 1px;

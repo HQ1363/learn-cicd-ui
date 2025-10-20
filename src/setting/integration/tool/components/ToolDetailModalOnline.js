@@ -12,6 +12,7 @@ import toolStore from "../store/ToolStore";
 import {scmTitle} from "./ToolCommon";
 import homesStore from "../store/HomesStore";
 import ListEmpty from "../../../../common/component/list/ListEmpty";
+import {toolGit,toolSvn,toolJdk} from "../../../../common/utils/Constant";
 
 const ToolDetailModalOnline = props =>{
 
@@ -28,7 +29,7 @@ const ToolDetailModalOnline = props =>{
     useEffect(() => {
         if(onlineVisible){
             findToolsType({
-                type: scmType==='jdk' ? "openjdk" : scmType
+                type: scmType===toolJdk ? "openjdk" : scmType
             }).then(res=>{
                 if(res.data.length > 0){
                     const data = res.data[0];
@@ -61,7 +62,7 @@ const ToolDetailModalOnline = props =>{
             id: id
         }
         let res;
-        if(['git','svn'].includes(scmType)){
+        if([toolGit,toolSvn].includes(scmType)){
             res = await downloadFile(values)
         } else {
             res = await downloadAndInstall(values)

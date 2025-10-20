@@ -12,12 +12,16 @@ import "./Tool.scss";
 import {scmTitle, scmImage} from "./ToolCommon";
 import {RightOutlined} from "@ant-design/icons";
 import {
+    toolCAdd,
     toolGit,
     toolGo,
     toolJdk,
     toolK8s,
     toolMaven,
+    toolNetCore,
     toolNode,
+    toolPhp,
+    toolPython,
     toolSonarScanner,
     toolSourceFareScanner,
     toolSvn
@@ -39,12 +43,10 @@ const scmList = [
             toolMaven,
             toolNode,
             toolGo,
-        ],
-    },
-    {
-        title: '容器',
-        list: [
-            toolK8s,
+            toolPython,
+            toolPhp,
+            toolNetCore,
+            toolCAdd,
         ],
     },
     {
@@ -52,6 +54,12 @@ const scmList = [
         list: [
             toolSourceFareScanner,
             toolSonarScanner,
+        ],
+    },
+    {
+        title: 'Kubernetes',
+        list: [
+            toolK8s,
         ],
     },
 ]

@@ -12,10 +12,11 @@ import FormsInput from "../FormsInput";
 import FormsSelect from "../FormsSelect";
 import FormsTool from "../FormsTool";
 import {
+    toolCAdd,
     toolGo,
     toolJdk,
-    toolMaven,
-    toolNode,
+    toolMaven, toolNetCore,
+    toolNode, toolPython,
     toolSourceFareScanner
 } from "../../../../../../../common/utils/Constant";
 import FormsAuth from "../FormsAuth";
@@ -28,8 +29,13 @@ const ScanSourceFare = props =>{
     const {updateTask, dataItem} = taskStore;
     const {findSourceFareProjectList} = sourceFareScanStore;
 
+    //扫描项目
     const [projectList,setProjectList] = useState([]);
 
+    /**
+     * 获取扫描项目
+     * @param scanWay
+     */
     const onFocus = (scanWay) => {
         const authId = dataItem.task?.authId
         if(!authId) return;
@@ -72,6 +78,16 @@ const ScanSourceFare = props =>{
         })
     }
 
+    //扫描代码语言所需工具
+    const codeTypeTools = {
+        java: [toolJdk, toolMaven],
+        javascript: [toolNode],
+        go: [toolGo],
+        python: [toolPython],
+        c3: [toolNetCore],
+        'c-cadd': [toolCAdd]
+    };
+
     return (
         <>
             <FormsSelect
@@ -89,7 +105,7 @@ const ScanSourceFare = props =>{
                         <FormsSelect
                             rules={[{required:true, message:"扫描项目不能为空"}]}
                             name={"scanProjectName"}
-                            label={"扫描项目"}
+                            label={"项目Key"}
                             onFocus={()=>onFocus('server')}
                             onChange={(value,option)=>changeProjectName(option)}
                         >
@@ -102,6 +118,10 @@ const ScanSourceFare = props =>{
                     </>
                     :
                     <>
+                        <div className='taskForm-forms-config-title'>SourceFare scanner配置</div>
+                        <FormsTool
+                            scmType={toolSourceFareScanner}
+                        />
                         <FormsSelect
                             name={"codeType"}
                             label="扫描代码语言"
@@ -115,36 +135,34 @@ const ScanSourceFare = props =>{
                             <Select.Option value={'c-cadd'}>c/c++</Select.Option>
                         </FormsSelect>
                         {
-                            dataItem?.task?.codeType === 'java' &&
-                            <>
-                                <FormsTool
-                                    scmType={toolJdk}
-                                />
-                                <FormsTool
-                                    scmType={toolMaven}
-                                />
-                            </>
+                            dataItem?.task?.codeType && codeTypeTools[dataItem.task.codeType]?.map((tool, index) => (
+                                <FormsTool key={index} scmType={tool} />
+                            ))
                         }
-                        {
-                            dataItem?.task?.codeType === 'javascript' &&
-                            <FormsTool
-                                scmType={toolNode}
-                            />
-                        }
-                        {
-                            dataItem?.task?.codeType === 'go' &&
-                            <FormsTool
-                                scmType={toolGo}
-                            />
-                        }
-                        <FormsTool
-                            scmType={toolSourceFareScanner}
+                        <FormsInput
+                            name={"scanPath"}
+                            placeholder={"扫描代码地址"}
+                            label={"扫描代码地址"}
+                            isRequire={true}
+                            tipText={true}
                         />
+                        {
+                            ['java','go'].includes(dataItem?.task?.codeType) &&
+                            <FormsSelect
+                                name={"scanCoverage"}
+                                label="是否开启覆盖率扫描"
+                                onChange={value=>changSourceFare(value,'scanCoverage')}
+                            >
+                                <Select.Option value={0}>关闭</Select.Option>
+                                <Select.Option value={1}>开启</Select.Option>
+                            </FormsSelect>
+                        }
+                        <div className='taskForm-forms-config-title'>SourceFare server配置</div>
                         <FormsAuth />
                         <FormsSelect
                             rules={[{required:true, message:"扫描项目不能为空"}]}
                             name={"scanProjectName"}
-                            label={"扫描项目"}
+                            label={"项目Key"}
                             onFocus={()=>onFocus('client')}
                             onChange={(value,option)=>changeProjectName(option)}
                         >
@@ -154,13 +172,6 @@ const ScanSourceFare = props =>{
                                 ))
                             }
                         </FormsSelect>
-                        <FormsInput
-                            name={"scanPath"}
-                            placeholder={"扫描代码地址"}
-                            label={"扫描代码地址"}
-                            isRequire={true}
-                            tipText={true}
-                        />
                     </>
             }
         </>

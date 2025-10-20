@@ -42,6 +42,7 @@ const ScanSonarQube = props =>{
             {
                 dataItem?.task?.codeType === 'java' ?
                     <>
+                        <div className='taskForm-forms-config-title'>SonarQube Maven配置</div>
                         <FormsTool
                             scmType={toolJdk}
                         />
@@ -50,16 +51,13 @@ const ScanSonarQube = props =>{
                         />
                     </>
                     :
-                    <FormsTool
-                        scmType={toolSonarScanner}
-                    />
+                    <>
+                        <div className='taskForm-forms-config-title'>SonarQube scanner配置</div>
+                        <FormsTool
+                            scmType={toolSonarScanner}
+                        />
+                    </>
             }
-            <FormsInput
-                name={"projectName"}
-                placeholder={"项目Key"}
-                label={"项目Key"}
-                isRequire={true}
-            />
             <FormsInput
                 name={"scanPath"}
                 placeholder={"扫描代码地址"}
@@ -67,7 +65,14 @@ const ScanSonarQube = props =>{
                 isRequire={true}
                 tipText={true}
             />
+            <div className='taskForm-forms-config-title'>SonarQube server配置</div>
             <FormsAuth />
+            <FormsInput
+                name={"projectName"}
+                placeholder={"项目Key"}
+                label={"项目Key"}
+                isRequire={true}
+            />
         </>
     )
 }

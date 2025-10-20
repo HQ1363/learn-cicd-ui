@@ -39,7 +39,6 @@ const DeployLinux = props =>{
             {
                 dataItem.task?.authType===1 ?
                     <>
-                        <FormsAuth />
                         <FormsInput
                             name={"localAddress"}
                             placeholder={"部署文件"}
@@ -52,10 +51,11 @@ const DeployLinux = props =>{
                             placeholder={"部署文件匹配规则"}
                             label={"部署文件匹配规则"}
                         />
+                        <FormsAuth />
                         <FormsInput
                             name={"deployAddress"}
-                            placeholder={"部署位置"}
-                            label={"部署位置"}
+                            placeholder={"部署主机位置"}
+                            label={"部署主机位置"}
                             addonBefore={"/"}
                             isRequire={true}
                             tipText={true}
@@ -65,18 +65,6 @@ const DeployLinux = props =>{
                             label={"部署命令"}
                             placeholder={"部署命令"}
                         />
-                        {/*{*/}
-                        {/*    dataItem?.task?.auth?.groupId && (*/}
-                        {/*        <FormsSelect*/}
-                        {/*            name={"strategyType"}*/}
-                        {/*            label="部署策略"*/}
-                        {/*            onChange={value=>changDeployType(value,'strategyType')}*/}
-                        {/*        >*/}
-                        {/*            <Select.Option value={'one'}>顺序发布</Select.Option>*/}
-                        {/*            <Select.Option value={'all'}>蓝绿发布</Select.Option>*/}
-                        {/*        </FormsSelect>*/}
-                        {/*    )*/}
-                        {/*}*/}
                     </>
                     :
                     <FormsMirror

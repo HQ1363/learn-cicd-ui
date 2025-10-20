@@ -16,7 +16,7 @@ const BuildDocker = props => {
             <FormsInput
                 name={"dockerFile"}
                 placeholder={`"\/\" 代表当前源的根目录`}
-                label={"DockerFile文件地址"}
+                label={"DockerFile文件路径"}
                 addonBefore={"/"}
                 isRequire={true}
                 tipText={true}

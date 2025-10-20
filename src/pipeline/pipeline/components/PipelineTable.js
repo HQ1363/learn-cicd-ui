@@ -16,7 +16,7 @@ import {
     CopyOutlined,
     ExportOutlined,
 } from "@ant-design/icons";
-import {inject, observer} from "mobx-react";
+import {observer} from "mobx-react";
 import historyStore from "../../history/store/HistoryStore";
 import pipelineStore from "../store/PipelineStore";
 import ListEmpty from "../../../common/component/list/ListEmpty";
@@ -33,7 +33,6 @@ import "./PipelineTable.scss";
 import {runStatusIcon} from "../../history/components/HistoryCommon";
 import PipelineDelete from "./PipelineDelete";
 import PipelineAddInfo from "./PipelineAddInfo";
-import {PrivilegeButton} from "tiklab-privilege-ui";
 import moment from "moment";
 
 const PipelineTable = props =>{
@@ -136,22 +135,6 @@ const PipelineTable = props =>{
         }
     },1000)
 
-
-    /**
-     * 克隆
-     */
-    const toClone = (record) => {
-        setDropVisible(null);
-        findPipelineCloneName(record.id).then(res=>{
-            setPipelineObj({
-                id:record.id,
-                name:res.data || record.name,
-            })
-            form.setFieldsValue({name:res.data || record.name})
-            setCloneVisible(true)
-        })
-    }
-
     /**
      * 确定克隆
      */
@@ -187,38 +170,6 @@ const PipelineTable = props =>{
         }
     }
 
-    /**
-     * 导出yaml文件
-     */
-    const toYaml = record => {
-        setDropVisible(null);
-        importPipelineYaml(record.id).then(response=>{
-            if(!response.code){
-                // 生成二进制数据的blob URL
-                const url = window.URL.createObjectURL(new Blob([response],{type: 'text/plain;charset=utf-8;content-type'}));
-                // 创建a标签并设置download属性
-                const link = document.createElement('a');
-                link.href = url;
-                link.setAttribute('download', `${record.name}.yaml`);
-                // 点击触发下载
-                document.body.appendChild(link);
-                link.click();
-                link.remove();
-                // 释放内存
-                window.URL.revokeObjectURL(url);
-            }else {
-                message.error(response.msg)
-            }
-        })
-    }
-
-    /**
-     * 编辑
-     */
-    const toEdit = record =>{
-        setDropVisible(null);
-        setEditVisible(true)
-    }
 
     /**
      * 关闭弹出框
@@ -229,22 +180,6 @@ const PipelineTable = props =>{
         }
         setEditVisible(false);
         setPipeline(null);
-    }
-
-    /**
-     * 删除
-     */
-    const toDelete = record =>{
-        setDropVisible(null);
-        setDelVisible(true);
-    }
-
-    /**
-     * 设置
-     */
-    const toSetting = record =>{
-        setDropVisible(null);
-        props.history.push(`/pipeline/${record.id}/setting/info`)
     }
 
     /**
@@ -262,6 +197,64 @@ const PipelineTable = props =>{
     const goPipelineTask = (text,record) => {
         props.history.push(`/pipeline/${record.id}/config`)
     }
+
+    /**
+     * 更多操作
+     * @param record
+     * @param code
+     */
+    const moreAction = (record,code) => {
+        setDropVisible(null);
+        switch (code) {
+            case 'edit':
+                setEditVisible(true)
+                break;
+            case 'delete':
+                setDelVisible(true);
+                break;
+            case 'setting':
+                props.history.push(`/pipeline/${record.id}/setting/info`)
+                break;
+            case 'clone':
+                findPipelineCloneName(record.id).then(res=>{
+                    setPipelineObj({
+                        id:record.id,
+                        name:res.data || record.name,
+                    })
+                    form.setFieldsValue({name:res.data || record.name})
+                    setCloneVisible(true)
+                })
+                break;
+            case 'export':
+                importPipelineYaml(record.id).then(response=>{
+                    if(!response.code){
+                        // 生成二进制数据的blob URL
+                        const url = window.URL.createObjectURL(new Blob([response],{type: 'text/plain;charset=utf-8;content-type'}));
+                        // 创建a标签并设置download属性
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.setAttribute('download', `${record.name}.yaml`);
+                        // 点击触发下载
+                        document.body.appendChild(link);
+                        link.click();
+                        link.remove();
+                        // 释放内存
+                        window.URL.revokeObjectURL(url);
+                    }else {
+                        message.error(response.msg)
+                    }
+                })
+        }
+    }
+
+    const pipMoreActList = [
+        {code:'edit',icon:<EditOutlined />, title:'编辑'},
+        {code:'delete',icon:<DeleteOutlined />, title:'删除'},
+        {code:'setting',icon: <img src={pip_setting} width={17} height={17} alt={''}/>, title:'设置'},
+        {code:'line'},
+        {code:'clone',icon:<CopyOutlined />, title:'克隆'},
+        {code:'export',icon:<ExportOutlined />, title:'导出'},
+    ]
 
     const columns = [
         {
@@ -327,7 +320,13 @@ const PipelineTable = props =>{
             width:"14%",
             ellipsis:true,
             render:(text,record)=>{
-                const {state,collect,exec} = record
+                const { state,collect,exec,permissions={} } = record;
+                const safePermissions = permissions || {};
+                const actList = pipMoreActList.filter(item => {
+                    if (item.code === 'line') return true;
+                    const per = safePermissions[item.code];
+                    return per === true;
+                });
                 return(
                     <Space size="middle">
                         <Tooltip title="收藏">
@@ -335,73 +334,68 @@ const PipelineTable = props =>{
                                 <img src={collect === 0 ? pip_xingxing_kong : pip_xingxing} alt={"收藏"} width={20} height={20}/>
                             </span>
                         </Tooltip>
-                        <PrivilegeButton code={"pipeline_run"}>
-                            {
-                                exec ? (
-                                    <Tooltip title={state===3 ? "等待":"运行"} >
-                                        <span className="pipelineTable-action" onClick={()=>work(record)}>
-                                            { state === 1 && <PlayCircleOutlined className="actions-se"/> }
-                                            { state === 2 && <Spin indicator={<LoadingOutlined className="actions-se" spin />} /> }
-                                            { state === 3 && <MinusCircleOutlined className="actions-se"/> }
-                                        </span>
-                                    </Tooltip>
-                                ) : (
-                                    <Tooltip title={'流水线正在运行或等待运行中'}>
-                                        <span className="pipelineTable-action-ban">
-                                            <PlayCircleOutlined className="actions-se"/>
-                                        </span>
-                                    </Tooltip>
-                                )
-                            }
-                        </PrivilegeButton>
-                        <Dropdown
-                            overlay={
-                                <div className="arbess-dropdown-more">
-                                    <PrivilegeButton code={"pipeline_update"}>
-                                        <div className="dropdown-more-item" onClick={()=>toEdit(record)}>
-                                            <EditOutlined /> 编辑
-                                        </div>
-                                    </PrivilegeButton>
-                                    <PrivilegeButton code={"pipeline_delete"}>
-                                        <div className="dropdown-more-item" onClick={()=>toDelete(record)}>
-                                            <DeleteOutlined /> 删除
-                                        </div>
-                                    </PrivilegeButton>
-                                    <PrivilegeButton code={"pipeline_setting"}>
-                                        <div className='dropdown-more-setting'>
-                                            <div className="dropdown-more-item dropdown-more-item-setting" onClick={()=>toSetting(record)}>
-                                                <img src={pip_setting} width={16} height={16}/> 设置
-                                            </div>
-                                        </div>
-                                    </PrivilegeButton>
-                                    <PrivilegeButton code={"pipeline_clone"}>
-                                        <div className="dropdown-more-item" onClick={()=>toClone(record)}>
-                                            <CopyOutlined /> 克隆
-                                        </div>
-                                    </PrivilegeButton>
-                                    <PrivilegeButton code={"pipeline_import"}>
-                                        <div className="dropdown-more-item" onClick={()=>toYaml(record)}>
-                                            <ExportOutlined /> 导出
-                                        </div>
-                                    </PrivilegeButton>
-                                </div>
-                            }
-                            trigger={['click']}
-                            placement={"bottomRight"}
-                            visible={dropVisible === record.id}
-                            onVisibleChange={visible => {
-                                if(visible){
-                                    setPipeline(record)
+                        {
+                            permissions?.exec && (
+                                <Tooltip title={exec ? (state===3 ? '等待' : '运行') : '流水线正在运行或等待运行中'}>
+                                    <span
+                                        className={exec ? 'pipelineTable-action' : 'pipelineTable-action-ban'}
+                                        onClick={exec ? ()=>work(record) : undefined}
+                                    >
+                                        {
+                                            exec ?
+                                                <>
+                                                    { state === 1 && <PlayCircleOutlined className="actions-se"/> }
+                                                    { state === 2 && <Spin indicator={<LoadingOutlined className="actions-se" spin />} /> }
+                                                    { state === 3 && <MinusCircleOutlined className="actions-se"/> }
+                                                </>
+                                                :
+                                                <PlayCircleOutlined className="actions-se"/>
+                                        }
+                                    </span>
+                                </Tooltip>
+                            )
+                        }
+                        {
+                            actList?.length > 1 &&
+                            <Dropdown
+                                overlay={
+                                    <div className="arbess-dropdown-more">
+                                        {
+                                            actList.map(({code,icon,title},index)=>{
+                                                if(code==='line'){
+                                                    if(index===0 || index===actList.length-1) return;
+                                                    return <div className='dropdown-more-item-line' key={code}></div>
+                                                }
+                                                return (
+                                                    <div
+                                                        key={code}
+                                                        className={`dropdown-more-item dropdown-more-item-${code}`}
+                                                        onClick={()=>moreAction(record,code)}
+                                                    >
+                                                        {icon} {title}
+                                                    </div>
+                                                )
+                                            })
+                                        }
+                                    </div>
                                 }
-                                setDropVisible(visible ? record.id : null);
-                            }}
-                        >
-                            <Tooltip title="更多">
-                                <span className="pipelineTable-action">
-                                    <img src={pip_more} width={18} alt={'更多'}/>
-                                </span>
-                            </Tooltip>
-                        </Dropdown>
+                                trigger={['click']}
+                                placement={"bottomRight"}
+                                visible={dropVisible === record.id}
+                                onVisibleChange={visible => {
+                                    if(visible){
+                                        setPipeline(record)
+                                    }
+                                    setDropVisible(visible ? record.id : null);
+                                }}
+                            >
+                                <Tooltip title="更多">
+                                    <span className="pipelineTable-action">
+                                        <img src={pip_more} width={18} alt={'更多'}/>
+                                    </span>
+                                </Tooltip>
+                            </Dropdown>
+                        }
                     </Space>
                 )
             }

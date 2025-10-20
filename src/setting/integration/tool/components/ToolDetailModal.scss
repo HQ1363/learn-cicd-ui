@@ -1,0 +1,66 @@
+.tool-modal{
+  .tool-download-addType{
+    display: flex;
+    gap: 8px;
+    .download-addType-item{
+      border: 1px solid var(--arbess-border-color);
+      padding: 8px;
+      border-radius: 2px;
+      flex: 1;
+      .download-addType-item-desc{
+        font-size: 12px;
+        color: var(--tiklab-gray-500);
+      }
+    }
+    .download-addType-active{
+      border-color: var(--tiklab-blue);
+    }
+    .download-addType-allow{
+      cursor: pointer;
+    }
+    .download-addType-ban{
+      background: var(--tiklab-gray-600);
+      .download-addType-item-desc{
+        opacity: 0.7;
+      }
+    }
+  }
+
+  .tool-download-or{
+    display: inline-block;
+    padding: 0 15px;
+  }
+
+  .tool-online-download{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .online-download-red{
+      color: #ff4d4f;
+    }
+    .online-download-blue{
+      color: var(--tiklab-blue);
+    }
+    .online-download-delete{
+      cursor: pointer;
+    }
+  }
+}
+
+.tool-online-modal{
+  .ant-table{
+    border: none !important;
+    .ant-table-tbody > tr > td{
+      border-bottom: 1px solid #f0f0f0 !important;
+    }
+  }
+  .version-download-btn{
+    cursor: pointer;
+    font-size: 16px;
+    &-ban{
+      cursor: not-allowed;
+      color: #999999;
+      font-size: 16px;
+    }
+  }
+}

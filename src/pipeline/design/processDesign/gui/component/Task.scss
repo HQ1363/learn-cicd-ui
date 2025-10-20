@@ -300,12 +300,6 @@ $line-color:#d9d9d9;
                 display: flex;
                 margin: 0 10px;
             }
-            .view-last-content .newStages-content{
-                margin-right: 0 !important;
-                .newStages-job:last-child .newStages-has-add-right{
-                    display: none;
-                }
-            }
             .add-newStage:before{
                 width: 50% !important;
                 border-left: none;

@@ -16,8 +16,8 @@ const UploadSsh = (props) => {
             <FormsAuth />
             <FormsInput
                 name={"putAddress"}
-                placeholder={"上传位置"}
-                label={"上传位置"}
+                placeholder={"上传路径"}
+                label={"上传路径"}
                 isRequire={true}
             />
             <FormsInput
