@@ -19,7 +19,7 @@ const Stage = props =>{
     const {stageStore,taskStore,addTask,setCreateValue,setTaskFormDrawer,match:{params}} = props
 
     const {finAllStage,stageFresh,deleteStage,stageMustField} = stageStore;
-    const {setDataItem,taskFresh,taskPermissions} = taskStore;
+    const {setDataItem,taskFresh,taskPermissions, dataItem} = taskStore;
 
     const taskUpdate = taskPermissions?.includes(pipeline_task_update);
 
@@ -46,7 +46,7 @@ const Stage = props =>{
     }
 
     /**
-     * 添加新任务
+     * 添加新的阶段
      */
     const newTask = () =>{
         setCreateValue({
@@ -91,6 +91,17 @@ const Stage = props =>{
     }
 
     /**
+     * 仅选择阶段（不打开抽屉），用于显示编辑/删除图标
+     */
+    const selectStage = (group) => {
+        setDataItem({
+            stageId: group.stageId,
+            stageName: group.stageName,
+            formType: 'stage'
+        })
+    }
+
+    /**
      * task详情
      */
     const showDetail = (item,formType) =>{
@@ -125,7 +136,7 @@ const Stage = props =>{
                 !group.code &&
                 <div className="group-flow">
                     <div className="group-flow_btn group-flow_multiBtn">
-                        <Tooltip title="添加新任务">
+                        <Tooltip title="添加新的阶段">
                             <img
                                 src={pip_zengjia}
                                 style={{width:22,height:22}}
@@ -139,11 +150,36 @@ const Stage = props =>{
             }
             <div className="group-table group-table-hover">
                 <div className="group-head">
-                    <div className="name">
+                    <div className="name" style={{display:'flex',alignItems:'center'}}>
                         <div className="group-name">{group?.stageName}</div>
                         <div className="group-inputBtn"
                              onClick={()=>showDetail(group,'stage')}
+                             style={{marginLeft:8}}
                         ><EditOutlined/></div>
+                        <Popconfirm
+                            title="你确定删除该阶段吗"
+                            onConfirm={()=>deleteStage({stageId: group.stageId, pipelineId: params.id})}
+                            okText="确定"
+                            cancelText="取消"
+                        >
+                            <div
+                                className="group-inputBtn"
+                                style={{
+                                    marginLeft:8,
+                                    background:'#ff4d4f',
+                                    color:'#fff',
+                                    borderRadius:'50%',
+                                    width:18,
+                                    height:18,
+                                    display:'flex',
+                                    alignItems:'center',
+                                    justifyContent:'center',
+                                    cursor:'pointer'
+                                }}
+                            >
+                                <DeleteOutlined style={{fontSize:12,color:'#fff'}}/>
+                            </div>
+                        </Popconfirm>
                     </div>
                 </div>
                 <div className="newStages-multi">
@@ -229,7 +265,7 @@ const Stage = props =>{
                                 <div className="newStages-job">
                                     <div className="add-newStages-job-content" onClick={()=>parallelTask(group)}>
                                         <PlusOutlined/>
-                                        <span style={{paddingLeft:5}}>并行阶段</span>
+                                        <span style={{paddingLeft:5}}>并行任务</span>
                                     </div>
                                 </div>
                             </div>

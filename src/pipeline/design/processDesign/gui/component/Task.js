@@ -34,7 +34,7 @@ const Task = props => {
     },[taskFresh])
 
     /**
-     * 添加新任务
+     * 添加新的阶段
      */
     const newTask = () =>{
         setCreateValue({
@@ -108,7 +108,7 @@ const Task = props => {
                 isCode(group.taskType) &&
                 <div className="group-flow">
                     <div className="group-flow_btn group-flow_singleBtn">
-                        <Tooltip title="添加新任务">
+                        <Tooltip title="添加新的阶段">
                             <img
                                 src={pip_zengjia}
                                 style={{width:22,height:22}}

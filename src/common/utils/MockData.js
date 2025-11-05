@@ -1173,7 +1173,7 @@ const mockDataMap = {
     },
     
     // 查询流水线的所有阶段（🔄 支持动态增删改）
-    '/stage/finAllStageV2': (data) => {
+    '/stage/finAllStage': (data) => {
         const formData = data instanceof FormData ? Object.fromEntries(data.entries()) : data;
         const pipelineId = formData?.pipelineId || data?.pipelineId;
         console.log('[Mock] 🔍 查询流水线阶段:', pipelineId);
@@ -1186,7 +1186,7 @@ const mockDataMap = {
     },
     
     // 旧的静态数据保留作为备注
-    '/stage/finAllStage': (data) => {
+    '/stage/finAllStageV2': (data) => {
         const formData = data instanceof FormData ? Object.fromEntries(data.entries()) : data;
         const pipelineId = formData?.pipelineId || data?.pipelineId;
         return successResponse([
@@ -1662,13 +1662,76 @@ const mockDataMap = {
     
     // 创建阶段（🔄 支持动态添加）
     '/stage/createStage': (data) => {
-        console.log('[Mock] 🆕 创建阶段:', data);
+        console.log('[Mock] 🆕 创建阶段/任务 (根据入参判断):', data);
         
         const pipelineId = data?.pipelineId;
-        const stageName = data?.stageName || '新阶段';
         const stageSort = data?.stageSort || 1;
+        const stageIdForTask = data?.stageId; // 如果传入了 stageId，说明是在现有并行阶段下添加任务（串行/并行）
         
-        // 生成新阶段ID
+        // 情况 A：带 stageId → 实际是添加任务到现有子阶段
+        if (pipelineId && stageIdForTask) {
+            const taskType = data?.taskType || 'git';
+            const taskName = data?.taskName || '新任务';
+            const newTaskId = `task-${Date.now()}-${taskIdCounter++}`;
+            const newTask = {
+                taskId: newTaskId,
+                createTime: new Date().toLocaleString('zh-CN'),
+                taskType: taskType,
+                taskSort: data?.taskSort || 1,
+                taskName: taskName,
+                pipelineId: null,
+                postprocessId: null,
+                stageId: stageIdForTask,
+                task: null,
+                instanceId: null,
+                taskVariable: null,
+                fieldStatus: 1,
+                ...data
+            };
+            const pipelineData = ensurePipelineData(pipelineId);
+            // 1) 优先尝试将任务添加到已存在的子阶段（stageIdForTask 作为子阶段ID）
+            let added = addTaskToStage(pipelineData.stages, stageIdForTask, newTask);
+            if (added) {
+                console.log('[Mock] ✅ 在子阶段下添加任务成功:', stageIdForTask, newTaskId);
+                return successResponse(newTaskId);
+            }
+            // 2) 如果未找到，认为传入的是父阶段ID，需要创建一个新的并行子阶段，再把任务放进去
+            for (let stage of pipelineData.stages) {
+                if (stage.stageId === stageIdForTask) {
+                    const newSubStageId = `stage-${Date.now()}-${stageIdCounter++}-p`;
+                    const newSubStage = {
+                        stageId: newSubStageId,
+                        stageName: `并行阶段-${stage.stageSort}-${(stage.stageList?.length || 0) + 1}`,
+                        createTime: new Date().toLocaleString('zh-CN'),
+                        pipelineId: null,
+                        stageSort: (stage.stageList?.length || 0) + 1,
+                        parentId: stage.stageId,
+                        code: false,
+                        taskValues: [],
+                        stageList: null,
+                        taskType: null,
+                        taskName: null,
+                        taskId: null,
+                        values: null,
+                        taskSort: 0,
+                        parallelName: null,
+                        instanceId: null,
+                        mainStageId: null
+                    };
+                    if (!stage.stageList) stage.stageList = [];
+                    stage.stageList.push(newSubStage);
+                    // 将任务添加到新创建的并行子阶段
+                    added = addTaskToStage(pipelineData.stages, newSubStageId, newTask);
+                    console.log('[Mock] ✅ 创建并行子阶段并添加任务:', newSubStageId, newTaskId);
+                    return successResponse(newTaskId);
+                }
+            }
+            console.log('[Mock] ⚠️ 未找到目标阶段（既不是子阶段也不是父阶段）:', stageIdForTask);
+            return successResponse(newTaskId);
+        }
+        
+        // 情况 B：不带 stageId → 创建新的阶段（“添加新任务”按钮）
+        const stageName = data?.stageName || '新阶段';
         const newStageId = `stage-${Date.now()}-${stageIdCounter++}`;
         const newSubStageId = `stage-${Date.now()}-${stageIdCounter++}-1`;
         
@@ -1713,13 +1776,45 @@ const mockDataMap = {
             ...data
         };
         
-        // 添加到流水线数据中
+        // 如果用户在创建新阶段时已经选择了任务类型，则直接在新建的并行子阶段中添加该任务
+        let createdTaskId = null;
+        if (data?.taskType) {
+            const newTaskId = `task-${Date.now()}-${taskIdCounter++}`;
+            const taskType = data?.taskType;
+            const taskName = data?.taskName || '新任务';
+            const newTask = {
+                taskId: newTaskId,
+                createTime: new Date().toLocaleString('zh-CN'),
+                taskType: taskType,
+                taskSort: data?.taskSort || 1,
+                taskName: taskName,
+                pipelineId: null,
+                postprocessId: null,
+                stageId: newSubStageId,
+                task: null,
+                instanceId: null,
+                taskVariable: null,
+                fieldStatus: 1,
+                ...data
+            };
+            // 放入新建子阶段
+            if (newStage.stageList && newStage.stageList[0]) {
+                if (!newStage.stageList[0].taskValues) newStage.stageList[0].taskValues = [];
+                newStage.stageList[0].taskValues.push(newTask);
+                createdTaskId = newTaskId;
+            }
+        }
+
         if (pipelineId) {
             const pipelineData = ensurePipelineData(pipelineId);
-            pipelineData.stages.push(newStage);
-            console.log('[Mock] ✅ 阶段创建成功:', newStageId, stageName);
+            pipelineData.stages.splice(Math.max(0, stageSort - 1), 0, newStage);
+            console.log('[Mock] ✅ 阶段创建成功 (插入位置:', stageSort, '):', newStageId, stageName);
         }
         
+        // 若创建阶段时同时创建了任务，则返回 taskId 以便前端打开表单；否则返回阶段对象
+        if (createdTaskId) {
+            return successResponse(createdTaskId);
+        }
         return successResponse(newStage);
     },
     
@@ -1747,14 +1842,48 @@ const mockDataMap = {
         
         return successResponse(data);
     },
+
+    // 更新阶段名称（兼容前端单独的名称更新接口）
+    '/stage/updateStageName': (data) => {
+        console.log('[Mock] 🔄 更新阶段名称:', data);
+        const stageId = data?.stageId;
+        const pipelineId = data?.pipelineId;
+        const stageName = data?.stageName || data?.name;
+        if (pipelineId && stageId && stageName) {
+            const pipelineData = ensurePipelineData(pipelineId);
+            for (let i = 0; i < pipelineData.stages.length; i++) {
+                if (pipelineData.stages[i].stageId === stageId) {
+                    pipelineData.stages[i].stageName = stageName;
+                    console.log('[Mock] ✅ 阶段名称已更新:', stageId, '=>', stageName);
+                    break;
+                }
+            }
+            return successResponse(null);
+        }
+        // 兼容：如果没有传 pipelineId，则在所有流水线中查找该 stageId
+        if (!pipelineId && stageId && stageName) {
+            for (const pid of Object.keys(pipelineDesignData)) {
+                const p = ensurePipelineData(pid);
+                for (let i = 0; i < p.stages.length; i++) {
+                    if (p.stages[i].stageId === stageId) {
+                        p.stages[i].stageName = stageName;
+                        console.log('[Mock] ✅ 阶段名称已更新(全局查找):', stageId, '=>', stageName);
+                        return successResponse(null);
+                    }
+                }
+            }
+        }
+        return successResponse(null);
+    },
     
     // 删除阶段（🔄 支持动态删除）
     '/stage/deleteStage': (data) => {
         const formData = data instanceof FormData ? Object.fromEntries(data.entries()) : data;
         const stageId = formData?.stageId || data?.stageId;
         const pipelineId = formData?.pipelineId || data?.pipelineId;
+        const maybeTaskOrStageId = formData?.taskId || data?.taskId; // 前端可能传 taskId 字段
         
-        console.log('[Mock] 🗑️ 删除阶段:', stageId, 'pipelineId:', pipelineId);
+        console.log('[Mock] 🗑️ 删除阶段:', stageId || maybeTaskOrStageId, 'pipelineId:', pipelineId);
         
         if (pipelineId && stageId) {
             const pipelineData = ensurePipelineData(pipelineId);
@@ -1765,6 +1894,28 @@ const mockDataMap = {
                 console.log('[Mock] ✅ 阶段删除成功:', stageId);
             } else {
                 console.log('[Mock] ⚠️ 未找到阶段:', stageId);
+            }
+        } else if (pipelineId && maybeTaskOrStageId) {
+            const pipelineData = ensurePipelineData(pipelineId);
+            // 先尝试将 taskId 作为阶段ID删除
+            let index = pipelineData.stages.findIndex(s => s.stageId === maybeTaskOrStageId);
+            if (index !== -1) {
+                pipelineData.stages.splice(index, 1);
+                console.log('[Mock] ✅ 阶段删除成功(通过taskId字段识别为stageId):', maybeTaskOrStageId);
+            } else {
+                // 否则尝试查找包含该任务的父阶段并整体删除父阶段
+                for (let i = 0; i < pipelineData.stages.length; i++) {
+                    const stage = pipelineData.stages[i];
+                    if (!stage.stageList) continue;
+                    for (let sub of stage.stageList) {
+                        if (sub.taskValues && sub.taskValues.some(t => t.taskId === maybeTaskOrStageId)) {
+                            pipelineData.stages.splice(i, 1);
+                            console.log('[Mock] ✅ 删除包含任务的整段阶段:', stage.stageId, '任务:', maybeTaskOrStageId);
+                            return successResponse(null);
+                        }
+                    }
+                }
+                console.log('[Mock] ⚠️ 未找到与 taskId 相关的阶段:', maybeTaskOrStageId);
             }
         }
         
@@ -1882,4 +2033,3 @@ export const getMockData = (url, data) => {
 };
 
 export default mockDataMap;
-

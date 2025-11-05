@@ -122,7 +122,14 @@ class StageStore {
     @action
     deleteStage = async value =>{
         const param = new FormData()
-        param.append("taskId",value)
+        if (value && typeof value === 'object') {
+            // 兼容传入 {stageId, taskId, pipelineId}
+            const id = value.taskId || value.stageId
+            if (id) param.append('taskId', id)
+            if (value.pipelineId) param.append('pipelineId', value.pipelineId)
+        } else {
+            param.append("taskId",value)
+        }
         const data = await Axios.post("/stage/deleteStage",param)
         if(data.code===0){
             message.success("删除成功")
