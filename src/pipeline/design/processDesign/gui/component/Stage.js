@@ -163,7 +163,7 @@ const Stage = props =>{
                             cancelText="取消"
                         >
                             <div
-                                className="group-inputBtn"
+                                className="group-delBtn"
                                 style={{
                                     marginLeft:8,
                                     background:'#ff4d4f',
@@ -171,7 +171,6 @@ const Stage = props =>{
                                     borderRadius:'50%',
                                     width:18,
                                     height:18,
-                                    display:'flex',
                                     alignItems:'center',
                                     justifyContent:'center',
                                     cursor:'pointer'
@@ -221,15 +220,30 @@ const Stage = props =>{
                                                                        valid() &&
                                                                        <div className="newStages-job-warn"><ExclamationCircleOutlined /></div>
                                                                    }
-                                                                   <Popconfirm
+                                                                  <Popconfirm
                                                                        title="你确定删除吗"
                                                                        onConfirm={e=>deleteTask(e,group,list,task)}
                                                                        onCancel={e=>e.stopPropagation()}
                                                                        okText="确定"
                                                                        cancelText="取消"
                                                                    >
-                                                                       <div className="newStages-job-del" onClick={e=>e.stopPropagation()}>
-                                                                           <DeleteOutlined />
+                                                                       <div
+                                                                           className="newStages-job-del"
+                                                                           onClick={e=>e.stopPropagation()}
+                                                                           style={{
+                                                                               background:'#ff4d4f',
+                                                                               color:'#fff',
+                                                                               borderRadius:'50%',
+                                                                               width:18,
+                                                                               height:18,
+                                                                               display:'flex',
+                                                                               alignItems:'center',
+                                                                               justifyContent:'center',
+                                                                               marginRight: 12,
+                                                                               cursor:'pointer'
+                                                                           }}
+                                                                       >
+                                                                           <DeleteOutlined style={{fontSize:12,color:'#fff'}}/>
                                                                        </div>
                                                                    </Popconfirm>
                                                                </div>

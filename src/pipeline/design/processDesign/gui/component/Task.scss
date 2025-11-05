@@ -80,6 +80,12 @@ $line-color:#d9d9d9;
                 .group-head .group-inputBtn{
                     display: block;
                 }
+                .group-head .group-delBtn {
+                    display: flex;
+                }
+            }
+            .group-head .group-delBtn {
+                display: none;
             }
         }
         .group-table-hover:hover{
@@ -147,7 +153,7 @@ $line-color:#d9d9d9;
         }
         .newStages-job-del{
             opacity: 0;
-            padding-right: 10px;
+            // padding-right: 10px;
         }
         .newStages-job-content:hover .newStages-job-del{
             opacity: 1;
