@@ -8,8 +8,12 @@ import {store} from "./store";
 import routes from "./routes";
 import App from "./app";
 import {InitInstallProvider} from 'tiklab-eam-ui';
+import {initMock} from './common/utils/InitMock';
 
 enableAxios()
+
+// 初始化 Mock 拦截器（开发模式下自动启用）
+initMock()
 const Index = observer(() => {
 
     const allStore = {

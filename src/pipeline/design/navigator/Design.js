@@ -82,9 +82,31 @@ const Design = props =>{
     }
 
     useEffect(() => {
+        // 开发环境：如果没有获取到权限，使用默认全部权限
+        const isDevelopment = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'dev';
+        
         if(pipelinePermissions){
             //权限
             setTaskPermissions(pipelinePermissions);
+        } else if (isDevelopment) {
+            // 🔑 开发模式下，设置默认全部权限
+            console.log('[Mock] 🔓 设置默认流程设计权限');
+            const defaultPermissions = [
+                'pip_design_update',      // 设计更新（核心）
+                'pip_design_view',
+                'pipeline_task_update',
+                'pipeline_task_create',
+                'pipeline_task_delete',
+                'pipeline_stage_update',
+                'pipeline_stage_create',
+                'pipeline_stage_delete',
+                'pipeline_view',
+                'pipeline_edit',
+                'pipeline_delete',
+                'pipeline_execute',
+                'pipeline_clone'
+            ];
+            setTaskPermissions(defaultPermissions);
         }
     }, [pipelinePermissions]);
 

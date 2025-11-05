@@ -50,6 +50,8 @@ const Layout = props =>{
     )
 }
 
+// 开发环境下不使用登录验证（支持 development 和 dev）
+const isDevelopment = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'dev';
 
-export default UserVerify(Layout,'/noAuth')
+export default isDevelopment ? Layout : UserVerify(Layout,'/noAuth')
 

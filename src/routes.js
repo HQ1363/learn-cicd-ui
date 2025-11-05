@@ -95,25 +95,31 @@ import {
 
 } from './ui';
 
+// 开发环境下不需要登录相关路由（支持 development 和 dev）
+const isDevelopment = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'dev';
+
 const routers=[
-    {
-        path:"/login",
-        component:Login,
-    },
-    {
-        component: LoginRpw,
-        exact:true,
-        path: '/loginRpw'
-    },
-    {
-        path:"/logout",
-        component:Logout,
-    },
-    {
-        path:"/noAuth",
-        exact:true,
-        component:ExcludeProductUser,
-    },
+    // 登录相关路由（生产环境使用）
+    ...(isDevelopment ? [] : [
+        {
+            path:"/login",
+            component:Login,
+        },
+        {
+            component: LoginRpw,
+            exact:true,
+            path: '/loginRpw'
+        },
+        {
+            path:"/logout",
+            component:Logout,
+        },
+        {
+            path:"/noAuth",
+            exact:true,
+            component:ExcludeProductUser,
+        },
+    ]),
     {
         path:"/500",
         exact:true,
