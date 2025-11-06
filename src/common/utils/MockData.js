@@ -522,9 +522,62 @@ const mockDataMap = {
     },
     
     // 获取流水线项目用户
-    '/dmUser/findDmUserPage': (data) => pageResponse([
-        { id: 'mock-user-001', name: '管理员', nickname: '管理员', username: 'admin' }
-    ], 1),
+    '/dmUser/findDmUserPage': (data) => {
+        const makeUser = (id, name, nickname, type) => ({
+            id,
+            name,
+            phone: null,
+            email: null,
+            avatar: null,
+            nickname,
+            dirId: '1',
+            password: type === 1 ? '3bdc934fcae1f16f51abecf5e870ca1f' : 'a144f3052df296568f84280ebab81294',
+            status: 1,
+            type,
+            openId: null,
+            newPassword: null
+        });
+        const dataList = [
+            {
+                id: '704af514eca8',
+                domainId: 'fda56c97a076',
+                domainType: null,
+                user: makeUser('111111', 'admin', '管理员', 1),
+                type: 0,
+                status: 1
+            },
+            {
+                id: 'a469794794a0',
+                domainId: 'fda56c97a076',
+                domainType: null,
+                user: makeUser('demoUserA', 'tiklab', 'Tiklab', 0),
+                type: 0,
+                status: 1
+            },
+            {
+                id: 'dc51723e1baa',
+                domainId: 'fda56c97a076',
+                domainType: null,
+                user: makeUser('demoUserB', 'jackson', 'Jackson', 0),
+                type: 0,
+                status: 1
+            }
+        ];
+        return {
+            code: 0,
+            data: {
+                pageSize: 10,
+                currentPage: 1,
+                totalRecord: 3,
+                totalPage: 1,
+                beginIndex: 1,
+                endIndex: 4,
+                dataList
+            },
+            msg: null,
+            detailMsg: null
+        };
+    },
     
     // 🔑 获取用户在项目中的权限（关键：影响流程设计编辑按钮显示）
     '/dmUser/findDmPermissions': (data) => {
@@ -1130,6 +1183,264 @@ const mockDataMap = {
         versionStatus: 'latest'
     }),
     
+    // 实例历史 - 流水线实例分页
+    '/instance/findPipelineInstance': (data) => {
+        const now = new Date();
+        const pageSize = 12;
+        const currentPage = 1;
+        const totalRecord = 16;
+        const totalPage = 2;
+        const beginIndex = 1;
+        const makeUser = (id, name, type) => ({
+            id,
+            name,
+            phone: null,
+            email: null,
+            avatar: null,
+            nickname: name === 'admin' ? '管理员' : 'Tiklab',
+            dirId: '1',
+            password: type === 1 ? '3bdc934fcae1f16f51abecf5e870ca1f' : 'a144f3052df296568f84280ebab81294',
+            status: 1,
+            type,
+            openId: null,
+            newPassword: null
+        });
+        const pipelineBase = {
+            id: 'fda56c97a076',
+            name: '示例项目',
+            user: { id: '111111', name: null, phone: null, email: null, avatar: null, nickname: null, dirId: null, password: null, status: null, type: null, openId: null, newPassword: null },
+            env: { id: 'default', envName: null, createTime: null, user: null, detail: null },
+            group: { id: 'default', groupName: null, createTime: null, user: null, detail: null },
+            createTime: '2024-11-27 10:00:01',
+            type: 2,
+            state: 1,
+            power: 1,
+            color: 5,
+            templateList: null,
+            collect: 0,
+            userList: null,
+            execUser: null,
+            number: null,
+            instanceId: null,
+            buildStatus: null,
+            lastBuildTime: null,
+            permissions: null,
+            template: 1,
+            openQuote: false,
+            templateId: null,
+            approve: null,
+            addApproveId: null,
+            exec: null
+        };
+        const instancePermissions = { delete: true, deleteCode: 'pip_history_delete', rollback: true, rollbackCode: 'pip_history_rollback', run: true, runCode: 'pip_history_run' };
+        const pad = (n) => String(n).padStart(2, '0');
+        const format = (d) => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+        const dataList = Array.from({ length: pageSize }).map((_, idx) => {
+            const created = new Date(now.getTime() - (idx+1) * 3600 * 1000);
+            const runStatuses = ['success','success','success','error'];
+            const runStatus = runStatuses[idx % runStatuses.length];
+            const runTime = [9,10,9,1,9,9,9,4,8,7,7,4][idx % 12];
+            const runWay = [1,1,1,2,1,1,1,3,1,1,1,1][idx % 12];
+            const findNumber = 16 - idx;
+            const user = idx % 3 === 1 ? makeUser('demoUserA','tiklab',0) : makeUser('111111', idx % 2 ? 'admin' : 'admin', 1);
+            return {
+                instanceId: Math.random().toString(16).slice(2, 14),
+                createTime: format(created),
+                runWay,
+                user,
+                runStatus,
+                runTime,
+                pipeline: { ...pipelineBase },
+                findNumber,
+                runTimeDate: `${runTime} 秒`,
+                logPath: null,
+                exec: true,
+                rollbackExec: runStatus === 'success',
+                runLog: null,
+                instancePermissions: { ...instancePermissions },
+                approve: null,
+                addApproveId: null,
+                timeList: null
+            };
+        });
+        return {
+            code: 0,
+            data: {
+                pageSize,
+                currentPage,
+                totalRecord,
+                totalPage,
+                beginIndex,
+                endIndex: beginIndex + dataList.length,
+                dataList
+            },
+            msg: null,
+            detailMsg: null
+        };
+    },
+
+    // 阶段实例 - 某次流水线执行的阶段/任务实例树
+    '/stageInstance/findStageInstance': (data) => {
+        // 使用静态示例结构，按需可根据 instanceId 动态生成
+        const instanceId = (data && (data.instanceId || (data instanceof FormData && data.get && data.get('instanceId')))) || 'fb1fd088b47f';
+        const pipelineId = 'fda56c97a076';
+        const makeTask = (id, { taskType, taskSort, taskName, logFile, runTime, runState, stagesId, taskId, runLog }) => ({
+            id,
+            instanceId: null,
+            taskType,
+            taskSort,
+            taskName,
+            logAddress: `/opt/tiklab/arbess-ee/other/${pipelineId}/${instanceId}/${logFile}.log`,
+            runTime,
+            runTimeDate: `${runTime} 秒`,
+            runState,
+            stagesId,
+            taskId,
+            postprocessId: null,
+            runLog,
+            deployInstanceList: [],
+            createTime: '2025-10-31 23:27:49'
+        });
+        const stage1TaskLog = (
+            '[2025-10-31 23:27:49]   执行任务：GitPuk\n' +
+            '[2025-10-31 23:27:49]   当前Git程序版本：git version 2.43.0\n' +
+            '[2025-10-31 23:27:49]   读取本地仓库信息...\n' +
+            '[2025-10-31 23:27:49]   本地仓库读取成功。\n' +
+            '[2025-10-31 23:27:49]   仓库位置：/opt/tiklab/arbess-ee/source/fda56c97a076\n' +
+            '[2025-10-31 23:27:49]   仓库分支：master\n' +
+            '[2025-10-31 23:27:49]   仓库信息地址分支等未发生变动,拉取最新代码......\n' +
+            '[2025-10-31 23:27:50]   Already up to date.\n' +
+            '[2025-10-31 23:27:50]   最近提交信息：测试类  提交者：zhangcheng  提交者邮箱：zcamyy@126.com  提交时间：2023-11-17 20:14:30\n' +
+            '[2025-10-31 23:27:50]   任务GitPuk执行成功。\n'
+        );
+        const stage2TaskLog = (
+            '[2025-10-31 23:27:51]   执行任务：Maven构建\n' +
+            '[2025-10-31 23:27:51]   当前Java版本：java version "17.0.7" 2023-04-18 LTS\n' +
+            '[2025-10-31 23:27:51]   当前Maven版本：Apache Maven 3.9.2 (c9616018c7a021c1c39be70fb2843d6f5f9b8a1c)\n' +
+            '[2025-10-31 23:27:51]   当前构建地址：/opt/tiklab/arbess-ee/source/fda56c97a076\n' +
+            '[2025-10-31 23:27:51]   pom.xml文件位置：/opt/tiklab/arbess-ee/source/fda56c97a076/pom.xml\n' +
+            '[2025-10-31 23:27:51]   执行命令：mvn clean package\n' +
+            '[2025-10-31 23:27:52]   [INFO] Scanning for projects...\n' +
+            '[2025-10-31 23:27:52]   [INFO] ---------------------< com.tiklab:tiklab-example >----------------------\n' +
+            '[2025-10-31 23:27:52]   [INFO] Building tiklab-example 1.0.0\n' +
+            '[2025-10-31 23:27:52]   [INFO] --- clean:3.2.0:clean (default-clean) @ tiklab-example ---\n' +
+            '[2025-10-31 23:27:52]   [INFO] Deleting /opt/tiklab/arbess-ee/source/fda56c97a076/target\n' +
+            '[2025-10-31 23:27:53]   [INFO] Compiling 7 source files ...\n' +
+            '[2025-10-31 23:27:54]   [INFO] BUILD SUCCESS\n' +
+            '[2025-10-31 23:27:54]   任务Maven构建执行完成。\n'
+        );
+        const stage3TaskLog = (
+            '[2025-10-31 23:27:55]   执行任务：主机部署\n' +
+            '[2025-10-31 23:27:55]   远程服务器,IP：172.12.1.12 端口：22\n' +
+            '[2025-10-31 23:27:55]   连接用户名：root ，密码：******\n' +
+            '[2025-10-31 23:27:55]   开始建立连接......\n' +
+            '[2025-10-31 23:27:55]   连接建立成功。\n' +
+            '[2025-10-31 23:27:55]   获取部署文件......\n' +
+            '[2025-10-31 23:27:55]   制品文件获取成功：/opt/tiklab/arbess-ee/source/fda56c97a076/target/tiklab-example-1.0.0.jar\n' +
+            '[2025-10-31 23:27:55]   制品文件文件上传中...\n' +
+            '[2025-10-31 23:27:58]   部署命令执行完成！\n'
+        );
+        const dataList = [
+            {
+                id: '0500af12c9ca',
+                stageName: '阶段-1',
+                instanceId,
+                stageSort: 1,
+                stageAddress: `/opt/tiklab/arbess-ee/other/${pipelineId}/${instanceId}/690ec3d09bc2`,
+                stageTime: 2,
+                stageState: 'success',
+                parentId: null,
+                runLog: null,
+                stageInstanceList: [
+                    {
+                        id: '8f17290b50bc',
+                        stageName: '源码',
+                        instanceId: null,
+                        stageSort: 1,
+                        stageAddress: `/opt/tiklab/arbess-ee/other/${pipelineId}/${instanceId}`,
+                        stageTime: 2,
+                        stageState: 'success',
+                        parentId: '0500af12c9ca',
+                        runLog: null,
+                        stageInstanceList: null,
+                        taskInstanceList: [
+                            makeTask('5e340a0ac2c2', {
+                                taskType: 'gitpuk', taskSort: 1, taskName: 'GitPuk', logFile: '690ec3d09bc2/8f17290b50bc/5e340a0ac2c2',
+                                runTime: 2, runState: 'success', stagesId: '8f17290b50bc', taskId: 'cc707638bf83', runLog: stage1TaskLog
+                            })
+                        ]
+                    }
+                ],
+                taskInstanceList: null
+            },
+            {
+                id: '7c6d0d0bd030',
+                stageName: '构建',
+                instanceId,
+                stageSort: 2,
+                stageAddress: `/opt/tiklab/arbess-ee/other/${pipelineId}/${instanceId}/54dbea9c00bf`,
+                stageTime: 6,
+                stageState: 'success',
+                parentId: null,
+                runLog: null,
+                stageInstanceList: [
+                    {
+                        id: '29d5694d5717',
+                        stageName: '并行阶段-4-1',
+                        instanceId: null,
+                        stageSort: 1,
+                        stageAddress: `/opt/tiklab/arbess-ee/other/${pipelineId}/${instanceId}`,
+                        stageTime: 6,
+                        stageState: 'success',
+                        parentId: '7c6d0d0bd030',
+                        runLog: null,
+                        stageInstanceList: null,
+                        taskInstanceList: [
+                            makeTask('2824c84cbcae', {
+                                taskType: 'maven', taskSort: 1, taskName: 'Maven构建', logFile: '54dbea9c00bf/29d5694d5717/2824c84cbcae',
+                                runTime: 6, runState: 'success', stagesId: '29d5694d5717', taskId: 'ceb7b80f990b', runLog: stage2TaskLog
+                            })
+                        ]
+                    }
+                ],
+                taskInstanceList: null
+            },
+            {
+                id: '151b05d0dda3',
+                stageName: '阶段-3',
+                instanceId,
+                stageSort: 3,
+                stageAddress: `/opt/tiklab/arbess-ee/other/${pipelineId}/${instanceId}/6deef698941e`,
+                stageTime: 5,
+                stageState: 'success',
+                parentId: null,
+                runLog: null,
+                stageInstanceList: [
+                    {
+                        id: '1e25a94243ba',
+                        stageName: '并行阶段-3-1',
+                        instanceId: null,
+                        stageSort: 1,
+                        stageAddress: `/opt/tiklab/arbess-ee/other/${pipelineId}/${instanceId}`,
+                        stageTime: 5,
+                        stageState: 'success',
+                        parentId: '151b05d0dda3',
+                        runLog: null,
+                        stageInstanceList: null,
+                        taskInstanceList: [
+                            makeTask('a8b7f2f22e5c', {
+                                taskType: 'liunx', taskSort: 1, taskName: '主机部署', logFile: '6deef698941e/1e25a94243ba/a8b7f2f22e5c',
+                                runTime: 5, runState: 'success', stagesId: '1e25a94243ba', taskId: '4dd81a348f68', runLog: stage3TaskLog
+                            })
+                        ]
+                    }
+                ],
+                taskInstanceList: null
+            }
+        ];
+        return { code: 0, data: dataList, msg: null, detailMsg: null };
+    },
+
     // ==================== 流程设计相关 ====================
     
     // 查询流水线的所有任务（流程设计核心接口）
